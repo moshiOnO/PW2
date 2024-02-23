@@ -21,8 +21,6 @@
     letter-spacing: 1px;
 }
 
-/* Personalización de elementos Bootstrap */
-
 .nav-link {
     transition: background-color 0.3s;
     /* Agrega una transición suave */
