@@ -3,25 +3,73 @@
 
 <head>
     <meta charset="UTF-8">
+   
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"> <!--fontawesome-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">  <!--bootstrap--> 
+    
+    <link rel="stylesheet" href="../css/register.css">
+    
+
+
     <title>Deezy</title>
 </head>
 
 <body>
-    <form>      
-        
-        <label for="name">Name:</label><br>
-        <input id="name" type="text"><br>
-        <label for="nickN">Nickame:</label><br>
-        <input id="nickN" type="text"><br>
-        <label for="mail">Mail:</label><br>
-        <input id="mail" type="text"><br>
-        <label for="pass">Password:</label><br>
-        <input id="pass" type="text"><br>
-        <label for="pass2">Confirm Password:</label><br>
-        <input id="pass2" type="text"><br>
 
-    </form>
+       <!--para que se vea el fondo xd-->
+       <style> 
+        body {
+            background-color: #080808;
+            background-image: url('../../resources/Illustrations/Register.jpg');
+            /* height: 500px; */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+
+<body>
+    <div class="register-container">
+        <h3 class="text-white" align=center>Registrate!</h3>
+        <form onsubmit="return validateForm()">      
+            <label for="name">Name:</label><br>
+            <input id="name" type="text" required><br>
+            <label for="nickN">Nickame:</label><br>
+            <input id="nickN" type="text" required><br>
+            <label for="mail">Mail:</label><br>
+            <input id="mail" type="email" required><br>
+            <label for="pass">Password:</label><br>
+            <input id="pass" type="password" required><br>
+            <label for="pass2">Confirm Password:</label><br>
+            <input id="pass2" type="password" required><br>
+            <button type="submit">Crear</button>
+            <p class="text-white">Already have an account? <a href="/website/login.html">Log In</a></p> 
+        </form>
+    </div>
 </body>
+
+
+<script>
+    function validateForm() {
+        var name = document.getElementById("name").value;
+        var nickN = document.getElementById("nickN").value;
+        var mail = document.getElementById("mail").value;
+        var pass = document.getElementById("pass").value;
+        var pass2 = document.getElementById("pass2").value;
+
+        if (name == "" || nickN == "" || mail == "" || pass == "" || pass2 == "") {
+            alert("Por favor, complete todos los campos.");
+            return false;
+        }
+
+        if (pass !== pass2) {
+            alert("Las contraseñas no coinciden.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
 
 </html>
