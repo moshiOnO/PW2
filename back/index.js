@@ -58,6 +58,24 @@ app.post("/create",
     }
 )
 
+app.post("/login", 
+    (req, resp)=>{
+        db.query("SELECT * FROM usuarios WHERE name=? AND pass=?",
+        [req.body.us, req.body.con],
+        (err, data)=>{
+            if(err){
+                resp.send(err);
+            }else{
+                if(data.length > 0){
+                    resp.json({
+                        "alert": 'Success'                        
+                    })
+                }else{
+                    resp.json('Usuario no existe')
+                }
+            }
+        })
+})
 
 app.get("/getU",
     (req, resp)=>{

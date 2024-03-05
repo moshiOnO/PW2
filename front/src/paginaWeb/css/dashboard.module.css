@@ -58,6 +58,14 @@
     background-color: #E4AF9E;
 }
 
+.card img {   
+    border-radius: 10px;
+    width: 90%;
+    height: 90%;
+    display: block; /* Hace que la imagen sea un bloque para centrarla correctamente */
+    margin: 15px auto 0; /* Centra la imagen horizontalmente */
+}
+
 .card-body {
     margin-top: 10px;
     padding-left: 20px;    
@@ -68,10 +76,3 @@
     color: #f0f0f0;
 }
 
-.card img {   
-    border-radius: 10px;
-    width: 90%;
-    height: 90%;
-    display: block; /* Hace que la imagen sea un bloque para centrarla correctamente */
-    margin: 15px auto 0; /* Centra la imagen horizontalmente */
-}

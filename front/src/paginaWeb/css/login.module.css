@@ -1,17 +1,4 @@
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
 
-     background-color: #080808;
-            background-image: url('../../resources/Illustrations/login.jpg');
-            /* height: 500px; */
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: cover;
-}
 
 .login-container {
     /*width: 300px;

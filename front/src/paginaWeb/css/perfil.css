@@ -1,0 +1,150 @@
+/* Personalización de menú------------------------------------ */
+#companyname {
+    font-family: sans-serif;
+    /* Cambiar la fuente a sans-serif */
+    font-weight: bold;
+    font-size: 28px;
+    letter-spacing: 6px;
+}
+
+#menu {
+    margin-top: 2%;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+#menuElements {
+    margin-left: auto;
+    font-family: system-ui;
+    /* Cambiar la fuente a sans-serif */
+    font-weight: lighter;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+/* Hovers */
+.nav-link {
+    transition: background-color 0.3s;
+    /* Agrega una transición suave */
+    transition: border-color 0.3s;
+    transition: font-weight 0.2s;
+    padding: 5px;
+    /* Añade un espacio entre el texto y el borde */
+    margin-right: 10px;
+}
+
+.nav-link:hover {
+    background-color: #f0f0f0;
+    /* Cambia el color de fondo al pasar el cursor sobre el enlace */
+    border-radius: 10px;
+    /* Suaviza los bordes del cuadrado */
+    font-weight: bold;
+}
+.nav-item img{
+    max-width: 80px;
+    /* Tamaño máximo de la imagen */
+    max-height: 80px;       
+    /* Alinea la imagen a la izquierda */    
+    border-radius: 60%;
+    /* Bordes redondeados */
+}
+
+/* ------------------------------------------------------------ */
+
+/*Personalización general */
+.row {
+    margin-top: 6%;
+}
+.separador{
+    border: none; /* Eliminar el borde predeterminado */
+    border-top: 2px solid black; /* Establecer un borde superior de 2px sólido */
+    width: 50%; /* Establecer la anchura de la línea al 50% */
+    margin: 20px auto; 
+}
+
+#pfinfo {
+    margin-left: 4%;
+}
+
+#pubpfp {
+    /* Personalización del contenedor */
+    background-color: #E4AF9E;
+    padding: 20px;
+    /* Espaciado interno */
+    border: 1px solid #dee2e6;
+    /* Borde */
+    border-radius: 8px;
+    /* Bordes redondeados */
+    margin-bottom: 20px;
+    /* Espacio inferior */
+    margin-top: 20px;
+    /* Espacio superior */
+    /* Alineación del texto */
+    overflow: auto;
+    /* Limpiar el float */
+}
+
+#pubpfp img {
+    max-width: 400px;
+    /* Tamaño máximo de la imagen */
+    max-height: 400px;
+    object-fit: cover;
+    /* Recorte la imagen para ajustarla al tamaño */
+    float: left;
+    /* Alinea la imagen a la izquierda */
+    margin-right: 30px;
+    border-radius: 20px;
+    /* Bordes redondeados */
+}
+
+#pubpfpT {
+    margin: 20px;
+    margin-top: 30px;
+}
+
+/* ------------------------------------------------------------ */
+
+/* Personalización de la info del usuario */
+#pfn {
+    /* Personalización del contenedor */
+    background-color: #E4AF9E;
+    padding: 20px;
+    /* Espaciado interno */
+    border: 1px solid #dee2e6;
+    /* Borde */
+    border-radius: 8px;
+    /* Bordes redondeados */
+    /* Alineación del texto */
+    overflow: auto;
+    /* Limpiar el float */
+}
+#pfp {
+    text-align: center;
+    background-color: #E4AF9E;
+    padding: 20px;
+    /* Espaciado interno */
+    border: 1px solid #dee2e6;
+    /* Borde */
+    border-radius: 8px;
+    /* Bordes redondeados */
+    display: inline-block;
+    /* Ajusta el tamaño del fondo al contenido */
+}
+#pfp img {
+    border-radius: 60%;
+    width: 200px;
+    height: 200px;
+}
+#pfp h2 {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+#featured{
+    text-align: left;
+    color:bisque;
+    font-weight: lighter;
+    font-size: 20px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+/* ------------------------------------------------------------ */
