@@ -24,6 +24,21 @@ const db = mysql.createConnection(
     }
 )
 
+app.post("/registro", (req, res) => {
+    const { name, nickN, mail, pass } = req.body;
+  
+    // Insertarusuario en la base de dato
+    const sql = 'INSERT INTO usuario (nme_u, nick_u, mail_u, pass_u) VALUES (?, ?, ?, ?)';
+    db.query(sql, [name, nickN, mail, pass], (err, result) => {
+      if (err) {
+        res.status(500).send('Error al registrar el usuario');
+        throw err;
+      }
+      res.status(200).send('Usuario registrado exitosamente');
+    });
+  });
+  
+
 app.post("/create", 
     (req, resp)=>{
         const usu = req.body.usuario;
