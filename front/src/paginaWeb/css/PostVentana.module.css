@@ -49,19 +49,6 @@
 }
 
 
-body {
-  margin: 0;
-  font-family: Roboto, Bold 700;
-  font-size: 24px;
-  display: grid;
-  flex-direction: column-reverse;
-  height: 100vh;
-  background-color: #f5f5f5; /* Color crema suave de fondo */
-   border: 7px solid #EBC3D3; /* Borde azul de 10 píxeles */
-   /* Incluye el ancho del borde en el tamaño total */
-}
-
-
 .container {
   display: flex;
   justify-content: space-between;

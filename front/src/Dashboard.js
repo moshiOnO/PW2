@@ -24,23 +24,24 @@ function Dashboard() {
     return (
         <>
 
-            <nav id={styles.menu} className="navbar navbar-expand-lg navbar-light">
-                <a id={styles.companyname} className="navbar-brand" href="#">DEEZY</a>
-                <ul id={styles.menuElements} className="navbar-nav">
+            {/* <!-- Menú del apartado superior --> */}
+            <nav id={styles.menu} class="navbar navbar-expand-lg navbar-light">
+                <a id={styles.companyname} class="navbar-brand" href="#">DEEZY</a>
+                <ul id={styles.menuElements} class="navbar-nav">
                     {/* css                 bootstrap */}
-                    <li className={`${styles["nav-item"]} nav-item`} >
-                        <a className={`${styles["nav-link"]} nav-link`} href="dashboard.html">Inicio</a>
+                    <li className={`${styles["nav-item"]}`} >
+                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
                     </li>
-                    <li className={`${styles["nav-item"]} nav-item`}>
+                    <li className={`${styles["nav-item"]}`}>
                         <a className={`${styles["nav-link"]} nav-link`} href="dashboard.html">Explorar</a>
                     </li>
-                    <li className={`${styles["nav-item"]} nav-item`}>
+                    <li className={`${styles["nav-item"]}`}>
                         <a className={`${styles["nav-link"]} nav-link`} href="editPubs.html">Crear</a>
                     </li>
-                    <li className={`${styles["nav-item"]} nav-item`}>
-                        <a href="perfil.html">
+                    <li className={`${styles["nav-item"]}`}>
+                        <Link to="/perfil">
                             <img src="/resources/pfp/lovers.jpeg" alt="PFP" />
-                        </a>
+                        </Link>
                     </li>
                 </ul>
             </nav>
