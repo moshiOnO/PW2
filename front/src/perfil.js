@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-icons/font/bootstrap-icons.css'
 import styles from './paginaWeb/css/perfil.module.css';
 import React, { useState, useEffect } from 'react';
-import Masonry from 'masonry-layout';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ function perfil() {
                         <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
-                        <a className={`${styles["nav-link"]} nav-link`} href="dashboard.html">Explorar</a>
+                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Explorar</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
                         <a className={`${styles["nav-link"]} nav-link`} href="editPubs.html">Crear</a>
@@ -33,12 +33,17 @@ function perfil() {
             </nav>
 
             <div class="container">
-                <div class="row">
+                <div className={`${styles["row"]} row`}>
 
                     {/* <!--Columna para la info personal del usuario--> */}
                     <div class="col-md-3">
+
                         <div id={styles.pfp}>
-                            <img src="../../resources/pfp/itadori rocks.jpeg" alt="PFP" />
+                            <Link id={styles.editButton} to="/editperfil">
+                                <span class="bi bi-wrench"></span>
+                            </Link>
+
+                            <img src="../../resources/pfp/lovers.jpeg" alt="PFP" />
                             <h2> Donnie Balboa</h2>
                             <p> Me gusta la saga de los juegos de Persona :DD</p>
                             <hr class={`${styles["separador"]}`} />
@@ -58,7 +63,16 @@ function perfil() {
                         </div>
 
                         <div id={styles.pfpubs}>
+
                             <div id={styles.pubpfp}>
+
+                                <Link id={styles.editPub} to="/dashboard">
+                                    <span class="bi bi-wrench-adjustable"></span>
+                                </Link>
+                                <button id={styles.removePub}>
+                                    <span class="bi bi-trash"></span>
+                                </button>
+
                                 <img src="../../resources/pubs/Akali.jpeg" alt="" />
                                 <div id={styles.pubpfpT}>
                                     <h4>Título</h4>
@@ -68,6 +82,14 @@ function perfil() {
                             </div>
 
                             <div id={styles.pubpfp}>
+
+                                <Link id={styles.editPub} to="/dashboard">
+                                    <span class="bi bi-wrench-adjustable"></span>
+                                </Link>
+                                <button id={styles.removePub}>
+                                    <span class="bi bi-trash"></span>
+                                </button>
+
                                 <img src="../../resources/pubs/yanfo.jpeg" alt="" />
                                 <div id={styles.pubpfpT}>
                                     <h4>Título</h4>
@@ -77,6 +99,14 @@ function perfil() {
                             </div>
 
                             <div id={styles.pubpfp}>
+
+                                <Link id={styles.editPub} to="/dashboard">
+                                    <span class="bi bi-wrench-adjustable"></span>
+                                </Link>
+                                <button id={styles.removePub}>
+                                    <span class="bi bi-trash"></span>
+                                </button>
+
                                 <img src="../../resources/pubs/DanHeng.jpeg" alt="" />
                                 <div id={styles.pubpfpT}>
                                     <h4>Título</h4>
@@ -86,6 +116,14 @@ function perfil() {
                             </div>
 
                             <div id={styles.pubpfp}>
+
+                                <Link id={styles.editPub} to="/dashboard">
+                                    <span class="bi bi-wrench-adjustable"></span>
+                                </Link>
+                                <button id={styles.removePub}>
+                                    <span class="bi bi-trash"></span>
+                                </button>
+
                                 <img src="../../resources/pubs/ururaka.jpeg" alt="" />
                                 <div id={styles.pubpfpT}>
                                     <h4>Título</h4>

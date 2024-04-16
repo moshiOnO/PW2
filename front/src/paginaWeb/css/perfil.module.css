@@ -40,14 +40,17 @@
     /* Suaviza los bordes del cuadrado */
     font-weight: bold;
 }
-.nav-item img{
+
+.nav-item img {
     max-width: 80px;
     /* Tamaño máximo de la imagen */
-    max-height: 80px;       
-    /* Alinea la imagen a la izquierda */    
+    max-height: 80px;
+    /* Alinea la imagen a la izquierda */
     border-radius: 60%;
     /* Bordes redondeados */
 }
+
+
 
 /* ------------------------------------------------------------ */
 
@@ -55,11 +58,15 @@
 .row {
     margin-top: 6%;
 }
-.separador{
-    border: none; /* Eliminar el borde predeterminado */
-    border-top: 2px solid black; /* Establecer un borde superior de 2px sólido */
-    width: 50%; /* Establecer la anchura de la línea al 50% */
-    margin: 20px auto; 
+
+.separador {
+    border: none;
+    /* Eliminar el borde predeterminado */
+    border-top: 2px solid black;
+    /* Establecer un borde superior de 2px sólido */
+    width: 50%;
+    /* Establecer la anchura de la línea al 50% */
+    margin: 20px auto;
 }
 
 #pfinfo {
@@ -81,7 +88,8 @@
     /* Espacio superior */
     /* Alineación del texto */
     overflow: auto;
-    /* Limpiar el float */
+    position: inherit;
+    position: relative;   
 }
 
 #pubpfp img {
@@ -102,6 +110,30 @@
     margin-top: 30px;
 }
 
+#editPub {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    font-size: 28px;   
+    
+    color:#dee2e6; /* Cambia el color del enlace a negro */
+    text-decoration: none; /* Elimina la subrayado del enlace */
+}
+#removePub {
+    position: absolute;
+    bottom: 0;
+    right: 0;    
+    border: none;
+    background-color: transparent;
+
+    padding: 10px;     
+    font-size: 28px;
+    
+    color:red; /* Cambia el color del enlace a negro */
+    text-decoration: none; /* Elimina la subrayado del enlace */
+}
+
 /* ------------------------------------------------------------ */
 
 /* Personalización de la info del usuario */
@@ -118,6 +150,7 @@
     overflow: auto;
     /* Limpiar el float */
 }
+
 #pfp {
     text-align: center;
     background-color: #E4AF9E;
@@ -128,23 +161,38 @@
     border-radius: 8px;
     /* Bordes redondeados */
     display: inline-block;
-    /* Ajusta el tamaño del fondo al contenido */
+    position: relative;   
 }
+
 #pfp img {
     border-radius: 60%;
     width: 200px;
     height: 200px;
 }
+
 #pfp h2 {
     margin-top: 20px;
     margin-bottom: 40px;
 }
-#featured{
+
+#featured {
     text-align: left;
-    color:bisque;
+    color: bisque;
     font-weight: lighter;
     font-size: 20px;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
+
+#editButton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;  
+    font-size: 20px;   
+    
+    color:#dee2e6; /* Cambia el color del enlace a negro */
+    text-decoration: none; /* Elimina la subrayado del enlace */
+}
+
 
 /* ------------------------------------------------------------ */

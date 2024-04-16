@@ -10,6 +10,7 @@ import Dashboard from './Dashboard';
 import InicioSesion from './is';
 import Perfil from './perfil';
 import Publicacion from './publicacion';
+import Editperfil from './editPerfil';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         <Route path='/dashboard' element={<Dashboard />}></Route>
         <Route path='/perfil' element={<Perfil />}></Route>
         <Route path='/publicacion' element={<Publicacion />}></Route>
+        <Route path='/editperfil' element={<Editperfil />}></Route>
 
       </Routes>
     </BrowserRouter>

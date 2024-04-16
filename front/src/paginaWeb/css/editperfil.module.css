@@ -1,0 +1,143 @@
+/* Personalización de menú------------------------------------ */
+#companyname {
+    font-family: sans-serif;
+    /* Cambiar la fuente a sans-serif */
+    font-weight: bold;
+    font-size: 28px;
+    letter-spacing: 6px;
+}
+#menu {
+    margin-top: 2%;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+#menuElements {
+    margin-left: auto;
+    font-family: system-ui;
+    /* Cambiar la fuente a sans-serif */
+    font-weight: lighter;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+/* Hovers */
+.nav-link {
+    transition: background-color 0.3s;
+    /* Agrega una transición suave */
+    transition: border-color 0.3s;
+    transition: font-weight 0.2s;
+    padding: 5px;
+    /* Añade un espacio entre el texto y el borde */
+    margin-right: 10px;
+}
+.nav-link:hover {
+    background-color: #f0f0f0;
+    /* Cambia el color de fondo al pasar el cursor sobre el enlace */
+    border-radius: 10px;
+    /* Suaviza los bordes del cuadrado */
+    font-weight: bold;
+}
+.nav-item img{
+    max-width: 80px;
+    /* Tamaño máximo de la imagen */
+    max-height: 80px;       
+    /* Alinea la imagen a la izquierda */    
+    border-radius: 60%;
+    /* Bordes redondeados */
+}
+
+
+/* ------------------------------------------------------------ */
+
+/*Personalización general */
+.row {
+    margin-top: 6%;
+}
+#pfinfo {
+    margin-left: 4%;
+     /* Personalización del contenedor */
+     background-color: #E4AF9E;
+     padding: 20px;
+     /* Espaciado interno */
+     border: 1px solid #dee2e6;
+     /* Borde */
+     border-radius: 8px;
+     /* Bordes redondeados */
+     /* Alineación del texto */
+     overflow: auto;
+     /* Limpiar el float */
+}
+/*Personlaización de la foto de perfil*/
+#pfp {
+    position: relative; /* Añadir posición relativa para que el botón pueda tener posición absoluta respecto a este contenedor */
+    width: 380px;
+    height: 380px;
+    overflow: hidden; /* Para recortar la imagen si es más grande */
+    float: left; /* Hacer que el contenedor flote a la izquierda */
+}
+#pfPhoto {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;        
+    border-radius: 50%; /* Hacer los bordes del botón redondeados */
+    border: 5px solid white; /* Agregar un borde blanco de 5 píxeles */
+}
+#pfp button {
+    position: absolute; /* Hacer que el botón tenga posición absoluta para que pueda posicionarse correctamente */
+    bottom: 20px; /* Distancia desde la parte inferior */
+    left: 50%; /* Centrar horizontalmente */
+    transform: translateX(-50%); /* Centrar horizontalmente */
+    display: none; /* Ocultar el botón inicialmente */
+
+    background-color: white; /* Cambiar el color de fondo del botón */
+    border-radius: 10px; /* Hacer los bordes del botón redondeados */
+    border-color: white; /* Cambiar el color del borde del botón */
+    color: #D3BFFF; /* Cambiar el color del texto del botón */
+
+    font-family: 'Roboto', sans-serif; /* Cambiar la fuente del texto del botón */
+}
+#pfp:hover button {
+    display: block; /* Mostrar el botón cuando el mouse está sobre el contenedor */
+}
+/*Personalización de inputs*/
+#pfnick {
+    float: right; /* Hacer que el div flote a la derecha */
+    width: 60%; /* Establecer un ancho para ocupar parte del contenedor padre */
+}
+#pfnick h3 {
+    margin-top: 3%; /* Eliminar el margen superior del texto */
+}
+#inputs {
+    margin-top: 2%;
+    color: #D3BFFF; /* Color del texto */
+    border: none;
+    border-radius: 10px; /* Bordes redondeados */
+    font-size: 20px; /* Tamaño del texto */
+    width: 600px; /* Ancho del campo de entrada */
+    height: 40px; /* Altura del campo de entrada */
+    /* Cambiar el color del borde de enfoque */
+    outline: none; /* Quitar el borde de enfoque por defecto */
+}
+#inputs::placeholder {
+    color: #D3BFFF; /* Color del marcador de posición */
+}
+
+#guardaInfo {
+    position: relative;
+    margin-top: 6%;
+    left: 6%;
+
+    width: 280px; /* Ancho del campo de entrada */
+    height: 100px; /* Altura del campo de entrada */
+    font-size: 25px;
+
+    background-color: white; /* Cambiar el color de fondo del botón */
+    border-radius: 40px; /* Hacer los bordes del botón redondeados */
+    border-color: white; /* Cambiar el color del borde del botón */
+    color: #D3BFFF; /* Cambiar el color del texto del botón */
+
+    font-family: 'Roboto', sans-serif; /* Cambiar la fuente del texto del botón */
+}
+
+

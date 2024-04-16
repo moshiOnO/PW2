@@ -19,7 +19,7 @@ function publicacion() {
                         <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
-                        <a className={`${styles["nav-link"]} nav-link`} href="dashboard.html">Explorar</a>
+                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Explorar</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
                         <a className={`${styles["nav-link"]} nav-link`} href="editPubs.html">Crear</a>
@@ -31,7 +31,7 @@ function publicacion() {
                     </li>
                 </ul>
             </nav>
-
+            
             <div class={`${styles["container"]} container`}>
                 
                 <div class={`${styles["left-column"]} left-column`}>
