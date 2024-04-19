@@ -51,82 +51,85 @@
     </div>
     
     <script>
-       function validateForm() {
-    var name = document.getElementById("name").value;
-    var nickN = document.getElementById("nickN").value;
-    var mail = document.getElementById("mail").value;
-    var pass = document.getElementById("pass").value;
-    var pass2 = document.getElementById("pass2").value;
+        function validateForm() {
+            var name = document.getElementById("name").value;
+            var nickN = document.getElementById("nickN").value;
+            var mail = document.getElementById("mail").value;
+            var pass = document.getElementById("pass").value;
+            var pass2 = document.getElementById("pass2").value;
 
-    var nameError = document.getElementById("nameError");
-    var nickError = document.getElementById("nickError");
-    var mailError = document.getElementById("mailError");
-    var passError = document.getElementById("passError");
-    var pass2Error = document.getElementById("pass2Error");
+            var nameError = document.getElementById("nameError");
+            var nickError = document.getElementById("nickError");
+            var mailError = document.getElementById("mailError");
+            var passError = document.getElementById("passError");
+            var pass2Error = document.getElementById("pass2Error");
 
-    var nameInput = document.getElementById("name");
-    var nickNInput = document.getElementById("nickN");
-    var mailInput = document.getElementById("mail");
-    var passInput = document.getElementById("pass");
-    var pass2Input = document.getElementById("pass2");
+            var nameInput = document.getElementById("name");
+            var nickNInput = document.getElementById("nickN");
+            var mailInput = document.getElementById("mail");
+            var passInput = document.getElementById("pass");
+            var pass2Input = document.getElementById("pass2");
 
-    nameError.textContent = "";
-    nickError.textContent = "";
-    mailError.textContent = "";
-    passError.textContent = "";
-    pass2Error.textContent = "";
+            nameError.textContent = "";
+            nickError.textContent = "";
+            mailError.textContent = "";
+            passError.textContent = "";
+            pass2Error.textContent = "";
 
-    nameInput.classList.remove("input-error");
-    nickNInput.classList.remove("input-error");
-    mailInput.classList.remove("input-error");
-    passInput.classList.remove("input-error");
-    pass2Input.classList.remove("input-error");
+            nameInput.classList.remove("input-error");
+            nickNInput.classList.remove("input-error");
+            mailInput.classList.remove("input-error");
+            passInput.classList.remove("input-error");
+            pass2Input.classList.remove("input-error");
 
-    var isValid = true;
+            var isValid = true;
 
-    if (name.trim() === "") {
-        nameError.textContent = "Por favor, complete este campo.";
-        nameInput.classList.add("input-error");
-        isValid = false;
-    }
+            if (name.trim() === "") {
+                nameError.textContent = "Por favor, complete este campo.";
+                nameInput.classList.add("input-error");
+                isValid = false;
+            }
 
-    if (nickN.trim() === "") {
-        nickError.textContent = "Por favor, complete este campo.";
-        nickNInput.classList.add("input-error");
-        isValid = false;
-    }
+            if (nickN.trim() === "") {
+                nickError.textContent = "Por favor, complete este campo.";
+                nickNInput.classList.add("input-error");
+                isValid = false;
+            }
 
-    if (mail.trim() === "") {
-        mailError.textContent = "Por favor, complete este campo.";
-        mailInput.classList.add("input-error");
-        isValid = false;
-    }
+            if (mail.trim() === "") {
+                mailError.textContent = "Por favor, complete este campo.";
+                mailInput.classList.add("input-error");
+                isValid = false;
+            }
 
-    if (pass.trim() === "") {
-        passError.textContent = "Por favor, complete este campo.";
-        passInput.classList.add("input-error");
-        isValid = false;
-    }
+            if (pass.trim() === "") {
+                passError.textContent = "Por favor, complete este campo.";
+                passInput.classList.add("input-error");
+                isValid = false;
+            } else if (pass.length < 8 || !/[A-Z]/.test(pass) || !/\d/.test(pass)) {
+                passError.textContent = "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.";
+                passInput.classList.add("input-error");
+                isValid = false;
+            }
 
-    if (pass2.trim() === "") {
-        pass2Error.textContent = "Por favor, complete este campo.";
-        pass2Input.classList.add("input-error");
-        isValid = false;
-    }
+            if (pass2.trim() === "") {
+                pass2Error.textContent = "Por favor, complete este campo.";
+                pass2Input.classList.add("input-error");
+                isValid = false;
+            }
 
-    if (pass !== pass2) {
-        pass2Error.textContent = "Las contraseñas no coinciden.";
-        pass2Input.classList.add("input-error");
-        isValid = false;
-    }
+            if (pass !== pass2) {
+                pass2Error.textContent = "Las contraseñas no coinciden.";
+                pass2Input.classList.add("input-error");
+                isValid = false;
+            }
 
-    if (!isValid) {
-        return false;
-    }
+            if (!isValid) {
+                return false;
+            }
 
-    return true;
-}
-
+            return true;
+        }
     </script>
 
 </body>
