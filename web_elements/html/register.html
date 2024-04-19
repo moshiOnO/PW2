@@ -3,60 +3,132 @@
 
 <head>
     <meta charset="UTF-8">
-   
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"> <!--fontawesome-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">  <!--bootstrap--> 
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> <!--bootstrap-->
     <link rel="stylesheet" href="../css/register.css">
-    
-
 
     <title>Deezy</title>
-</head>    
-      
+    <style>
+        .error {
+            color: red;
+            font-size: 0.8em;
+        }
+
+        .input-error {
+            border: 1px solid red;
+        }
+    </style>
+</head>
 
 <body>
     <div class="register-container">
-        <h3 class="text-white" align=center>Registrate!</h3>
-        <form onsubmit="return validateForm()">      
+        <h3 class="text-white" align="center">Registrate!</h3>
+        <form>
             <label for="name">Name:</label><br>
-            <input id="name" type="text" required><br>
-            <label for="nickN">Nickame:</label><br>
-            <input id="nickN" type="text" required><br>
+            <input id="name" type="text" class="input-field">
+            <span id="nameError" class="error"></span><br>
+            
+            <label for="nickN">Nickname:</label><br>
+            <input id="nickN" type="text" class="input-field">
+            <span id="nickError" class="error"></span><br>
+            
             <label for="mail">Mail:</label><br>
-            <input id="mail" type="email" required><br>
+            <input id="mail" type="email" class="input-field">
+            <span id="mailError" class="error"></span><br>
+            
             <label for="pass">Password:</label><br>
-            <input id="pass" type="password" required><br>
+            <input id="pass" type="password" class="input-field">
+            <span id="passError" class="error"></span><br>
+            
             <label for="pass2">Confirm Password:</label><br>
-            <input id="pass2" type="password" required><br>
-            <button type="submit">Crear</button>
-            <p class="text-white">Already have an account? <a href="login.html">Log In</a></p> 
+            <input id="pass2" type="password" class="input-field">
+            <span id="pass2Error" class="error"></span><br>
+    
+            <button type="button" onclick="validateForm()">Crear</button>
+            <p class="text-white">Already have an account? <a href="login.html">Log In</a></p>
         </form>
     </div>
-</body>
+    
+    <script>
+       function validateForm() {
+    var name = document.getElementById("name").value;
+    var nickN = document.getElementById("nickN").value;
+    var mail = document.getElementById("mail").value;
+    var pass = document.getElementById("pass").value;
+    var pass2 = document.getElementById("pass2").value;
 
+    var nameError = document.getElementById("nameError");
+    var nickError = document.getElementById("nickError");
+    var mailError = document.getElementById("mailError");
+    var passError = document.getElementById("passError");
+    var pass2Error = document.getElementById("pass2Error");
 
-<script>
-    function validateForm() {
-        var name = document.getElementById("name").value;
-        var nickN = document.getElementById("nickN").value;
-        var mail = document.getElementById("mail").value;
-        var pass = document.getElementById("pass").value;
-        var pass2 = document.getElementById("pass2").value;
+    var nameInput = document.getElementById("name");
+    var nickNInput = document.getElementById("nickN");
+    var mailInput = document.getElementById("mail");
+    var passInput = document.getElementById("pass");
+    var pass2Input = document.getElementById("pass2");
 
-        if (name == "" || nickN == "" || mail == "" || pass == "" || pass2 == "") {
-            alert("Por favor, complete todos los campos.");
-            return false;
-        }
+    nameError.textContent = "";
+    nickError.textContent = "";
+    mailError.textContent = "";
+    passError.textContent = "";
+    pass2Error.textContent = "";
 
-        if (pass !== pass2) {
-            alert("Las contraseñas no coinciden.");
-            return false;
-        }
+    nameInput.classList.remove("input-error");
+    nickNInput.classList.remove("input-error");
+    mailInput.classList.remove("input-error");
+    passInput.classList.remove("input-error");
+    pass2Input.classList.remove("input-error");
 
-        return true;
+    var isValid = true;
+
+    if (name.trim() === "") {
+        nameError.textContent = "Por favor, complete este campo.";
+        nameInput.classList.add("input-error");
+        isValid = false;
     }
-</script>
+
+    if (nickN.trim() === "") {
+        nickError.textContent = "Por favor, complete este campo.";
+        nickNInput.classList.add("input-error");
+        isValid = false;
+    }
+
+    if (mail.trim() === "") {
+        mailError.textContent = "Por favor, complete este campo.";
+        mailInput.classList.add("input-error");
+        isValid = false;
+    }
+
+    if (pass.trim() === "") {
+        passError.textContent = "Por favor, complete este campo.";
+        passInput.classList.add("input-error");
+        isValid = false;
+    }
+
+    if (pass2.trim() === "") {
+        pass2Error.textContent = "Por favor, complete este campo.";
+        pass2Input.classList.add("input-error");
+        isValid = false;
+    }
+
+    if (pass !== pass2) {
+        pass2Error.textContent = "Las contraseñas no coinciden.";
+        pass2Input.classList.add("input-error");
+        isValid = false;
+    }
+
+    if (!isValid) {
+        return false;
+    }
+
+    return true;
+}
+
+    </script>
+
+</body>
 
 </html>
