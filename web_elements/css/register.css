@@ -12,19 +12,21 @@
 
     }
 
-.register-container {
-    width: 300px; /* Ancho del contenedor del formulario */
-    background-color: rgba(255, 255, 255, 0.13); /* Color de fondo con transparencia */
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 10px; /* Borde redondeado */
-    backdrop-filter: blur(20px); /* Efecto de desenfoque */
-    border: 2px solid rgb(255, 255, 255); /* Borde sólido */
-    box-shadow: 0 0 40px rgba(8, 7, 16, 0.6); /* Sombra */
-    padding: 30px 35px; /* Relleno */
-}
+    .register-container {
+        width: 400px; /* Ancho del contenedor del formulario */
+        background-color: rgba(255, 255, 255, 0.13); /* Color de fondo con transparencia */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 10px; /* Borde redondeado */
+        backdrop-filter: blur(20px); /* Efecto de desenfoque */
+        border: 2px solid rgb(255, 255, 255); /* Borde sólido */
+        box-shadow: 0 0 40px rgba(8, 7, 16, 0.6); /* Sombra */
+        padding: 20px 35px; /* Relleno reducido en altura */
+    }
+    
+    
 
 .register-container input,
 .register-container button {
@@ -46,4 +48,10 @@
     background-color: #2980b9; /* Cambio de color al pasar el cursor sobre el botón */
 }
 
+.error {
+    color: red;
+    font-size: 0.8em;
+    display: block;
+    margin-top: 5px;
+}
 
