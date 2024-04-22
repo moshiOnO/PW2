@@ -32,6 +32,7 @@ function perfil() {
                 </ul>
             </nav>
 
+
             <div class="container">
                 <div className={`${styles["row"]} row`}>
 

@@ -157,10 +157,12 @@
 
 
 /*Comentarios*/
+#username{
+    margin-bottom: 4px;
+}
 #comment {
     margin-bottom: 20px;
 }
-
 #comment img {
     float: left;
     /* Alinea la imagen a la izquierda */
@@ -171,7 +173,6 @@
     /* Establece el ancho máximo al 100% del contenedor */
     height: 70px;
 }
-
 #comment p {
     margin-right: 30px;
     width: 150px;
@@ -179,7 +180,6 @@
     background-color: #f0f0f0;
     border-radius: 20px;
 }
-
 #commentsContainer {
     width: 320px;
     height: 200px;
@@ -191,6 +191,15 @@
     padding: 10px;
     /* Agrega un poco de espacio entre el contenido y el borde */
     margin-bottom: 20px;
+}
+#commentForm button{
+    color: #E4AF9E; /* Establece el color de fondo del texto */
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    border: none;
+}
+#commentError{
+    color: rgb(210, 115, 115);
 }
 
 /*Categorías*/
@@ -252,4 +261,13 @@
     padding: 10px;
     /* Agrega un poco de espacio entre el contenido y el borde */
     margin-bottom: 20px;
+}
+
+#followButton{
+    background-color: #E4AF9E;
+    border-radius: 20px; border: none;
+    padding: 10px;
+    /* Agrega un poco de espacio entre el contenido y el borde */
+    margin-top: 2px;
+    margin-left: 10px;
 }

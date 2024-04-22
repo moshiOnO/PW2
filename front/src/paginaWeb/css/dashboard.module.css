@@ -49,13 +49,17 @@
 }
 
 /* Estilo personalizado para las imágenes */
-.card {
+.card {   
     margin-top: 10px;
     border: none;
     border-radius: 20px;
     margin-bottom: 10px;
     /* Quita el borde */   
     background-color: #E4AF9E;
+}
+/* Estilo específico para los enlaces dentro de los elementos con la clase "card" */
+.card a {
+    text-decoration: none;
 }
 
 .card img {   

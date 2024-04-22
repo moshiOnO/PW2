@@ -14,8 +14,7 @@
         crossorigin="anonymous"></script>
     <!--bootstrap icons-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!--bootstrap icons-->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
 
     <link rel="stylesheet" href="../css/post.css">
 
@@ -86,6 +85,13 @@
                         <p id="dateP">17/2/2020</p>
                     </div>
 
+
+                    <div>
+                        <button id="followButton" class="btn btn-primary">
+                            <span id="followIcon" class="ml-2">&times;</span>
+                        </button>
+                    </div>
+
                 </div>
 
             </div>
@@ -94,19 +100,19 @@
                 <!-- Botón de Likes -->
                 <div id="likesContainer">
                     <button type="button" class="btn btn-like">
-                        <i class="bi bi-heart-fill"></i> <!-- Icono de corazón usando Bootstrap Icons -->                    
+                        <i class="bi bi-heart-fill"></i> <!-- Icono de corazón usando Bootstrap Icons -->
                     </button>
                     <p id="contadorL">50</p>
                 </div>
-                
+
 
                 <!-- Icono de Comentarios -->
                 <div id="comI">
                     <button type="button" class="btn btn-comments">
-                        <i class="bi bi-chat"></i> <!-- Icono de comentario usando Bootstrap Icons -->                    
+                        <i class="bi bi-chat"></i> <!-- Icono de comentario usando Bootstrap Icons -->
                     </button>
                 </div>
-                
+
 
 
             </div>
@@ -117,39 +123,58 @@
                 <p id="descP">Sooooo, quería dbujar una gwen, pero pss no le puse coletas, así que ya es una OC >:DD</p>
 
                 <div id="commentsContainer">
+                    <!-- comentarios -->
                     <div id="commsP">
 
                         <div id="comment">
                             <img src="../../resources/pfp/acshually.jpeg" alt="PFP" />
+                            <p id="username">Mr kitty</p>                            
                             <p>Omgggg i luv it aaaaaaaaa</p>
                             <div style="clear:both;"></div> <!-- Limpiar el float -->
                         </div>
 
                         <div id="comment">
                             <img src="../../resources/pfp/acshually.jpeg" alt="PFP" />
+                            <p id="username">Mr kitty</p>  
                             <p>Omgggg i luv it aaaaaaaaa</p>
                             <div style="clear:both;"></div> <!-- Limpiar el float -->
                         </div>
 
                         <div id="comment">
                             <img src="../../resources/pfp/acshually.jpeg" alt="PFP" />
+                            <p id="username">Mr kitty</p>  
                             <p>Omgggg i luv it aaaaaaaaa</p>
                             <div style="clear:both;"></div> <!-- Limpiar el float -->
                         </div>
 
                         <div id="comment">
                             <img src="../../resources/pfp/acshually.jpeg" alt="PFP" />
+                            <p id="username">Mr kitty</p>  
                             <p>Omgggg i luv it aaaaaaaaa</p>
                             <div style="clear:both;"></div> <!-- Limpiar el float -->
                         </div>
 
                         <div id="comment">
                             <img src="../../resources/pfp/gojo.jpeg" alt="PFP" />
+                            <p id="username">Gojo-Kun</p>
                             <p>HAHAHA, im gonna create a text that's gonna surpass the 20 characters AHAHAHAHAHAH</p>
                             <div style="clear:both;"></div> <!-- Limpiar el float -->
                         </div>
 
                     </div>
+                    <!-- escribir com -->
+                    <form id="commentForm">
+                        <div class="form-group">
+                            <label for="commentText">Agregar comentario:</label>
+                            <!-- Añade una clase al textarea para el texto de error -->
+                            <textarea class="form-control" id="commentText" rows="3"></textarea>
+                            <!-- Agrega un elemento span para mostrar el texto de error -->
+                            <span id="commentError" class="error-text" style="display:none;">Por favor, escribe un
+                                comentario antes de enviar.</span>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar comentario</button>
+                    </form>
+
                 </div>
 
                 <div id="catP">
@@ -212,6 +237,41 @@
         </div>
     </div>
 
+
+    <script>
+        // JavaScript para manejar el evento de clic en el botón de follow
+        document.getElementById('followButton').addEventListener('click', function () {
+            // Obtener el contenido del icono
+            var followIcon = document.getElementById('followIcon').textContent;
+
+            // Cambiar el contenido del botón según el estado de seguimiento
+            if (followIcon.trim() === '✓') {
+                document.getElementById('followIcon').innerHTML = '&times;'; // Unicode para una "x"
+            } else {
+                document.getElementById('followIcon').innerHTML = '&check;'; // Unicode para una paloma (checkmark)
+            }
+
+            // Aquí puedes agregar el código para actualizar la base de datos según el estado de seguimiento
+        });
+
+        // Manejar el envío del formulario
+        document.getElementById('commentForm').addEventListener('submit', function (event) {
+            // Obtener el valor del campo de comentario
+            var commentText = document.getElementById('commentText').value.trim();
+
+            // Verificar si el campo de comentario está vacío
+            if (commentText === '') {
+                // Mostrar el texto de error en rojo
+                document.getElementById('commentError').style.display = 'inline';
+                // Evitar la acción predeterminada del formulario (evitar que la página se actualice)
+                event.preventDefault();
+            } else {
+                // Si el campo no está vacío, ocultar el texto de error
+                document.getElementById('commentError').style.display = 'none';
+            }
+        });
+
+    </script>
 
 
 

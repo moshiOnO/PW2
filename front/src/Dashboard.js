@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 
 function Dashboard() {
-    
+
     useEffect(() => {
         // Selecciona el contenedor de Masonry y crea una nueva instancia de Masonry
         const grid = document.querySelector('.row-cols-md-3');
@@ -53,10 +53,14 @@ function Dashboard() {
 
                     <div class="col">
                         <div className={`${styles.card} card`}>
-                            <img src="./resources/pubs/Gwen uwu.png" class="card-img-top" alt="Imagen 2" />
-                            <div className={`${styles["card-body"]} card-body`}>
-                                <p class="card-title">Gwen uwu</p>
-                            </div>
+
+                            <Link to="/publicacion">
+                                <img src="./resources/pubs/Gwen uwu.png" class="card-img-top" alt="Imagen 2" />
+                                <div className={`${styles["card-body"]} card-body`}>
+                                    <p class="card-title">Gwen uwu</p>
+                                </div>
+                            </Link>
+
                         </div>
                     </div>
 
@@ -64,46 +68,57 @@ function Dashboard() {
 
                     <div class="col">
                         <div className={`${styles.card} card`}>
-                            <img src="./resources/pubs/1083226.jpg" class="card-img-top" alt="Imagen 2" />
-                            <div className={`${styles["card-body"]} card-body`}>
-                                <p class="card-title">Just gettin' fun</p>
-                            </div>
+
+                            <Link to="/publicacion">
+                                <img src="./resources/pubs/1083226.jpg" class="card-img-top" alt="Imagen 2" />
+                                <div className={`${styles["card-body"]} card-body`}>
+                                    <p class="card-title">Just gettin' fun</p>
+                                </div>
+                            </Link>
                         </div>
                     </div>
 
                     <div class="col">
                         <div className={`${styles.card} card`}>
-                            <img src="/resources/pubs/yeh.jpg" class="card-img-top" alt="Imagen 3" />
-                            <div className={`${styles["card-body"]} card-body`}>
-                                <p class="card-title">yeh</p>
-                            </div>
+                            <Link to="/publicacion">
+                                <img src="/resources/pubs/yeh.jpg" class="card-img-top" alt="Imagen 3" />
+                                <div className={`${styles["card-body"]} card-body`}>
+                                    <p class="card-title">yeh</p>
+                                </div>
+                            </Link>
                         </div>
                     </div>
 
                     <div class="col">
                         <div className={`${styles.card} card`}>
-                            <img src="../../resources/pubs/hijodeturepuchamadre.png" class="card-img-top" alt="Imagen 1" />
-                            <div className={`${styles["card-body"]} card-body`}>
-                                <p class="card-title">staaaar⭐</p>
-                            </div>
+                            <Link to="/publicacion">
+                                <img src="../../resources/pubs/hijodeturepuchamadre.png" class="card-img-top" alt="Imagen 1" />
+                                <div className={`${styles["card-body"]} card-body`}>
+                                    <p class="card-title">staaaar⭐</p>
+                                </div>
+                            </Link>
                         </div>
                     </div>
 
                     <div class="col">
                         <div className={`${styles.card} card`}>
-                            <img src="../../resources/pubs/StarRail_Image_1693122087.png" class="card-img-top" alt="Imagen 2" />
-                            <div className={`${styles["card-body"]} card-body`}>
-                                <p class="card-title">march coquette</p>
-                            </div>
+                            <Link to="/publicacion">
+                                <img src="../../resources/pubs/StarRail_Image_1693122087.png" class="card-img-top" alt="Imagen 2" />
+                                <div className={`${styles["card-body"]} card-body`}>
+                                    <p class="card-title">march coquette</p>
+                                </div>
+                            </Link>
                         </div>
                     </div>
 
                     <div class="col">
                         <div className={`${styles.card} card`}>
-                            <img src="../../resources/pubs/1135214.jpg" class="card-img-top" alt="Imagen 3" />
-                            <div className={`${styles["card-body"]} card-body`}>
-                                <p class="card-title">my beauty HU TAOOOOO!</p>
-                            </div>
+                            <Link to="/publicacion">
+                                <img src="../../resources/pubs/1135214.jpg" class="card-img-top" alt="Imagen 3" />
+                                <div className={`${styles["card-body"]} card-body`}>
+                                    <p class="card-title">my beauty HU TAOOOOO!</p>
+                                </div>
+                            </Link>
                         </div>
                     </div>
 
@@ -111,7 +126,7 @@ function Dashboard() {
 
                 </div>
 
-            </div>        
+            </div>
 
 
         </>
