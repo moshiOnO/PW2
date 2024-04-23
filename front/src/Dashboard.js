@@ -36,7 +36,7 @@ function Dashboard() {
                         <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Explorar</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
-                        <a className={`${styles["nav-link"]} nav-link`} href="editPubs.html">Crear</a>
+                        <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
                         <Link to="/perfil">

@@ -10,8 +10,8 @@ function perfil() {
 
     return (
         <>
-            {/* <!-- Menú del apartado superior --> */}
-            <nav id={styles.menu} class="navbar navbar-expand-lg navbar-light">
+             {/* <!-- Menú del apartado superior --> */}
+             <nav id={styles.menu} class="navbar navbar-expand-lg navbar-light">
                 <a id={styles.companyname} class="navbar-brand" href="#">DEEZY</a>
                 <ul id={styles.menuElements} class="navbar-nav">
                     {/* css                 bootstrap */}
@@ -22,7 +22,7 @@ function perfil() {
                         <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Explorar</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
-                        <a className={`${styles["nav-link"]} nav-link`} href="editPubs.html">Crear</a>
+                        <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
                         <Link to="/perfil">
@@ -48,10 +48,12 @@ function perfil() {
                             <h2> Donnie Balboa</h2>
                             <p> Me gusta la saga de los juegos de Persona :DD</p>
                             <hr class={`${styles["separador"]}`} />
-                            <h2>Featured</h2>
+                            <h2>Estadisticas</h2>
                             <div id={styles.featured}>
-                                <p>Título</p>
-                                <p>Título</p>
+                                <Link to="/stats">Publicaciones/Likes</Link>
+                                <Link to="/stats">Publicaciones/Visualización</Link>
+                                <Link to="/stats">Interacciones/Semanales</Link>
+                                <Link to="/stats">Seguidores/Mensuales</Link>
                             </div>
                         </div>
                     </div>
@@ -67,7 +69,7 @@ function perfil() {
 
                             <div id={styles.pubpfp}>
 
-                                <Link id={styles.editPub} to="/dashboard">
+                                <Link id={styles.editPub} to="/editpost">
                                     <span class="bi bi-wrench-adjustable"></span>
                                 </Link>
                                 <button id={styles.removePub}>
@@ -84,7 +86,7 @@ function perfil() {
 
                             <div id={styles.pubpfp}>
 
-                                <Link id={styles.editPub} to="/dashboard">
+                                <Link id={styles.editPub} to="/editpost">
                                     <span class="bi bi-wrench-adjustable"></span>
                                 </Link>
                                 <button id={styles.removePub}>
@@ -101,7 +103,7 @@ function perfil() {
 
                             <div id={styles.pubpfp}>
 
-                                <Link id={styles.editPub} to="/dashboard">
+                                <Link id={styles.editPub} to="/editpost">
                                     <span class="bi bi-wrench-adjustable"></span>
                                 </Link>
                                 <button id={styles.removePub}>
@@ -118,7 +120,7 @@ function perfil() {
 
                             <div id={styles.pubpfp}>
 
-                                <Link id={styles.editPub} to="/dashboard">
+                                <Link id={styles.editPub} to="/editpost">
                                     <span class="bi bi-wrench-adjustable"></span>
                                 </Link>
                                 <button id={styles.removePub}>

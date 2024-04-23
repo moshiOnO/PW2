@@ -175,12 +175,18 @@
     margin-bottom: 40px;
 }
 
-#featured {
+#featured,
+#featured a {
     text-align: left;
     color: bisque;
     font-weight: lighter;
     font-size: 20px;
     font-family: Georgia, 'Times New Roman', Times, serif;
+}
+#featured a {
+    display: block;
+    margin-bottom: 10px; /* Opcional: puedes ajustar el margen entre cada enlace según tu preferencia */
+    text-decoration: none;
 }
 
 #editButton {

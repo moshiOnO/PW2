@@ -32,8 +32,8 @@ function Editperfil() {
 
     return (
         <>
-           {/* <!-- Menú del apartado superior --> */}
-           <nav id={styles.menu} class="navbar navbar-expand-lg navbar-light">
+            {/* <!-- Menú del apartado superior --> */}
+            <nav id={styles.menu} class="navbar navbar-expand-lg navbar-light">
                 <a id={styles.companyname} class="navbar-brand" href="#">DEEZY</a>
                 <ul id={styles.menuElements} class="navbar-nav">
                     {/* css                 bootstrap */}
@@ -44,7 +44,7 @@ function Editperfil() {
                         <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Explorar</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
-                        <a className={`${styles["nav-link"]} nav-link`} href="editPubs.html">Crear</a>
+                        <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
                         <Link to="/perfil">
