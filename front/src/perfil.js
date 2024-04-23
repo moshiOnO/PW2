@@ -1,11 +1,46 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'
+import Swal from 'sweetalert2';
 import styles from './paginaWeb/css/perfil.module.css';
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-function perfil() {
+const Perfil = () => {
+
+    const nav = useNavigate()
+    
+    const mostrarVentanaConfirmacion = () => {
+        Swal.fire({
+          title: '¿Estás seguro?',
+          text: 'Se borrará la información de forma permanente.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#E4AF9E',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, borrar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Aquí puedes ejecutar la lógica para borrar la información
+            console.log('Borrando información...');
+            //Alerta               
+            Swal.fire({
+                title: 'Tu post se borró con éxito',
+                text: '<3',
+                icon: 'success',
+                confirmButtonText: 'Yeiiiiii :DD',
+                confirmButtonColor: '#E4AF9E'}
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirigir al usuario a la página 
+                    nav("/perfil");                    
+                }
+            });
+          }
+        });
+      };
+      
 
 
     return (
@@ -72,7 +107,8 @@ function perfil() {
                                 <Link id={styles.editPub} to="/editpost">
                                     <span class="bi bi-wrench-adjustable"></span>
                                 </Link>
-                                <button id={styles.removePub}>
+
+                                <button id={styles.removePub} onClick={mostrarVentanaConfirmacion}>
                                     <span class="bi bi-trash"></span>
                                 </button>
 
@@ -89,7 +125,7 @@ function perfil() {
                                 <Link id={styles.editPub} to="/editpost">
                                     <span class="bi bi-wrench-adjustable"></span>
                                 </Link>
-                                <button id={styles.removePub}>
+                                <button id={styles.removePub} onClick={mostrarVentanaConfirmacion}>
                                     <span class="bi bi-trash"></span>
                                 </button>
 
@@ -106,7 +142,7 @@ function perfil() {
                                 <Link id={styles.editPub} to="/editpost">
                                     <span class="bi bi-wrench-adjustable"></span>
                                 </Link>
-                                <button id={styles.removePub}>
+                                <button id={styles.removePub} onClick={mostrarVentanaConfirmacion}>
                                     <span class="bi bi-trash"></span>
                                 </button>
 
@@ -123,7 +159,7 @@ function perfil() {
                                 <Link id={styles.editPub} to="/editpost">
                                     <span class="bi bi-wrench-adjustable"></span>
                                 </Link>
-                                <button id={styles.removePub}>
+                                <button id={styles.removePub} onClick={mostrarVentanaConfirmacion}>
                                     <span class="bi bi-trash"></span>
                                 </button>
 
@@ -151,4 +187,4 @@ function perfil() {
     );
 }
 
-export default perfil
+export default Perfil
