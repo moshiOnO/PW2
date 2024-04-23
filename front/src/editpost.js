@@ -1,17 +1,18 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.bundle.js'
+import Swal from 'sweetalert2';
 import styles from './paginaWeb/css/createpost.module.css';
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Editpost() {
-
+    const nav = useNavigate()
     useEffect(() => {
         const handleFileChange = (event) => {
             const carouselInner = document.getElementById('carouselInner');
             carouselInner.innerHTML = ''; // Limpiar el contenido anterior del carrusel
-    
+
             const files = event.target.files;
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
@@ -25,12 +26,12 @@ function Editpost() {
                 reader.readAsDataURL(file);
             }
         };
-    
+
         const botonSubirFoto = document.getElementById('BotonSubirFoto');
         if (botonSubirFoto) {
             botonSubirFoto.addEventListener('change', handleFileChange);
         }
-    
+
         return () => {
             if (botonSubirFoto) {
                 botonSubirFoto.removeEventListener('change', handleFileChange);
@@ -76,17 +77,30 @@ function Editpost() {
 
             return false;
         } else {
+            /*
             // Limpiar los mensajes de error si los campos están validados
-            document.getElementById("titleError").textContent = "";
-            document.getElementById("descError").textContent = "";
-            document.getElementById("catError").textContent = "";
-
-            // Restablecer los valores de los campos
-            document.getElementById("titleP").value = "";
-            document.getElementById("descP").value = "";
-
+            // document.getElementById("titleError").textContent = "";
+            // document.getElementById("descError").textContent = "";
+            // document.getElementById("catError").textContent = "";
+            // // Restablecer los valores de los campos
+            // document.getElementById("titleP").value = "";
+            // document.getElementById("descP").value = "";
             // No necesitas recargar la página en React
             // window.location.reload();
+            */
+            //Lógica de subir datos al server
+            Swal.fire({
+                title: 'Tu publicación se creó con éxito',
+                text: '<3',
+                icon: 'success',
+                confirmButtonText: 'Yeiiiiii :DD'
+            } // Aquí cambia el texto del botón de confirmación
+            ).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirigir al usuario a la página "/dashboard"
+                    nav("/dashboard");
+                }
+            });
 
             return true;
         }
@@ -128,7 +142,7 @@ function Editpost() {
                             </div>
                         </div>
                         <label htmlFor="BotonSubirFoto" className={`${styles.customfileupload} custom-file-upload`}>Subir foto</label>
-                        <input type="file" accept="image/*" id="BotonSubirFoto" style={{ marginTop: '10px' }} hidden/>
+                        <input type="file" accept="image/*" id="BotonSubirFoto" style={{ marginTop: '10px' }} hidden />
                     </div>
 
                     {/* <!-- Información del post --> */}
@@ -138,7 +152,7 @@ function Editpost() {
                         <span id="titleError" className={`${styles.error} error-message`}></span>
                         <br />
                         <input type="text" id="descP" className={`${styles.descP} error-message`} placeholder="Nueva Descripción" style={{ marginBottom: '10px' }} />
-                        
+
                         <span id="descError" className={`${styles.error} error-message`}></span>
                         <br />
 

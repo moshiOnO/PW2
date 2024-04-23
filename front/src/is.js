@@ -13,7 +13,7 @@ const InicioSesion = () => {
     const nav = useNavigate()
 
 
-    //Función para agregar los datos al back
+    //Función para obtener los datos del back
     const handleSubmit = async (e) => {
         e.preventDefault();
         //console.log(user);

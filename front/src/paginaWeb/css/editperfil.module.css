@@ -122,11 +122,10 @@
 #inputs::placeholder {
     color: #D3BFFF; /* Color del marcador de posición */
 }
-
 #guardaInfo {
     position: relative;
     margin-top: 6%;
-    left: 6%;
+    margin-left: 6%;
 
     width: 280px; /* Ancho del campo de entrada */
     height: 100px; /* Altura del campo de entrada */
@@ -138,6 +137,22 @@
     color: #D3BFFF; /* Cambiar el color del texto del botón */
 
     font-family: 'Roboto', sans-serif; /* Cambiar la fuente del texto del botón */
+}
+#guardaInfo:focus:not(:focus-visible) {
+    outline: 0;
+}
+
+#guardaInfo:focus-visible {
+    outline: 0px solid transparent; /* Contorno transparente */
+}
+
+/*Errores*/
+.error {
+    position: absolute;
+    display: block; /* Mostrar los mensajes de error cuando están activos */
+    color: red;
+    font-size: 14px; /* Reducir el tamaño del texto */
+    
 }
 
 
