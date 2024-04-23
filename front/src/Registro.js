@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import styles from './paginaWeb/css/register.module.css';
+import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Axios from 'axios';
@@ -78,8 +79,6 @@ const Registro = () => {
       return;
     }
 
-
-
     try {
       const response = await Axios.post('http://localhost:3001/create', {
         usuario: name,
@@ -87,15 +86,25 @@ const Registro = () => {
         contra: pass
       });
       console.log(response.data);
-      //  redirigir a la página de inicio de sesión 
-      // Establecer el estado para redirigir      
-      alert('Usuario Registrado:D');
-      nav("/dashboard");
+      //Alerta               
+      Swal.fire(
+        'Bienvenido a DEEZY ' + name + '!',
+        'Gracias por unirte a deezy<3',
+        'success'
+      ).then((result) => {
+        if (result.isConfirmed) {
+          // Redirigir al usuario a la página "/dashboard"
+          nav("/dashboard");
+        }
+      });
 
 
     } catch (error) {
       console.error(error);
-      alert('Error al registrar el usuario');
+      Swal.fire('Error al registrar el usuario',
+        ':C',
+        'error'
+      );
     }
 
 
@@ -154,10 +163,8 @@ const Registro = () => {
 
       <style>{`
      body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      /* Eliminamos display:flex y align-items/justify-content */
+      /* Ajustamos el margin a 0 */
       margin: 0;
       background-color: #3ea0ca; /* Color de fondo */
       background-image: url('../../resources/Illustrations/Register.jpg');
@@ -166,6 +173,22 @@ const Registro = () => {
       background-size: cover;
 
   }
+
+  /* Establecemos un z-index alto para asegurarnos de que la imagen de fondo esté detrás de otras capas */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background-color: #3ea0ca; /* Color de fondo */
+        background-image: url('../../resources/Illustrations/Register.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
     `}</style>
 
     </>
