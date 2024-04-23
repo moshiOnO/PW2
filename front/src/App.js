@@ -11,6 +11,8 @@ import InicioSesion from './is';
 import Perfil from './perfil';
 import Publicacion from './publicacion';
 import Editperfil from './editPerfil';
+import Stats from './stats';
+import Editpost from './editpost';
 
 function App() {
 
@@ -24,6 +26,8 @@ function App() {
         <Route path='/perfil' element={<Perfil />}></Route>
         <Route path='/publicacion' element={<Publicacion />}></Route>
         <Route path='/editperfil' element={<Editperfil />}></Route>
+        <Route path='/stats' element={<Stats />}></Route>
+        <Route path='/editpost' element={<Editpost />}></Route>
 
       </Routes>
     </BrowserRouter>

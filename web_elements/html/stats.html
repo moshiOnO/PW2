@@ -19,31 +19,15 @@
 
   <!-- Estilos CSS para Masonry layout y fuente Arial -->
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      padding: 20px;
-      /* Espaciado alrededor del cuerpo */
-    }
-
-    .grid {
-      column-gap: 20px;
-      margin: 20px;
-    }
-
-    .grid-item {
-      width: 100%;
-      margin-bottom: 20px;
-      background-color: rgb(120, 120, 120);
-      /* Fondo gris claro */
-      color: white;
-      /* Texto blanco */
-      padding: 20px;
-      /* Espaciado interior */
+    #chart-container {
+      border: 5px solid rgb(238, 174, 153);
+      /* Melon color */
       border-radius: 5px;
-      /* Bordes redondeados */
-      text-align: center;
-      /* Centrar texto */
-    }
+      /* Rounded corners */
+      background-color: rgb(238, 174, 153);
+      padding: 200px;
+    }    
+    
   </style>
 </head>
 
@@ -54,81 +38,74 @@
     <a id="companyname" class="navbar-brand" href="#">DEEZY</a>
     <ul id="menuElements" class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" href="dashboard.html">Inicio</a>
+        <a class="nav-link" href="#">Inicio</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="dashboard.html">Explorar</a>
+        <a class="nav-link" href="#">Explorar</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="editPubs.html">Crear</a>
-      </li>
-      <li class="nav-item">
-        <a href="perfil.html">
-          <img src="../../resources/pfp/lovers.jpeg" alt="PFP">
-        </a>
+        <a class="nav-link" href="#">Crear</a>
       </li>
     </ul>
   </nav>
-
-  <!-- Contenedor para el gráfico de interacciones de perfil -->
-  <div class="grid-item">
-    <h2>Interacciones de Perfil</h2>
-    <canvas id="profileInteractionsChart" width="400" height="200"></canvas>
-    <img src="../../resources/images.png" class="card-img-top" alt="Imagen 1">
-  </div>
-
-  <!-- Contenedor para el gráfico de interacciones de publicaciones -->
-  <div class="grid-item">
-    <h2>Interacciones de Publicaciones</h2>
-    <canvas id="postInteractionsChart" width="400" height="200"></canvas>
-    <img src="../../resources/images.png" class="card-img-top" alt="Imagen 2">
+  <br>
+  <br>
+  <div class="container">
+    <h2>Datos de publicaciones</h2>
+    <br>
+    <div id="chart-container">
+      <canvas id="myChart"></canvas>
+    </div>
   </div>
 
 
 
-  <!-- Script para inicializar los gráficos y Masonry layout -->
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <script>
-    // Datos de ejemplo para los gráficos
-    var profileData = {
-      labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo"],
-      datasets: [{
-        label: 'Interacciones',
-        data: [10, 20, 15, 25, 30],
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1
-      }]
-    };
+    const ctx = document.getElementById('myChart');
 
-    var postData = {
-      labels: ["Post 1", "Post 2", "Post 3", "Post 4", "Post 5"],
-      datasets: [{
-        label: 'Interacciones',
-        data: [5, 15, 10, 20, 25],
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1
-      }]
-    };
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
+        datasets: [{
+          label: 'Visualizaciones',
+          data: [12, 19, 3, 5, 2, 3, 4],
+          borderWidth: 1,
+          backgroundColor: "RGBA(0,0,0,0.5)" // Negro menos 
+        },
+        {
+          label: 'Interacciones',
+          data: [5, 15, 7, 10, 2, 8, 6], // Tus nuevos datos
+          borderWidth: 1,
+          backgroundColor: "RGBA(0,255,0,0.5)" // Verde menos 
+        },
 
-    // Configuración de Masonry layout
-    var postGrid = new Masonry('.grid', {
-      itemSelector: '.grid-item',
-      columnWidth: '.grid-sizer',
-      percentPosition: true
-    });
+        {
+          label: 'Me gusta',
+          data: [6, 12, 5, 7, 3, 4, 9], // Tus nuevos datos
+          borderWidth: 1,
+          backgroundColor: "RGBA(255,0,0,0.5)" // Verde menos 
+        },
 
-    // Inicialización de gráficos
-    var profileInteractionsChart = new Chart(document.getElementById('profileInteractionsChart').getContext('2d'), {
-      type: 'bar',
-      data: profileData
-    });
-
-    var postInteractionsChart = new Chart(document.getElementById('postInteractionsChart').getContext('2d'), {
-      type: 'bar',
-      data: postData
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
     });
   </script>
+  <br>
+
+
+
+
 </body>
 
 </html>

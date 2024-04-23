@@ -65,8 +65,23 @@ function Publicacion() {
                             <div className={`${styles["carousel-inner"]} carousel-inner`}>
                                 <div className={`${styles["carousel-item"]} carousel-item active`}>
                                     <img className="d-block w-100" src="../../resources/pubs/Gwen uwu.png" alt="Primera imagen" />
-                                </div>                               
-                            </div>                           
+                                </div>
+                                <div className={`${styles["carousel-item"]} carousel-item`}>
+                                    <img className="d-block w-100" src="../../resources/pubs/DanHeng.jpeg" alt="Segunda imagen" />
+                                </div>
+                                <div className={`${styles["carousel-item"]} carousel-item`}>
+                                    <img className="d-block w-100" src="../../resources/pubs/StarRail_Image_1693122087.png" alt="Tercer imagen" />
+                                </div>
+                            </div>
+
+                            <button className={`${styles["carousel-control-prev"]} carousel-control-prev`} type="button" data-bs-target={`#${styles.carouselExample}`} data-bs-slide="prev">
+                                <span className={`${styles["carousel-control-prev-icon"]} carousel-control-prev-icon`} aria-hidden="true"></span>
+                                <span className={`${styles["visually-hidden"]} visually-hidden`}>Previous</span>
+                            </button>
+                            <button className={`${styles["carousel-control-next"]} carousel-control-next`} type="button" data-bs-target={`#${styles.carouselExample}`} data-bs-slide="next">
+                                <span className={`${styles["carousel-control-next-icon"]} carousel-control-next-icon`} aria-hidden="true"></span>
+                                <span className={`${styles["visually-hidden"]} visually-hidden`}>Next</span>
+                            </button>
 
                         </div>
 

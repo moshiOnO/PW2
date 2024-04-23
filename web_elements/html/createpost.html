@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- bootstrap.css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!--bootstrap js-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <!--bootstrap icons-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="../css/createpost.css">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <!-- Menú del apartado superior -->
+    <nav id="menu" class="navbar navbar-expand-lg navbar-light">
+        <a id="companyname" class="navbar-brand" href="#">DEEZY</a>
+        <ul id="menuElements" class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">Inicio</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">Explorar</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="editPubs.html">Crear</a>
+            </li>
+            <li class="nav-item">
+                <a href="perfil.html">
+                    <img src="../../resources/pfp/lovers.jpeg" alt="PFP">
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Post -->
+    <div class="container">
+        <div class="row">
+
+            <!-- Fotos -->
+            <div class="col-md-4">
+                <!-- Dibujos y el autor -->
+                <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner" id="carouselInner">
+                        <!-- Aquí se agregarán dinámicamente las imágenes seleccionadas -->
+                    </div>
+                </div>
+
+                <!-- Botón personalizado para subir foto -->
+                <label for="BotonSubirFoto" class="custom-file-upload">Subir foto</label>
+                <input type="file" accept="image/*" id="BotonSubirFoto" style="margin-top: 10px;">
+
+            </div>
+
+            <!-- Información del post -->
+            <div id="postInfo" class="col-md-8">
+                <input type="text" id="titleP" placeholder="Nuevo Título" style="margin-bottom: 10px;">
+                <span id="titleError" class="error-message"></span>
+                <br>
+                <input type="text" id="descP" placeholder="Nueva Descripción" style="margin-bottom: 10px;">
+                <span id="descError" class="error-message"></span>
+                <br>
+
+                <div id="catP" class="col-md-8" style="margin-bottom: 10px;">
+                    
+                    <div class="form-check form-check-inline categoria">
+                        <input class="form-check-input" type="checkbox" value="" id="animeCheck" style="display: none;">
+                        <label class="form-check-label checkbox-label" for="animeCheck">Anime</label>
+                    </div>
+                    <div class="form-check form-check-inline categoria">
+                        <input class="form-check-input" type="checkbox" value="" id="drawingCheck" style="display: none;">
+                        <label class="form-check-label checkbox-label" for="drawingCheck">Drawing</label>
+                    </div>
+                    <div class="form-check form-check-inline categoria">
+                        <input class="form-check-input" type="checkbox" value="" id="ocCheck" style="display: none;">
+                        <label class="form-check-label checkbox-label" for="ocCheck">OC</label>
+                    </div>
+                    <span id="catError" class="error-message"></span>                    
+
+                </div>
+                
+
+                <!-- Botón personalizado para postear -->
+                <button id="BotonPostear" onclick="validarPosteo()" style="margin-top: 10px;">Postear</button>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('BotonSubirFoto').addEventListener('change', function (event) {
+            var carouselInner = document.getElementById('carouselInner');
+            carouselInner.innerHTML = ''; // Limpiar el contenido anterior del carrusel
+
+            var files = event.target.files;
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'd-block w-100 carousel-item';
+                    carouselInner.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        // Función para validar el título y la descripción antes de postear
+        function validarPosteo() {
+        var titulo = document.getElementById("titleP").value.trim();
+        var desc = document.getElementById("descP").value.trim();
+        var categorias = document.querySelectorAll(".categoria input[type='checkbox']"); // Selecciona todos los elementos de categoría
+
+        var tituloValido = titulo.length > 0;
+        var descValida = desc.length > 0;
+        var alMenosUnaCategoriaSeleccionada = false;
+
+        // Verifica si al menos una categoría ha sido seleccionada
+        categorias.forEach(function(categoria) {
+            if (categoria.checked) {
+                alMenosUnaCategoriaSeleccionada = true;
+            }
+        });
+
+        if (!tituloValido || !descValida || !alMenosUnaCategoriaSeleccionada) {
+            if (!tituloValido) {
+                document.getElementById("titleError").textContent = "El título es requerido.";
+            } else {
+                document.getElementById("titleError").textContent = "";
+            }
+
+            if (!descValida) {
+                document.getElementById("descError").textContent = "La descripción es requerida.";
+            } else {
+                document.getElementById("descError").textContent = "";
+            }
+
+            if (!alMenosUnaCategoriaSeleccionada) {
+                document.getElementById("catError").textContent = "Debes seleccionar al menos una categoría.";
+            } else {
+                document.getElementById("catError").textContent = "";
+            }
+
+            return false;
+        } else {
+            // Limpiar los mensajes de error si los campos están validados
+            document.getElementById("titleError").textContent = "";
+            document.getElementById("descError").textContent = "";
+            document.getElementById("catError").textContent = "";
+
+            // Restablecer los valores de los campos
+            document.getElementById("titleP").value = "";
+            document.getElementById("descP").value = "";
+
+            window.location.reload()
+
+            return true;
+        }
+    }
+
+
+    </script>
+</body>
+
+</html>

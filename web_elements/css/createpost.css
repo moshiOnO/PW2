@@ -1,0 +1,288 @@
+ /* Personalización de menú------------------------------------ */
+ #companyname {
+    font-family: sans-serif;
+    /* Cambiar la fuente a sans-serif */
+    font-weight: bold;
+    font-size: 28px;
+    letter-spacing: 6px;
+}
+
+#menu {
+    margin-top: 2%;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+#menuElements {
+    margin-left: auto;
+    font-family: system-ui;
+    /* Cambiar la fuente a sans-serif */
+    font-weight: lighter;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+/* Hovers */
+.nav-link {
+    transition: background-color 0.3s, border-color 0.3s, font-weight 0.2s;
+    padding: 5px;
+    /* Añade un espacio entre el texto y el borde */
+    margin-right: 10px;
+}
+
+.nav-link:hover {
+    background-color: #f0f0f0;
+    /* Cambia el color de fondo al pasar el cursor sobre el enlace */
+    border-radius: 10px;
+    /* Suaviza los bordes del cuadrado */
+    font-weight: bold;
+}
+
+.nav-item img {
+    max-width: 80px;
+    /* Tamaño máximo de la imagen */
+    max-height: 80px;
+    /* Alinea la imagen a la izquierda */
+    border-radius: 60%;
+    /* Bordes redondeados */
+}
+
+
+/* ------------------------------------------------------------ */
+.row {
+    margin-top: 6%;
+}
+
+/* Personalización de la publi------------------------------------ */
+
+/* General de la info de la publi */
+#postInfo {
+    text-align: center;
+}
+
+#postInfo * {
+    margin: 0 auto;
+    /* Esto centrará horizontalmente cualquier elemento dentro de #postInfo */
+}
+
+/* Cosos Generales */
+#titleP,
+#descP,
+#catP,
+#BotonPostear {
+    font-weight: bold;
+    background-color: #E4AF9E;
+    border-radius: 20px;
+    padding: 10px;
+    /* Agrega un poco de espacio entre el contenido y el borde */
+    margin-bottom: 28px;
+}
+.checkbox-label {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background-color: #E4AF9E;
+    color: white;
+    cursor: pointer;
+}
+
+.checkbox-label:hover {
+    background-color: #D4937B;
+}
+
+.checkbox-label.selected {
+    background-color: #BD7E6A;
+}
+
+#titleP {
+    margin-bottom: 50px;
+}
+
+#descP {
+    height: 200px;
+    overflow-y: auto;
+    padding: 50px;
+}
+
+/* Dibujos */
+#carouselExample .carousel-item img {
+    max-height: 580px;
+    /* Establece la altura máxima deseada */
+    width: auto;
+    /* Permite que el ancho se ajuste automáticamente para mantener la proporción de la imagen */
+    object-fit: contain;
+    /* Hace que la imagen se ajuste para mantener su aspecto sin recortar */
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: #E4AF9E;
+    /* Cambia el color de fondo de las flechas */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    color: #ffffff;
+    /* Cambia el color del icono de las flechas */
+}
+
+/* Likes */
+
+#contadorL {
+    margin-top: 10px;
+    margin-bottom: 180px;
+    margin-left: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#likesContainer,
+#comI {
+    background-color: transparent;
+    border: none;
+}
+
+#likesContainer i,
+#comI i {
+    font-size: 40px;
+    color: pink;
+}
+
+#likesContainer i:hover,
+#comI i:hover {
+    color: hotpink;
+    /* Cambia el color del icono cuando el cursor está encima */
+}
+
+
+/* Info de autors */
+#autorInfo img {
+    margin-right: 20px;
+    height: 60px;
+    width: auto;
+    border-radius: 50%;
+}
+
+#autorInfo {
+    margin-top: 20px;
+    display: flex;
+    /* Utiliza flexbox para colocar elementos en la misma fila */
+    align-items: center;
+    /* Centra verticalmente los elementos */
+}
+
+#addInfo {
+    background-color: #E4AF9E;
+    /* Establece el color de fondo del texto */
+    padding: 5px;
+    /* Añade un espacio alrededor del texto */
+    margin-left: 10px;
+    /* Añade un margen a la izquierda para separar el texto de la imagen */
+    border-radius: 20px;
+    /* Agrega esquinas redondeadas al contenedor del texto */
+    display: flex;
+    /* Utiliza flexbox para colocar elementos en la misma fila */
+    align-items: center;
+    /* Centra verticalmente los elementos */
+}
+
+
+/* Comentarios */
+#comment {
+    margin-bottom: 20px;
+}
+
+#comment img {
+    float: left;
+    /* Alinea la imagen a la izquierda */
+    margin-right: 10px;
+}
+
+#comment p {
+    margin-right: 30px;
+    width: 150px;
+    height: auto;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+}
+
+#commentsContainer {
+    width: 320px;
+    height: 200px;
+    overflow-y: auto;
+    /* Barra de desplazamiento vertical */
+
+    background-color: #E4AF9E;
+    border-radius: 20px;
+    padding: 10px;
+    /* Agrega un poco de espacio entre el contenido y el borde */
+    margin-bottom: 20px;
+}
+
+/* Categorías */
+#catP {
+    padding: 20px;
+    /* Espacio alrededor del contenido */
+}
+
+#catP p {
+    margin: 5px;
+    border-radius: 20px;
+    display: inline-block;
+    background-color: #f0f0f0;
+    font-size: 20px;
+    padding: 10px;
+    /* Añade un poco de espacio entre el texto y el borde */
+}
+
+/* Estilo para el botón de archivo personalizado */
+#BotonSubirFoto {
+    display: none; /* Oculta el botón real */
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #E4AF9E;
+    color: #fff;
+    border-radius: 20px;
+}
+
+.custom-file-upload:hover {
+    background-color: #D58C7D;
+}
+
+.form-check-input:checked+.form-check-label {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para el botón de postear */
+.custom-file-upload {
+    display: inline-block;
+    background-color: #E4AF9E;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Estilo para el botón de postear al estar en hover */
+.custom-file-upload:hover {
+    background-color: #D4937B;
+}
+
+/* Estilo para mostrar error */
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Estilo para el contenedor de categorías */
+#catP {
+    max-width: 250px;
+}

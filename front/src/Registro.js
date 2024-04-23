@@ -4,25 +4,81 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Axios from 'axios';
 
-const Registro = () => {
+function validationCampos(name, nickN, mail, pass, pass2, setNameError, setNickError, setMailError, setPassError, setPass2Error) {
+  let isValid = true;
 
+  // Perform validation
+  if (name.trim() === '') {
+    setNameError('Por favor, complete este campo.');
+    isValid = false;
+  }
+  if (nickN.trim() === "") {
+    setNickError('Por favor, complete este campo.');
+    isValid = false;
+  }
+  if (mail.trim() === "") {
+    setMailError('Por favor, complete este campo.');
+    isValid = false;
+  }
+  if (pass.trim() === "") {
+    setPassError('Por favor, complete este campo.');
+    isValid = false;
+
+  } else if (pass.length < 8 || !/[A-Z]/.test(pass) || !/\d/.test(pass)) {
+    setPassError('La contraseña debe tener al menos 8 caracteres, una mayúscula y un número. ');
+    isValid = false;
+  }
+  if (pass2.trim() === "") {
+    setPass2Error('Por favor, complete este campo.');
+    isValid = false;
+  }
+  if (pass !== pass2) {
+    setPass2Error('Las contraseñas no coinciden.');
+    isValid = false;
+  }
+
+  if (isValid === true) {
+    return true
+  }
+  else {
+    return false
+  }
+
+}
+
+const Registro = () => {
   const [name, setName] = useState('');
   const [nickN, setNickN] = useState('');
   const [mail, setMail] = useState('');
   const [pass, setPass] = useState('');
   const [pass2, setPass2] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [nickError, setNickError] = useState('');
+  const [mailError, setMailError] = useState('');
+  const [passError, setPassError] = useState('');
+  const [pass2Error, setPass2Error] = useState('');
 
-  const nav = useNavigate()
+  const nav = useNavigate();
 
-
-  //Función para agregar los datos al back
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (pass !== pass2) {
-      alert('Las contraseñas no coinciden.');
+    // Reset errors
+    setNameError('');
+    setNickError('');
+    setMailError('');
+    setPassError('');
+    setPass2Error('');
+
+    // Validar campos
+    const isValid = validationCampos(name, nickN, mail, pass, pass2, setNameError, setNickError, setMailError, setPassError, setPass2Error);
+
+    if (!isValid) {
+      // Si la validación no pasa, no continúes con el envío del formulario
       return;
     }
+
+
 
     try {
       const response = await Axios.post('http://localhost:3001/create', {
@@ -43,29 +99,56 @@ const Registro = () => {
     }
 
 
-  };
 
+
+
+  };
 
   return (
     <>
 
       <div className={styles["register-container"]}>
         <h3 className="text-white" align="center">Registrate!</h3>
+
         <form onSubmit={handleSubmit}>
+
           <label htmlFor="name">Name:</label><br />
-          <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} required /><br />
+          <input id="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <span id="nameError" className={`${styles.error} error`}>{nameError}</span>
+          <br />
+
+
+
           <label htmlFor="nickN">Nickame:</label><br />
-          <input id="nickN" type="text" value={nickN} onChange={(e) => setNickN(e.target.value)} required /><br />
+          <input id="nickN" type="text" value={nickN} onChange={(e) => setNickN(e.target.value)} />
+          <span id="nickError" className={`${styles.error} error`}>{nickError}</span>
+          <br />
+
+
           <label htmlFor="mail">Mail:</label><br />
-          <input id="mail" type="email" value={mail} onChange={(e) => setMail(e.target.value)} required /><br />
+          <input id="mail" type="email" value={mail} onChange={(e) => setMail(e.target.value)} />
+          <span id="mailError" className={`${styles.error} error`}>{mailError}</span>
+          <br />
+
+
           <label htmlFor="pass">Password:</label><br />
-          <input id="pass" type="password" value={pass} onChange={(e) => setPass(e.target.value)} required /><br />
+          <input id="pass" type="password" value={pass} onChange={(e) => setPass(e.target.value)} />
+          <span id="passError" className={`${styles.error} error`}>{passError}</span>
+          <br />
+
+
           <label htmlFor="pass2">Confirm Password:</label><br />
-          <input id="pass2" type="password" value={pass2} onChange={(e) => setPass2(e.target.value)} required /><br />
+          <input id="pass2" type="password" value={pass2} onChange={(e) => setPass2(e.target.value)} />
+          <span id="pass2Error" className={`${styles.error} error`}>{pass2Error}</span>
+          <br />
+
+
           <button type="submit">Crear</button>
           <p className="text-white">Already have an account?
             <Link to="/">Log In</Link>
           </p>
+
+
         </form>
       </div>
 
