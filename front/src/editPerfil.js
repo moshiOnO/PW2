@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 function Editperfil() {
     const nav = useNavigate()
     const [nickname, setNickname] = useState('');
+    const [desc, setDesc] = useState('');
     const [nombre, setNombre] = useState('');
     const [contraseña, setContraseña] = useState('');
     const [errors, setErrors] = useState({});
@@ -20,6 +21,9 @@ function Editperfil() {
     };
     const handleContraseñaChange = (event) => {
         setContraseña(event.target.value);
+    };
+    const handleDescChange = (event) => {
+        setDesc(event.target.value);
     };
     // Obtener referencias a los elementos del DOM
     const fileInputRef = useRef(null);
@@ -48,6 +52,10 @@ function Editperfil() {
         const errors = {};
         if (!nickname.trim()) {
             errors.nickname = 'Nickname es requerido';
+        }
+
+        if (!desc.trim()) {
+            errors.desc = 'Descripción es requerida';
         }
 
         if (!nombre.trim()) {
@@ -119,16 +127,25 @@ function Editperfil() {
 
                         <div id='inputsTexts'>
                             <div id={styles.pfnick}>
+
                                 <h3>Nickname</h3>
                                 <input type="text" id={styles.inputs} placeholder="Ingrese su nickname aquí"
                                     value={nickname}
                                     onChange={handleNicknameChange} />
                                 {errors.nickname && <p className={styles.error}>{errors.nickname}</p>}
+
+                                <h3>Descripción</h3>
+                                <input type="text" id={styles.inputs} placeholder="Ingrese su descripción aquí"
+                                    value={desc}
+                                    onChange={handleNicknameChange} />
+                                {errors.desc && <p className={styles.error}>{errors.desc}</p>}
+
                                 <h3>Nombre</h3>
                                 <input type="text" id={styles.inputs} placeholder="Ingrese su nombre aquí"
                                     value={nombre}
                                     onChange={handleNombreChange} />
                                 {errors.nombre && <p className={styles.error}>{errors.nombre}</p>}
+
                                 <h3>Contraseña</h3>
                                 <input type="text" id={styles.inputs} placeholder="Ingrese su contraseña aquí"
                                     value={contraseña}
