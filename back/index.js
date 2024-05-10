@@ -63,7 +63,7 @@ app.post("/create", (req, resp) => {
 
 app.post("/login", (req, resp) => {
   console.log("Datos recibidos:", req.body.us, req.body.con);
-  db.query("SELECT * FROM usuario WHERE nombre_usuario=? AND contrasenia_usuario=?", [req.body.us, req.body.con], (err, data) => {
+  db.query("SELECT * FROM usuario WHERE nickname_usuario=? AND contrasenia_usuario=?", [req.body.us, req.body.con], (err, data) => {
       if (err) {
           console.error("Error en la consulta:", err);
           resp.status(500).send(err); // Manejar errores de base de datos

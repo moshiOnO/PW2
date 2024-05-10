@@ -13,13 +13,13 @@ const InicioSesion = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         try {
             const response = await Axios.post('http://localhost:3001/login', {
                 us: user,
                 con: pass
             });
-    
+
             if (response.data.alert === "Success") {
                 localStorage.setItem('sesion', user);
                 Swal.fire(
@@ -53,6 +53,40 @@ const InicioSesion = () => {
                     </p>
                 </form>
             </div>
+
+            <style>{`
+    body {
+        /* Eliminamos display:flex y align-items/justify-content */
+        /* Ajustamos el margin a 0 */
+        margin: 0;
+    
+        /* Agregamos los estilos de la imagen de fondo */
+        background-color: #080808;
+        background-image: url('/resources/Illustrations/login.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    
+    /* Establecemos un z-index alto para asegurarnos de que la imagen de fondo esté detrás de otras capas */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background-color: #080808;
+        background-image: url('/resources/Illustrations/login.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    
+    `}</style>
+
+
         </>
     );
 };
