@@ -5,8 +5,22 @@ import Masonry from 'masonry-layout';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
 
+//Componentes
+import CardContainer from './components/cardContainerDashboard';
+
 
 function Dashboard() {
+
+
+    const cardDatadummy = [
+        { imageUrl: "./resources/pubs/Gwen uwu.png", title: "Gwen uwu" },
+        { imageUrl: "./resources/pubs/1083226.jpg", title: "Just gettin' fun" },
+        { imageUrl: "./resources/pubs/yeh.jpg", title: "yeh" },
+        { imageUrl: "./resources/pubs/hijodeturepuchamadre.png", title: "staaaaar" },
+        { imageUrl: "./resources/pubs/StarRail_Image_1693122087.png", title: "march coquette" },
+        { imageUrl: "./resources/pubs/1135214.jpg", title: "my beauty HU TAOOOOOO" },
+        // Agrega más datos según sea necesario
+    ];
 
     useEffect(() => {
         // Selecciona el contenedor de Masonry y crea una nueva instancia de Masonry
@@ -47,7 +61,9 @@ function Dashboard() {
             </nav>
 
 
-            <div className="container mt-4">
+            <CardContainer data={cardDatadummy} />
+
+            {/* <div className="container mt-4">
 
                 <div className="row row-cols-1 row-cols-md-3" data-masonry='{"percentPosition": true }'>
 
@@ -92,7 +108,7 @@ function Dashboard() {
                     <div class="col">
                         <div className={`${styles.card} card`}>
                             <Link to="/publicacion">
-                                <img src="../../resources/pubs/hijodeturepuchamadre.png" class="card-img-top" alt="Imagen 1" />
+                                <img src="../resources/pubs/hijodeturepuchamadre.png" class="card-img-top" alt="Imagen 1" />
                                 <div className={`${styles["card-body"]} card-body`}>
                                     <p class="card-title">staaaar⭐</p>
                                 </div>
@@ -103,7 +119,7 @@ function Dashboard() {
                     <div class="col">
                         <div className={`${styles.card} card`}>
                             <Link to="/publicacion">
-                                <img src="../../resources/pubs/StarRail_Image_1693122087.png" class="card-img-top" alt="Imagen 2" />
+                                <img src="../resources/pubs/StarRail_Image_1693122087.png" class="card-img-top" alt="Imagen 2" />
                                 <div className={`${styles["card-body"]} card-body`}>
                                     <p class="card-title">march coquette</p>
                                 </div>
@@ -126,7 +142,7 @@ function Dashboard() {
 
                 </div>
 
-            </div>
+            </div> */}
 
 
         </>
