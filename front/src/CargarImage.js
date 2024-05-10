@@ -8,6 +8,7 @@ function CargarImagen() {
     const [allImg, setAllImg] = useState([]);
     const [base64Images, setBase64Images] = useState([]);
 
+    //Obtiene valores de las fotos
     useEffect(() => {
         Axios.get("http://localhost:3001/getAllImg")
             .then((response) => {
@@ -23,6 +24,7 @@ function CargarImagen() {
             });
     }, []);
 
+    //Conversion de los valores a un base64
     useEffect(() => {
         const convertImagesToBase64 = async () => {
             const base64Promises = allImg.map((val) => {
@@ -59,17 +61,26 @@ function CargarImagen() {
         Axios.post("http://localhost:3001/file", frmData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         })
-        .then((response) => {
-            if (response.data.alert === "Success") {
+            .then((response) => {
+                if (response.data.alert === "Success") {
+                    // Una vez que la imagen se ha subido exitosamente, puedes recargar la lista de imágenes
+                    Axios.get("http://localhost:3001/getAllImg")
+                        .then((response) => {
+                            if (response.data === "No imagen") {
+                                alert("No hay imágenes");
+                            } else {
+                                setAllImg(response.data);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching images:", error);
+                        });
+                }
                 console.log(response.data);
-            }
-            if (response.data.alert === "Error") {
-                alert("Error");
-            }
-        })
-        .catch((error) => {
-            console.error("Error submitting form:", error);
-        });
+            })
+            .catch((error) => {
+                console.error("Error submitting form:", error);
+            });
     };
 
     return (

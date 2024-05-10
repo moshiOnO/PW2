@@ -8,9 +8,9 @@ const multer = require('multer');
 app.use(cors());
 app.use(express.json());
 
-app.listen(3001, 
-    ()=>{
-    console.log("Escuchupapuando en puertopapu 3papumil");
+app.listen(3001,
+    () => {
+        console.log("Escuchupapuando en puertopapu 3papumil");
     }
 )
 app.get('/', (req, res) => {
@@ -63,51 +63,51 @@ app.post("/create", (req, resp) => {
 
 
 app.post("/login", (req, resp) => {
-  console.log("Datos recibidos:", req.body.us, req.body.con);
-  db.query("SELECT * FROM usuario WHERE nickname_usuario=? AND contrasenia_usuario=?", [req.body.us, req.body.con], (err, data) => {
-      if (err) {
-          console.error("Error en la consulta:", err);
-          resp.status(500).send(err); // Manejar errores de base de datos
-      } else {
-          console.log("Resultado de la consulta:", data);
-          if (data.length > 0) {
-              resp.json({ alert: 'Success' }); // Usuario encontrado
-          } else {
-              resp.json({ alert: 'IncorrectPassword' }); // Contraseña incorrecta o usuario no encontrado
-          }
-      }
-  });
+    console.log("Datos recibidos:", req.body.us, req.body.con);
+    db.query("SELECT * FROM usuario WHERE nickname_usuario=? AND contrasenia_usuario=?", [req.body.us, req.body.con], (err, data) => {
+        if (err) {
+            console.error("Error en la consulta:", err);
+            resp.status(500).send(err); // Manejar errores de base de datos
+        } else {
+            console.log("Resultado de la consulta:", data);
+            if (data.length > 0) {
+                resp.json({ alert: 'Success' }); // Usuario encontrado
+            } else {
+                resp.json({ alert: 'IncorrectPassword' }); // Contraseña incorrecta o usuario no encontrado
+            }
+        }
+    });
 });
 
 app.delete("/delete/:nomUser",
-(req, resp)=>{
-    const nombreU = req.params.nomUser;
+    (req, resp) => {
+        const nombreU = req.params.nomUser;
 
-    db.query('DELETE FROM usuarios WHERE name=?',
-    nombreU,
-    (error, data)=>{
-        if(error){
-            console.log(error);
-        }else{
-            resp.send("Empleado eliminado");
-        }
-    })
-}
+        db.query('DELETE FROM usuarios WHERE name=?',
+            nombreU,
+            (error, data) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resp.send("Empleado eliminado");
+                }
+            })
+    }
 
 
 )
 
 //Obtener usuarios *solo para referencias*
 app.get("/getU",
-    (req, resp)=>{
+    (req, resp) => {
         db.query('SELECT * FROM usuario',
-        (error, data)=>{
-            if(error){
-                console.log(error);
-            }else{
-                resp.send(data);
-            }
-        })
+            (error, data) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resp.send(data);
+                }
+            })
     }
 )
 
@@ -115,53 +115,53 @@ app.get("/getU",
 const fileFil = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/png') {
-      cb(null, true);
-        } else {
-            cb(null, false);
+        cb(null, true);
+    } else {
+        cb(null, false);
 
-            return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
-        }
-  };
+        return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+    }
+};
 
 const strg = multer.memoryStorage();
 const upload = multer({
-                    storage:strg,
-                    fileFilter: fileFil
-                })
+    storage: strg,
+    fileFilter: fileFil
+})
 
 app.post("/file", upload.single('file'),
-(req, resp)=>{
-    const imagenB64 = req.file.buffer.toString('base64');
-    const usName = req.body.user;
+    (req, resp) => {
+        const imagenB64 = req.file.buffer;
+        const usName = req.body.user;
 
-    db. query("INSERT INTO usuario(nickname_usuario, foto_usuario) VALUES(?,?)",
-    [usName, imagenB64],
-    (err, data)=>{
-        if(err){
-            resp.json({
-                "alert": 'Error'
+        db.query("INSERT INTO usuario(nickname_usuario, foto_usuario) VALUES(?,?)",
+            [usName, imagenB64],
+            (err, data) => {
+                if (err) {
+                    resp.json({
+                        "alert": 'Error'
+                    })
+                } else {
+                    resp.json({
+                        "alert": 'Success'
+                    })
+                }
             })
-        }else{
-            resp.json({
-                "alert": 'Success' 
-            })
-        }
+        console.log(imagenB64, usName);
     })
-    console.log(imagenB64, usName );
-})
 
 app.get("/getAllImg",
-(req, resp)=>{
-    db.query("SELECT * FROM usuario",
-    (error, data)=>{
-        if(error){
-            resp.send(error);
-        }else{
-            if(data.length > 0){
-                resp.json(data);
-            }else{
-                resp.json('No imagen');
-            }
-        }
+    (req, resp) => {
+        db.query("SELECT * FROM usuario",
+            (error, data) => {
+                if (error) {
+                    resp.send(error);
+                } else {
+                    if (data.length > 0) {
+                        resp.json(data);
+                    } else {
+                        resp.json('No imagen');
+                    }
+                }
+            })
     })
-})
