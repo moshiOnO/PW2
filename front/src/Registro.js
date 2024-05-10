@@ -63,25 +63,26 @@ const Registro = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Reset errors
     setNameError('');
     setNickError('');
     setMailError('');
     setPassError('');
     setPass2Error('');
-
+  
     // Validar campos
     const isValid = validationCampos(name, nickN, mail, pass, pass2, setNameError, setNickError, setMailError, setPassError, setPass2Error);
-
+  
     if (!isValid) {
       // Si la validación no pasa, no continúes con el envío del formulario
       return;
     }
-
+  
     try {
       const response = await Axios.post('http://localhost:3001/create', {
         usuario: name,
+        apodo: nickN, // Agregar el apodo (nickname) al objeto enviado al servidor
         correo: mail,
         contra: pass
       });
@@ -97,8 +98,8 @@ const Registro = () => {
           nav("/dashboard");
         }
       });
-
-
+  
+  
     } catch (error) {
       console.error(error);
       Swal.fire('Error al registrar el usuario',
@@ -106,12 +107,8 @@ const Registro = () => {
         'error'
       );
     }
-
-
-
-
-
   };
+  
 
   return (
     <>
