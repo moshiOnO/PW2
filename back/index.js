@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const mysql = require('mysql');
 const cors = require('cors');
+const multer = require('multer');
+
 
 app.use(cors());
 app.use(express.json());
@@ -108,3 +110,58 @@ app.get("/getU",
         })
     }
 )
+
+//Logica para cargar imagesnes y asi
+const fileFil = (req, file, cb) => {
+    // reject a file
+    if (file.mimetype === 'image/png') {
+      cb(null, true);
+        } else {
+            cb(null, false);
+
+            return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+        }
+  };
+
+const strg = multer.memoryStorage();
+const upload = multer({
+                    storage:strg,
+                    fileFilter: fileFil
+                })
+
+app.post("/file", upload.single('file'),
+(req, resp)=>{
+    const imagenB64 = req.file.buffer.toString('base64');
+    const usName = req.body.user;
+
+    db. query("INSERT INTO usuario(nickname_usuario, foto_usuario) VALUES(?,?)",
+    [usName, imagenB64],
+    (err, data)=>{
+        if(err){
+            resp.json({
+                "alert": 'Error'
+            })
+        }else{
+            resp.json({
+                "alert": 'Success' 
+            })
+        }
+    })
+    console.log(imagenB64, usName );
+})
+
+app.get("/getAllImg",
+(req, resp)=>{
+    db.query("SELECT * FROM usuario",
+    (error, data)=>{
+        if(error){
+            resp.send(error);
+        }else{
+            if(data.length > 0){
+                resp.json(data);
+            }else{
+                resp.json('No imagen');
+            }
+        }
+    })
+})
