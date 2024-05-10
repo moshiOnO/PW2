@@ -39,7 +39,6 @@ app.post("/registro", (req, res) => {
         res.status(200).send('Usuario registrado exitosamente');
     });
 });
-
 // Modifica la ruta "/create" para incluir el apodo (nickname) del usuario
 app.post("/create", (req, resp) => {
     const usu = req.body.usuario;
@@ -78,8 +77,6 @@ app.post("/login", (req, resp) => {
   });
 });
 
-
-
 app.delete("/delete/:nomUser",
 (req, resp)=>{
     const nombreU = req.params.nomUser;
@@ -96,4 +93,18 @@ app.delete("/delete/:nomUser",
 }
 
 
+)
+
+//Obtener usuarios *solo para referencias*
+app.get("/getU",
+    (req, resp)=>{
+        db.query('SELECT * FROM usuario',
+        (error, data)=>{
+            if(error){
+                console.log(error);
+            }else{
+                resp.send(data);
+            }
+        })
+    }
 )

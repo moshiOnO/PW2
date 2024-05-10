@@ -28,8 +28,8 @@ function Usuarios() {
             return(
         <div className='card'>
             <div className='card-body'>
-                <h5 className='card-title'>{val.name}</h5>
-                <p className='card-text'>{val.email}</p>
+                <h5 className='card-title'>{val.nickname_usuario}</h5>
+                <p className='card-text'>{val.email_usuario}</p>
             </div>
             <div>
                 <button className='btn btn-danger' onClick={()=>{del(val.name)}}>Eliminar</button>
