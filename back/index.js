@@ -111,7 +111,11 @@ app.get("/getU",
     }
 )
 
-//Logica para cargar imagesnes y asi
+//Obtener las cosas para el dashboard
+
+
+
+//Logica  de clases para cargar imagesnes y asi
 const fileFil = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/png') {
@@ -122,13 +126,11 @@ const fileFil = (req, file, cb) => {
         return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
     }
 };
-
 const strg = multer.memoryStorage();
 const upload = multer({
     storage: strg,
     fileFilter: fileFil
 })
-
 app.post("/file", upload.single('file'),
     (req, resp) => {
         const imagenB64 = req.file.buffer;
@@ -149,7 +151,6 @@ app.post("/file", upload.single('file'),
             })
         console.log(imagenB64, usName);
     })
-
 app.get("/getAllImg",
     (req, resp) => {
         db.query("SELECT * FROM usuario",

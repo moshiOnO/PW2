@@ -12,6 +12,9 @@ import CardContainer from './components/cardContainerDashboard';
 function Dashboard() {
 
 
+    const [allImg, setAllImg] = useState([]);
+    const [base64Images, setBase64Images] = useState([]);
+    const [Titlepubs, setTitlespubs] = useState([]);
     const cardDatadummy = [
         { imageUrl: "./resources/pubs/Gwen uwu.png", title: "Gwen uwu" },
         { imageUrl: "./resources/pubs/1083226.jpg", title: "Just gettin' fun" },
@@ -20,8 +23,58 @@ function Dashboard() {
         { imageUrl: "./resources/pubs/StarRail_Image_1693122087.png", title: "march coquette" },
         { imageUrl: "./resources/pubs/1135214.jpg", title: "my beauty HU TAOOOOOO" },
         // Agrega más datos según sea necesario
-    ];
+    ];        
 
+    //Obtiene valores de las fotos
+    useEffect(() => {
+        Axios.get("http://localhost:3001/getAllImg")
+            .then((response) => {
+                if (response.data === "No imagen") {
+                    alert("No hay imágenes");
+                } else {
+                    setAllImg(response.data);
+                    //console.log(response.data);
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching images:", error);
+            });
+    }, []);
+    //Conversion de los valores a un base64
+    useEffect(() => {
+        const convertImagesToBase64 = async () => {
+            const base64Promises = allImg.map((val) => {
+                const blob = new Blob([new Uint8Array(val.foto_usuario.data)], { type: 'image/jpeg' });
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                return new Promise((resolve) => {
+                    reader.onloadend = () => {
+                        resolve(reader.result.split(',')[1]);
+                    };
+                });
+            });
+
+            try {
+                const base64Strings = await Promise.all(base64Promises);
+                setBase64Images(base64Strings);
+            } catch (error) {
+                console.error("Error converting images to base64:", error);
+            }
+        };
+
+        if (allImg.length > 0) {
+            convertImagesToBase64();
+        }
+    }, [allImg]);
+    //Valores de getallimgs    
+    const imageData = base64Images.map((data) => ({
+        image: data.base64String,
+        title: data.userData.nickname_usuario // O cualquier otra propiedad del usuario que desees mostrar como título
+    }));
+    
+
+
+    //Masonry Effect    
     useEffect(() => {
         // Selecciona el contenedor de Masonry y crea una nueva instancia de Masonry
         const grid = document.querySelector('.row-cols-md-3');
@@ -33,6 +86,8 @@ function Dashboard() {
         // Actualiza Masonry después de que las imágenes se hayan cargado completamente
         masonry.layout();
     }, []); // El segundo argumento de useEffect es un arreglo de dependencias vacío para que se ejecute solo una vezconsole.log(styles);
+
+
 
 
     return (
@@ -62,88 +117,7 @@ function Dashboard() {
 
 
             <CardContainer data={cardDatadummy} />
-
-            {/* <div className="container mt-4">
-
-                <div className="row row-cols-1 row-cols-md-3" data-masonry='{"percentPosition": true }'>
-
-                    <div class="col">
-                        <div className={`${styles.card} card`}>
-
-                            <Link to="/publicacion">
-                                <img src="./resources/pubs/Gwen uwu.png" class="card-img-top" alt="Imagen 2" />
-                                <div className={`${styles["card-body"]} card-body`}>
-                                    <p class="card-title">Gwen uwu</p>
-                                </div>
-                            </Link>
-
-                        </div>
-                    </div>
-
-
-
-                    <div class="col">
-                        <div className={`${styles.card} card`}>
-
-                            <Link to="/publicacion">
-                                <img src="./resources/pubs/1083226.jpg" class="card-img-top" alt="Imagen 2" />
-                                <div className={`${styles["card-body"]} card-body`}>
-                                    <p class="card-title">Just gettin' fun</p>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div className={`${styles.card} card`}>
-                            <Link to="/publicacion">
-                                <img src="/resources/pubs/yeh.jpg" class="card-img-top" alt="Imagen 3" />
-                                <div className={`${styles["card-body"]} card-body`}>
-                                    <p class="card-title">yeh</p>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div className={`${styles.card} card`}>
-                            <Link to="/publicacion">
-                                <img src="../resources/pubs/hijodeturepuchamadre.png" class="card-img-top" alt="Imagen 1" />
-                                <div className={`${styles["card-body"]} card-body`}>
-                                    <p class="card-title">staaaar⭐</p>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div className={`${styles.card} card`}>
-                            <Link to="/publicacion">
-                                <img src="../resources/pubs/StarRail_Image_1693122087.png" class="card-img-top" alt="Imagen 2" />
-                                <div className={`${styles["card-body"]} card-body`}>
-                                    <p class="card-title">march coquette</p>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div className={`${styles.card} card`}>
-                            <Link to="/publicacion">
-                                <img src="../../resources/pubs/1135214.jpg" class="card-img-top" alt="Imagen 3" />
-                                <div className={`${styles["card-body"]} card-body`}>
-                                    <p class="card-title">my beauty HU TAOOOOO!</p>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
-
-
-
-                </div>
-
-            </div> */}
-
+           
 
         </>
 
