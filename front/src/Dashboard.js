@@ -23,7 +23,9 @@ function Dashboard() {
         { imageUrl: "./resources/pubs/StarRail_Image_1693122087.png", title: "march coquette" },
         { imageUrl: "./resources/pubs/1135214.jpg", title: "my beauty HU TAOOOOOO" },
         // Agrega más datos según sea necesario
-    ];        
+    ];
+    //Valores de getallimgs    
+    const imageData = [];
 
     //Obtiene valores de las fotos
     useEffect(() => {
@@ -56,7 +58,9 @@ function Dashboard() {
 
             try {
                 const base64Strings = await Promise.all(base64Promises);
+                //console.log(base64Strings);
                 setBase64Images(base64Strings);
+                console.log(base64Images);
             } catch (error) {
                 console.error("Error converting images to base64:", error);
             }
@@ -66,26 +70,24 @@ function Dashboard() {
             convertImagesToBase64();
         }
     }, [allImg]);
-    //Valores de getallimgs    
-    const imageData = base64Images.map((data) => ({        
-        image: data.base64String,
-        title: data.nickname_usuario // O cualquier otra propiedad del usuario que desees mostrar como título
-    }));
-    
 
 
-    //Masonry Effect    
+
+
     useEffect(() => {
-        // Selecciona el contenedor de Masonry y crea una nueva instancia de Masonry
-        const grid = document.querySelector('.row-cols-md-3');
-        const masonry = new Masonry(grid, {
-            itemSelector: '.col',
-            percentPosition: true
-        });
+        const initializeMasonry = () => {
+            const grid = document.querySelector('.row-cols-md-3');
+            if (grid) {
+                const masonry = new Masonry(grid, {
+                    itemSelector: '.col',
+                    percentPosition: true
+                });
+                masonry.layout();
+            }
+        };
 
-        // Actualiza Masonry después de que las imágenes se hayan cargado completamente
-        masonry.layout();
-    }, []); // El segundo argumento de useEffect es un arreglo de dependencias vacío para que se ejecute solo una vezconsole.log(styles);
+        initializeMasonry();
+    }, [allImg]);
 
 
 
@@ -115,9 +117,19 @@ function Dashboard() {
                 </ul>
             </nav>
 
+            {/* Renderiza el contenedor de tarjetas con los datos */}
+            <CardContainer data=
+                {base64Images.map((base64String, index) =>
+                (
+                    {
+                        imageUrl: base64String,
+                        title: allImg[index].nickname_usuario
+                    }
+                ))
+                }
+            />
 
-            <CardContainer data={cardDatadummy} />
-           
+
 
         </>
 

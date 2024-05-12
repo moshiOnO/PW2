@@ -7,7 +7,8 @@ function Card({ imageUrl, title }) {
 
         <div className={`${styles.card} card`}>
             <Link to="/publicacion">
-                <img src={imageUrl} className="card-img-top" alt={title} />
+                {/* <img src={imageUrl} className="card-img-top" alt={title} /> */}
+                <img src={`data:image/jpeg;base64,${imageUrl}`} alt={`title`} />
                 <div className={`${styles["card-body"]} card-body`}>
                     <p className="card-title">{title}</p>
                 </div>
