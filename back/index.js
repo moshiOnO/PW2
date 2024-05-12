@@ -118,7 +118,7 @@ app.get("/getU",
 //Logica  de clases para cargar imagesnes y asi
 const fileFil = (req, file, cb) => {
     // reject a file
-    if (file.mimetype === 'image/png') {
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg') {
         cb(null, true);
     } else {
         cb(null, false);

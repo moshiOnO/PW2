@@ -67,9 +67,9 @@ function Dashboard() {
         }
     }, [allImg]);
     //Valores de getallimgs    
-    const imageData = base64Images.map((data) => ({
+    const imageData = base64Images.map((data) => ({        
         image: data.base64String,
-        title: data.userData.nickname_usuario // O cualquier otra propiedad del usuario que desees mostrar como título
+        title: data.nickname_usuario // O cualquier otra propiedad del usuario que desees mostrar como título
     }));
     
 
