@@ -99,7 +99,7 @@ function Editperfil() {
                         <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Explorar</Link>
+                        <Link className={`${styles["nav-link"]} nav-link`} to="/explore">Explorar</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
                         <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>

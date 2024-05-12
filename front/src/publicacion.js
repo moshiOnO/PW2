@@ -30,16 +30,16 @@ function Publicacion() {
 
     return (
         <>
-             {/* <!-- Menú del apartado superior --> */}
-             <nav id={styles.menu} class="navbar navbar-expand-lg navbar-light">
-                <a id={styles.companyname} class="navbar-brand" href="#">DEEZY</a>
-                <ul id={styles.menuElements} class="navbar-nav">
+            {/* <!-- Menú del apartado superior --> */}
+            <nav id={styles.menu} className="navbar navbar-expand-lg navbar-light">
+                <a id={styles.companyname} className="navbar-brand" href="#">DEEZY</a>
+                <ul id={styles.menuElements} className="navbar-nav">
                     {/* css                 bootstrap */}
                     <li className={`${styles["nav-item"]}`} >
                         <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Explorar</Link>
+                        <Link className={`${styles["nav-link"]} nav-link`} to="/explore">Explorar</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
                         <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
@@ -65,8 +65,8 @@ function Publicacion() {
                             <div className={`${styles["carousel-inner"]} carousel-inner`}>
                                 <div className={`${styles["carousel-item"]} carousel-item active`}>
                                     <img className="d-block w-100" src="../../resources/pubs/Gwen uwu.png" alt="Primera imagen" />
-                                </div>                               
-                            </div>                           
+                                </div>
+                            </div>
 
                         </div>
 

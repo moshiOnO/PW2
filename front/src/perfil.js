@@ -9,52 +9,53 @@ import { Link, useNavigate } from 'react-router-dom';
 const Perfil = () => {
 
     const nav = useNavigate()
-    
+
     const mostrarVentanaConfirmacion = () => {
         Swal.fire({
-          title: '¿Estás seguro?',
-          text: 'Se borrará la información de forma permanente.',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#E4AF9E',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Sí, borrar',
-          cancelButtonText: 'Cancelar'
+            title: '¿Estás seguro?',
+            text: 'Se borrará la información de forma permanente.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#E4AF9E',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, borrar',
+            cancelButtonText: 'Cancelar'
         }).then((result) => {
-          if (result.isConfirmed) {
-            // Aquí puedes ejecutar la lógica para borrar la información
-            console.log('Borrando información...');
-            //Alerta               
-            Swal.fire({
-                title: 'Tu post se borró con éxito',
-                text: '<3',
-                icon: 'success',
-                confirmButtonText: 'Yeiiiiii :DD',
-                confirmButtonColor: '#E4AF9E'}
-            ).then((result) => {
-                if (result.isConfirmed) {
-                    // Redirigir al usuario a la página 
-                    nav("/perfil");                    
+            if (result.isConfirmed) {
+                // Aquí puedes ejecutar la lógica para borrar la información
+                console.log('Borrando información...');
+                //Alerta               
+                Swal.fire({
+                    title: 'Tu post se borró con éxito',
+                    text: '<3',
+                    icon: 'success',
+                    confirmButtonText: 'Yeiiiiii :DD',
+                    confirmButtonColor: '#E4AF9E'
                 }
-            });
-          }
+                ).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirigir al usuario a la página 
+                        nav("/perfil");
+                    }
+                });
+            }
         });
-      };
-      
+    };
+
 
 
     return (
         <>
-             {/* <!-- Menú del apartado superior --> */}
-             <nav id={styles.menu} class="navbar navbar-expand-lg navbar-light">
-                <a id={styles.companyname} class="navbar-brand" href="#">DEEZY</a>
-                <ul id={styles.menuElements} class="navbar-nav">
+            {/* <!-- Menú del apartado superior --> */}
+            <nav id={styles.menu} className="navbar navbar-expand-lg navbar-light">
+                <a id={styles.companyname} className="navbar-brand" href="#">DEEZY</a>
+                <ul id={styles.menuElements} className="navbar-nav">
                     {/* css                 bootstrap */}
                     <li className={`${styles["nav-item"]}`} >
                         <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Explorar</Link>
+                        <Link className={`${styles["nav-link"]} nav-link`} to="/explore">Explorar</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
                         <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
