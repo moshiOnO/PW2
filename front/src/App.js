@@ -6,6 +6,7 @@ import Axios from 'axios';
 //import de páginas
 import Registro from './Registro';
 import Dashboard from './Dashboard';
+import Explore from './Explore';
 import InicioSesion from './is';
 import Perfil from './perfil';
 import Publicacion from './publicacion';
@@ -22,8 +23,11 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<InicioSesion />}></Route>
-        <Route path='/register' element={<Registro />}></Route>        
+        <Route path='/register' element={<Registro />}></Route>    
+
         <Route path='/dashboard' element={<Dashboard />}></Route>
+        <Route path='/explore' element={<Explore />}></Route>
+
         <Route path='/perfil' element={<Perfil />}></Route>
         <Route path='/publicacion' element={<Publicacion />}></Route>
         <Route path='/editperfil' element={<Editperfil />}></Route>

@@ -9,40 +9,39 @@ import { Link } from 'react-router-dom';
 import CardContainer from './components/cardContainerDashboard';
 
 
-function Dashboard() {
+function Explore() {
 
 
     const [allImg, setAllImg] = useState([]);
     const [base64Images, setBase64Images] = useState([]);
     const [Titlepubs, setTitlespubs] = useState([]);
-    //Valores para verificar si el usuario sigue a alguien      
-    const idusuario = 6; //6:non, 2:sis
-    const [hasFollowed, setHasFollowed] = useState(true);
+    const cardDatadummy = [
+        { imageUrl: "./resources/pubs/Gwen uwu.png", title: "Gwen uwu" },
+        { imageUrl: "./resources/pubs/1083226.jpg", title: "Just gettin' fun" },
+        { imageUrl: "./resources/pubs/yeh.jpg", title: "yeh" },
+        { imageUrl: "./resources/pubs/hijodeturepuchamadre.png", title: "staaaaar" },
+        { imageUrl: "./resources/pubs/StarRail_Image_1693122087.png", title: "march coquette" },
+        { imageUrl: "./resources/pubs/1135214.jpg", title: "my beauty HU TAOOOOOO" },
+        // Agrega más datos según sea necesario
+    ];
+    //Valores de getallimgs    
+    const imageData = [];
 
     //Obtiene valores de las fotos y demás cosas de la base de datos
     useEffect(() => {
-        Axios.get(`http://localhost:3001/getufollowed?id_usuario=${idusuario}`)
+        Axios.get("http://localhost:3001/getnewtoold")
             .then((response) => {
                 if (response.data === "No imagen") {
                     alert("No hay imágenes");
-                    //console.log("no hay datos aksdjksdjkasdj xD");
                 } else {
                     setAllImg(response.data);
-                    //console.log(response.data);
+                    console.log(response.data);
                 }
             })
             .catch((error) => {
                 console.error("Error fetching images:", error);
             });
     }, []);
-    //Verificar si el procedure devolvió datos
-    useEffect(() => {
-        // Verificar si allImg[0] está vacío o no tiene datos
-        if (allImg.length > 0 && Array.isArray(allImg[0]) && allImg[0].length === 0) {
-            console.log("No hay datos en allImg[0]");
-            setHasFollowed(false);
-        }
-    }, [allImg]);
     //Conversion de los valores a un base64
     useEffect(() => {
         const convertImagesToBase64 = async () => {
@@ -57,7 +56,7 @@ function Dashboard() {
                         };
                     });
                 });
-
+    
                 try {
                     const base64Strings = await Promise.all(base64Promises);
                     setBase64Images(base64Strings);
@@ -67,12 +66,10 @@ function Dashboard() {
                 }
             }
         };
-
+    
         convertImagesToBase64(); // Llamamos a la función de conversión independientemente del tamaño de allImg
-
+    
     }, [allImg]);
-
-
     //Masonry effect    
     useEffect(() => {
         const initializeMasonry = () => {
@@ -96,9 +93,9 @@ function Dashboard() {
         <>
 
             {/* <!-- Menú del apartado superior --> */}
-            <nav id={styles.menu} className="navbar navbar-expand-lg navbar-light">
-                <a id={styles.companyname} className="navbar-brand" href="#">DEEZY</a>
-                <ul id={styles.menuElements} className="navbar-nav">
+            <nav id={styles.menu} class="navbar navbar-expand-lg navbar-light">
+                <a id={styles.companyname} class="navbar-brand" href="#">DEEZY</a>
+                <ul id={styles.menuElements} class="navbar-nav">
                     {/* css                 bootstrap */}
                     <li className={`${styles["nav-item"]}`} >
                         <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
@@ -118,36 +115,24 @@ function Dashboard() {
             </nav>
 
             {/* Renderiza el contenedor de tarjetas con los datos */}
-            {hasFollowed ?
+            <CardContainer data=
+                {base64Images.map((base64String, index) =>
                 (
-                    <CardContainer data={
-                        base64Images.map(
-                            (base64String, index) => (
-                                {
-                                    imageUrl: base64String,
-                                    title: allImg[0][index].titulo_publi
-                                }
-                            )
-                        )
-                    } />
-                )
-                :
-                (
-                    // Puedes agregar un else aquí si deseas renderizar algo diferente cuando la variableVerdadera sea falsa
-                    <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
-                        <div className="text-center" style={{ fontSize: '2rem' }}>
-                            Comienza a seguir tus artistas favoritos en "Explorar"
-                        </div>
-                    </div>
-
-                )
-            }
+                    {
+                        imageUrl: base64String,
+                        title: allImg[0][index].titulo_publi
+                    }
+                ))
+                }
+            />
 
 
 
         </>
 
+
+
     );
 }
 
-export default Dashboard
+export default Explore

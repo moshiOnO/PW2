@@ -128,6 +128,25 @@ app.get("/getnewtoold",
             })
     })
 
+app.get("/getufollowed",
+    (req, resp) => {
+        const userId = req.query.id_usuario; // Obtener el ID del usuario de la URL
+        db.query("CALL publis_ufollowed(?)", [userId], (error, data) => {
+            if (error) {
+                resp.send(error);
+            } else {
+                if (data.length > 0) {
+                    resp.json(data);
+                } else {
+                    resp.json('No imagen');
+                }
+            }
+        });
+    });
+
+
+
+
 
 //Logica  de clases para cargar imagesnes y asi
 const fileFil = (req, file, cb) => {
