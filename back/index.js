@@ -4,9 +4,28 @@ const mysql = require('mysql');
 const cors = require('cors');
 const multer = require('multer');
 
+const session = require('express-session');
 
-app.use(cors());
+//Cors bien configurao
+app.use(cors({
+    origin: 'http://localhost:3000', // Ajusta esto al puerto donde corre tu React app
+    credentials: true // Permitir el envío de cookies
+}));
+
 app.use(express.json());
+
+//Session
+app.use(session({
+    secret: 'secret_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: true, // asegúrate de que tu sitio esté sirviendo sobre HTTPS
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 // Cookie válida por un día
+    }
+}));
+
 
 app.listen(3001,
     () => {
@@ -60,8 +79,7 @@ app.post("/create", (req, resp) => {
         }
     );
 });
-
-
+//Login para almacenar cosas 
 app.post("/login", (req, resp) => {
     console.log("Datos recibidos:", req.body.us, req.body.con);
     db.query("SELECT * FROM usuario WHERE nickname_usuario=? AND contrasenia_usuario=?", [req.body.us, req.body.con], (err, data) => {
@@ -71,6 +89,7 @@ app.post("/login", (req, resp) => {
         } else {
             console.log("Resultado de la consulta:", data);
             if (data.length > 0) {
+                req.session.userId = data[0].id_usuario; // Almacenar el ID del usuario en la sesión
                 resp.json({ alert: 'Success' }); // Usuario encontrado
             } else {
                 resp.json({ alert: 'IncorrectPassword' }); // Contraseña incorrecta o usuario no encontrado
@@ -79,37 +98,7 @@ app.post("/login", (req, resp) => {
     });
 });
 
-app.delete("/delete/:nomUser",
-    (req, resp) => {
-        const nombreU = req.params.nomUser;
 
-        db.query('DELETE FROM usuarios WHERE name=?',
-            nombreU,
-            (error, data) => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    resp.send("Empleado eliminado");
-                }
-            })
-    }
-
-
-)
-
-//Obtener usuarios *solo para referencias*
-app.get("/getU",
-    (req, resp) => {
-        db.query('SELECT * FROM usuario',
-            (error, data) => {
-                if (error) {
-                    console.log(error);
-                } else {
-                    resp.send(data);
-                }
-            })
-    }
-)
 
 //Obtener las cosas para el dashboard
 app.get("/getnewtoold",
@@ -199,3 +188,35 @@ app.get("/getAllImg",
                 }
             })
     })
+
+//Referencia de elminado de "usuarios.js"
+app.delete("/delete/:nomUser",
+    (req, resp) => {
+        const nombreU = req.params.nomUser;
+
+        db.query('DELETE FROM usuarios WHERE name=?',
+            nombreU,
+            (error, data) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resp.send("Empleado eliminado");
+                }
+            })
+    }
+
+
+)
+//Obtener usuarios *solo para referencias*
+app.get("/getU",
+    (req, resp) => {
+        db.query('SELECT * FROM usuario',
+            (error, data) => {
+                if (error) {
+                    console.log(error);
+                } else {
+                    resp.send(data);
+                }
+            })
+    }
+)
