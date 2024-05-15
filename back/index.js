@@ -11,20 +11,29 @@ app.use(cors({
     origin: 'http://localhost:3000', // Ajusta esto al puerto donde corre tu React app
     credentials: true // Permitir el envío de cookies
 }));
-
 app.use(express.json());
-
 //Session
 app.use(session({
     secret: 'secret_key',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: true, // asegúrate de que tu sitio esté sirviendo sobre HTTPS
+        secure: false, // Usar `true` sólo en producción con HTTPS
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 // Cookie válida por un día
-    }
+    },
+    name: 'id_usuario'
 }));
+function verificarSesion(req, res, next) {
+    if (req.session.userId) {
+        next(); // El usuario está logueado, continuar con la solicitud
+    } else {
+        res.status(401).send("No autorizado"); // No logueado, enviar error
+    }
+}
+app.use(verificarSesion); // Aplica el middleware globalmente (opcional)
+
+
 
 
 app.listen(3001,
@@ -90,6 +99,7 @@ app.post("/login", (req, resp) => {
             console.log("Resultado de la consulta:", data);
             if (data.length > 0) {
                 req.session.userId = data[0].id_usuario; // Almacenar el ID del usuario en la sesión
+                console.log("Sesión actualizada con userID:", req.session.userId); // Mostrar el ID del usuario almacenado en la sesión
                 resp.json({ alert: 'Success' }); // Usuario encontrado
             } else {
                 resp.json({ alert: 'IncorrectPassword' }); // Contraseña incorrecta o usuario no encontrado
@@ -97,6 +107,7 @@ app.post("/login", (req, resp) => {
         }
     });
 });
+
 
 
 

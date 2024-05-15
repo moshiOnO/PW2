@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Axios from 'axios';
+import axiosInstance from './AxiosConf/axiosconf';
 
 const InicioSesion = () => {
 
@@ -15,13 +16,13 @@ const InicioSesion = () => {
         e.preventDefault();
 
         try {
-            const response = await Axios.post('http://localhost:3001/login', {
+            const response = await axiosInstance.post('http://localhost:3001/login', {
                 us: user,
                 con: pass
             });
 
             if (response.data.alert === "Success") {
-                localStorage.setItem('sesion', user);
+                //localStorage.setItem('sesion', user);
                 Swal.fire(
                     'Bienvenido a DEEZY ' + user + '!',
                     '<3',
