@@ -1,238 +1,110 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.bundle.js'
+import 'bootstrap/dist/js/bootstrap.bundle.js';
 import styles from './paginaWeb/css/PostVentana.module.css';
-import React, { useState, useEffect } from 'react';
-import axiosInstance from './AxiosConf/axiosconf';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { usePerfil, usePublicacion, useFollow, useComment } from './components/publicacionUtils';
 
 //Componentes
 import Menu from './components/menuComponent';
-
+import Comentarios from './components/Comentarios';
+import Recomendaciones from './components/Recomendaciones';
 
 function Publicacion() {
-
-    //Variables para el menú
-    const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
-    //Obtiene los datos para el menu
-    useEffect(() => {
-        axiosInstance.get('/perfilMenu')
-            .then(response => {
-                //console.log(response.data.foto);                
-                setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
-            })
-            .catch(error => {
-                console.error("Error al obtener la información del perfil:", error);
-            });
-    }, []);
-
-    const [followed, setFollowed] = useState(false);
-    const [commentText, setCommentText] = useState('');
-    const [commentError, setCommentError] = useState('');
-
-    const handleFollowButtonClick = () => {
-        setFollowed(!followed);
-    };
-    const handleFormSubmit = (event) => {
-        event.preventDefault();
-        if (commentText.trim() === '') {
-            setCommentError('Por favor, escribe un comentario antes de enviar.');
-        } else {
-            // Aquí puedes agregar el código para enviar el comentario a la base de datos
-            setCommentError('');
-            setCommentText('');
-        }
-    };
-
-
+    const { id_publi } = useParams(); // Obtener id_publi de los parámetros de la URL
+    const perfil = usePerfil();
+    const publicacion = usePublicacion(id_publi);
+    const { followed, handleFollowButtonClick } = useFollow();
+    const { commentText, setCommentText, commentError, handleFormSubmit } = useComment();
 
     return (
         <>
-            {/* <!-- Menú del apartado superior --> */}
             <Menu perfil={perfil} />
 
-
-            {/* <!--Post --> */}
             <div className="container">
-
                 <div className={`${styles["row"]} row`}>
-
-                    {/* <!--Fotos--> */}
                     <div className="col-md-4">
-                        {/* <!-- Dibujos y el autor --> */}
                         <div id={styles.carouselExample} className="carousel slide">
                             <div className={`${styles["carousel-inner"]} carousel-inner`}>
                                 <div className={`${styles["carousel-item"]} carousel-item active`}>
-                                    <img className="d-block w-100" src="../../resources/pubs/Gwen uwu.png" alt="Primera imagen" />
+                                    <img className="d-block w-100" src={publicacion.imageUrl} alt="Primera imagen" />
                                 </div>
                             </div>
-
                         </div>
 
                         <div id={styles.autorInfo}>
-
                             <Link to="/perfil">
-                                <img src="/resources/pfp/lovers.jpeg" alt="PFP" />
+                                <img src={publicacion.autorPfp} alt="PFP" />
                             </Link>
 
                             <div id={styles.addInfo}>
-                                <p id="autor">moshiOnO</p>
-                                <p id="dateP">17/2/2020</p>
+                                <p id="autor">{publicacion.autorNombre}</p>
+                                <p id="dateP">{publicacion.fecha}</p>
                             </div>
-
 
                             <button id={styles.followButton} className="btn btn-primary" onClick={handleFollowButtonClick}>
                                 <span id={styles.followIcon} className="ml-2">{followed ? '✓' : '×'}</span>
                             </button>
-
                         </div>
-
                     </div>
 
-                    {/* Likes  */}
                     <div className="col-md-1">
-                        {/* <!-- Botón de Likes --> */}
                         <div id={styles.likesContainer}>
                             <button type="button" className="btn btn-like">
                                 <i className="bi bi-heart-fill"></i>
                             </button>
-                            <p id={styles.contadorL}>50</p>
+                            <p id={styles.contadorL}>{publicacion.likes}</p>
                         </div>
 
-
-                        {/* <!-- Icono de Comentarios --> */}
                         <div id={styles.comI}>
                             <button type="button" className="btn btn-comments">
                                 <i className="bi bi-chat"></i>
                             </button>
                         </div>
-
-
-
                     </div>
-
 
                     <div id={styles.postInfo} className="col-md-3">
-                        <h2 id={styles.titleP}>Rocky</h2>
-                        <p id={styles.descP}>Sooooo, quería dbujar una gwen, pero pss no le puse coletas, así que ya es una OC :DD</p>
+                        <h2 id={styles.titleP}>{publicacion.titulo}</h2>
+                        <p id={styles.descP}>{publicacion.descripcion}</p>
 
-                        <div id={styles.commentsContainer}>
-                            {/* <!-- comentarios --> */}
-                            <div id={styles.commsP}>
+                        <Comentarios comentarios={publicacion.comentarios} />
 
-                                <div id={styles.comment}>
-                                    <img src="../../resources/pfp/acshually.jpeg" alt="PFP" />
-                                    <p id={styles.username}>Mr kitty</p>
-                                    <p>Omgggg i luv it aaaaaaaaa</p>
-                                    <div style={{ clear: 'both' }}></div>
-                                </div>
-
-                                <div id={styles.comment}>
-                                    <img src="../../resources/pfp/acshually.jpeg" alt="PFP" />
-                                    <p id={styles.username}>Mr kitty</p>
-                                    <p>Omgggg i luv it aaaaaaaaa</p>
-                                    <div style={{ clear: 'both' }}></div>
-                                </div>
-
-                                <div id={styles.comment}>
-                                    <img src="../../resources/pfp/acshually.jpeg" alt="PFP" />
-                                    <p id={styles.username}>Mr kitty</p>
-                                    <p>Omgggg i luv it aaaaaaaaa</p>
-                                    <div style={{ clear: 'both' }}></div>
-                                </div>
-
-                                <div id={styles.comment}>
-                                    <img src="../../resources/pfp/acshually.jpeg" alt="PFP" />
-                                    <p id={styles.username}>Mr kitty</p>
-                                    <p>Omgggg i luv it aaaaaaaaa</p>
-                                    <div style={{ clear: 'both' }}></div>
-                                </div>
-
-                                <div id={styles.comment}>
-                                    <img src="../../resources/pfp/gojo.jpeg" alt="PFP" />
-                                    <p id={styles.username}>Gojo-Kun</p>
-                                    <p>HAHAHA, im gonna create a text that's gonna surpass the 20 characters AHAHAHAHAHAH</p>
-                                    <div style={{ clear: 'both' }}></div>
-                                </div>
-
+                        <form id={styles.commentForm} onSubmit={handleFormSubmit}>
+                            <div className="form-group">
+                                <label htmlFor="commentText">Agregar comentario:</label>
+                                <textarea className="form-control" id="commentText" rows="3" value={commentText} onChange={(e) => setCommentText(e.target.value)}></textarea>
+                                <span id={styles.commentError} className="error-text" style={{ display: commentError ? 'inline' : 'none' }}>{commentError}</span>
                             </div>
-
-                            {/* <!-- escribir com --> */}
-                            <form id={styles.commentForm} onSubmit={handleFormSubmit}>
-                                <div className="form-group">
-                                    <label htmlFor="commentText">Agregar comentario:</label>
-                                    {/* Añade una clase al textarea para el texto de error */}
-                                    <textarea className="form-control" id="commentText" rows="3" value={commentText} onChange={(e) => setCommentText(e.target.value)}></textarea>
-                                    {/* Agrega un elemento span para mostrar el texto de error */}
-                                    <span id={styles.commentError} className="error-text" style={{ display: commentError ? 'inline' : 'none' }}>{commentError}</span>
-                                </div>
-                                <button type="submit" className="btn btn-primary">Enviar comentario</button>
-                            </form>
-
-                        </div>
+                            <button type="submit" className="btn btn-primary">Enviar comentario</button>
+                        </form>
 
                         <div id={styles.catP}>
-                            <p>Anime</p>
-                            <p>Drawing</p>
-                            <p>Oc</p>
+                            {publicacion.categorias && publicacion.categorias.map((cat, index) => (
+                                <p key={index}>{cat}</p>
+                            ))}
                         </div>
-
                     </div>
 
-
-                    {/* <!-- Contenido de la tercera sección --> */}
                     <div className="col-md-4">
-                        <div id={styles.recommContainer}>
-                            <div id={styles.recomm}>
-                                <h2>Recomendaciones</h2>
-                                <div id={styles.recP}>
-                                    <Link href="post.html">
-                                        <img src="../../resources/pubs/1135214.jpg" alt="posts" />
-                                    </Link>
-                                </div>
-                                <div id={styles.recP}>
-                                    <Link href="post.html">
-                                        <img src="../../resources/pubs/hijodeturepuchamadre.png" alt="posts" />
-                                    </Link>
-                                </div>
-                                <div id={styles.recP}>
-                                    <Link href="post.html">
-                                        <img src="../../resources/pubs/yeh.jpg" alt="posts" />
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
+                        <Recomendaciones recomendaciones={publicacion.recomendaciones} />
 
                         <div id={styles.recentContainer}>
                             <div id={styles.recents}>
                                 <h2>Recientes</h2>
-                                <div id={styles.rectP}>
-                                    <Link href="post.html">
-                                        <img src="../../resources/pubs/Akali.jpeg" alt="posts" />
-                                    </Link>
-                                </div>
-                                <div id={styles.rectP}>
-                                    <Link href="post.html">
-                                        <img src="../../resources/pubs/DanHeng.jpeg" alt="posts" />
-                                    </Link>
-                                </div>
-                                <div id={styles.rectP}>
-                                    <Link href="post.html">
-                                        <img src="../../resources/pubs/ururaka.jpeg" alt="posts" />
-                                    </Link>
-                                </div>
+                                {publicacion.recientes && publicacion.recientes.map((rec, index) => (
+                                    <div key={index} id={styles.rectP}>
+                                        <Link to={`/publicacion/${rec.id}`}>
+                                            <img src={rec.imageUrl} alt="posts" />
+                                        </Link>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-
                     </div>
-
-
-
                 </div>
             </div>
-
         </>
-
     );
 }
 
-export default Publicacion
+export default Publicacion;
