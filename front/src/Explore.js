@@ -3,6 +3,7 @@ import styles from './paginaWeb/css/dashboard.module.css';
 import React, { useState, useEffect } from 'react';
 import Masonry from 'masonry-layout';
 import Axios from 'axios';
+import axiosInstance from './AxiosConf/axiosconf';
 import { Link } from 'react-router-dom';
 
 //Componentes
@@ -14,18 +15,20 @@ function Explore() {
 
     const [allImg, setAllImg] = useState([]);
     const [base64Images, setBase64Images] = useState([]);
-    const [Titlepubs, setTitlespubs] = useState([]);
-    const cardDatadummy = [
-        { imageUrl: "./resources/pubs/Gwen uwu.png", title: "Gwen uwu" },
-        { imageUrl: "./resources/pubs/1083226.jpg", title: "Just gettin' fun" },
-        { imageUrl: "./resources/pubs/yeh.jpg", title: "yeh" },
-        { imageUrl: "./resources/pubs/hijodeturepuchamadre.png", title: "staaaaar" },
-        { imageUrl: "./resources/pubs/StarRail_Image_1693122087.png", title: "march coquette" },
-        { imageUrl: "./resources/pubs/1135214.jpg", title: "my beauty HU TAOOOOOO" },
-        // Agrega más datos según sea necesario
-    ];
-    //Valores de getallimgs    
-    const imageData = [];
+
+    const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
+
+    useEffect(() => {
+        axiosInstance.get('/perfilMenu')
+            .then(response => {
+                //console.log(response.data.foto);                
+                setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
+            })
+            .catch(error => {
+                console.error("Error al obtener la información del perfil:", error);
+            });
+    }, []);
+
 
     //Obtiene valores de las fotos y demás cosas de la base de datos
     useEffect(() => {
@@ -35,7 +38,7 @@ function Explore() {
                     alert("No hay imágenes");
                 } else {
                     setAllImg(response.data);
-                    console.log(response.data);
+                    //console.log(response.data);
                 }
             })
             .catch((error) => {
@@ -56,19 +59,19 @@ function Explore() {
                         };
                     });
                 });
-    
+
                 try {
                     const base64Strings = await Promise.all(base64Promises);
                     setBase64Images(base64Strings);
-                    console.log(base64Strings); // Cambiado a log de base64Strings en lugar de base64Images
+                    //console.log(base64Strings); // Cambiado a log de base64Strings en lugar de base64Images
                 } catch (error) {
                     console.error("Error converting images to base64:", error);
                 }
             }
         };
-    
+
         convertImagesToBase64(); // Llamamos a la función de conversión independientemente del tamaño de allImg
-    
+
     }, [allImg]);
     //Masonry effect    
     useEffect(() => {
@@ -107,8 +110,9 @@ function Explore() {
                         <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
                     </li>
                     <li className={`${styles["nav-item"]}`}>
+                        {/* Aquí usamos la imagen obtenida del servidor, si está disponible */}
                         <Link to="/perfil">
-                            <img src="/resources/pfp/lovers.jpeg" alt="PFP" />
+                            {perfil.foto ? <img src={perfil.foto} alt="Perfil" /> : <img src="" alt="PFP" />}
                         </Link>
                     </li>
                 </ul>

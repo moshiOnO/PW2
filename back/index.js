@@ -24,6 +24,7 @@ app.use(session({
     },
     name: 'id_usuario'
 }));
+
 function verificarSesion(req, res, next) {
     if (req.session.userId) {
         next(); // El usuario está logueado, continuar con la solicitud
@@ -31,9 +32,6 @@ function verificarSesion(req, res, next) {
         res.status(401).send("No autorizado"); // No logueado, enviar error
     }
 }
-app.use(verificarSesion); // Aplica el middleware globalmente (opcional)
-
-
 
 
 app.listen(3001,
@@ -55,7 +53,7 @@ const db = mysql.createConnection(
 )
 
 
-
+//******************************Inicio y registro de sesión ************************
 // Modifica la ruta "/registro" para incluir el apodo (nickname) del usuario
 app.post("/registro", (req, res) => {
     const { name, nickN, mail, pass } = req.body;
@@ -107,11 +105,38 @@ app.post("/login", (req, resp) => {
         }
     });
 });
+//***************************************************************************************
+//***************************************************************************************
+//***************************************************************************************
+
+// Obtener info general del usuario
+app.get("/perfilMenu", verificarSesion, (req, res) => {
+    const userId = req.session.userId;
+    //console.log(userId);
+    if (userId) {
+        db.query("SELECT nombre_usuario, foto_usuario FROM usuario WHERE id_usuario = ?", [userId], (err, result) => {
+            if (err) {
+                return res.status(500).send("Error al recuperar la información del usuario");
+            }
+            if (result.length > 0) {
+                // Asegúrate de que result[0].foto_usuario no sea null antes de convertirlo
+                console.log(result[0]);
+                const foto = result[0].foto_usuario ? Buffer.from(result[0].foto_usuario).toString('base64') : null;
+                res.json({ nombre: result[0].nombre_usuario, foto: foto ? `data:image/jpeg;base64,${foto}` : null });
+            } else {
+                res.status(404).send("Usuario no encontrado.");
+            }
+        });
+    } else {
+        res.status(401).send("Usuario no autenticado.");
+    }
+});
 
 
 
 
-//Obtener las cosas para el dashboard
+
+//******************************DashBoard ************************
 app.get("/getnewtoold",
     (req, resp) => {
         db.query("CALL publis_newtoold",
@@ -126,7 +151,7 @@ app.get("/getnewtoold",
                     }
                 }
             })
-    })
+    });
 
 app.get("/getufollowed",
     (req, resp) => {
@@ -143,12 +168,15 @@ app.get("/getufollowed",
             }
         });
     });
+//***************************************************************************************
+//***************************************************************************************
+//***************************************************************************************
 
 
 
 
 
-//Logica  de clases para cargar imagesnes y asi
+//******************************Lógica de carga de imágenes************************
 const fileFil = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg') {
@@ -200,6 +228,12 @@ app.get("/getAllImg",
             })
     })
 
+//***************************************************************************************
+//***************************************************************************************
+//***************************************************************************************
+
+
+//******************************DashBoard ************************
 //Referencia de elminado de "usuarios.js"
 app.delete("/delete/:nomUser",
     (req, resp) => {

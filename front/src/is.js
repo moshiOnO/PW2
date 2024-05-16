@@ -3,7 +3,7 @@ import style from './paginaWeb/css/login.module.css';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import Axios from 'axios';
+//import Axios from 'axios';
 import axiosInstance from './AxiosConf/axiosconf';
 
 const InicioSesion = () => {
