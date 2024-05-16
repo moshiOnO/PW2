@@ -120,7 +120,7 @@ app.get("/perfilMenu", verificarSesion, (req, res) => {
             }
             if (result.length > 0) {
                 // Asegúrate de que result[0].foto_usuario no sea null antes de convertirlo
-                console.log(result[0]);
+                //console.log(result[0]);
                 const foto = result[0].foto_usuario ? Buffer.from(result[0].foto_usuario).toString('base64') : null;
                 res.json({ nombre: result[0].nombre_usuario, foto: foto ? `data:image/jpeg;base64,${foto}` : null });
             } else {
@@ -153,21 +153,23 @@ app.get("/getnewtoold",
             })
     });
 
-app.get("/getufollowed",
-    (req, resp) => {
-        const userId = req.query.id_usuario; // Obtener el ID del usuario de la URL
+app.get("/getufollowed", verificarSesion, (req, resp) => {
+    const userId = req.session.userId; // Usar el ID del usuario desde la sesión
+    if (userId) {
         db.query("CALL publis_ufollowed(?)", [userId], (error, data) => {
             if (error) {
-                resp.send(error);
+                resp.status(500).send(error);
+            } else if (data.length > 0) {
+                resp.json(data);
             } else {
-                if (data.length > 0) {
-                    resp.json(data);
-                } else {
-                    resp.json('No imagen');
-                }
+                resp.json('No imagen');
             }
         });
-    });
+    } else {
+        resp.status(401).send("No autorizado");
+    }
+});
+
 //***************************************************************************************
 //***************************************************************************************
 //***************************************************************************************

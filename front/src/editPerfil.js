@@ -3,10 +3,29 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import Swal from 'sweetalert2';
 import styles from './paginaWeb/css/editperfil.module.css';
 import React, { useRef, useState, useEffect } from 'react';
-import Axios from 'axios';
+import axiosInstance from './AxiosConf/axiosconf';
 import { Link, useNavigate } from 'react-router-dom';
 
+//Componentes
+import Menu from './components/menuComponent'
+
 function Editperfil() {
+
+     //Variables para el menú
+     const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
+     //Obtiene los datos para el menu
+     useEffect(() => {
+         axiosInstance.get('/perfilMenu')
+             .then(response => {
+                 //console.log(response.data.foto);                
+                 setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
+             })
+             .catch(error => {
+                 console.error("Error al obtener la información del perfil:", error);
+             });
+     }, []);
+
+
     const nav = useNavigate()
     const [nickname, setNickname] = useState('');
     const [desc, setDesc] = useState('');
@@ -91,26 +110,7 @@ function Editperfil() {
     return (
         <>
             {/* <!-- Menú del apartado superior --> */}
-            <nav id={styles.menu} className="navbar navbar-expand-lg navbar-light">
-                <a id={styles.companyname} className="navbar-brand" href="#">DEEZY</a>
-                <ul id={styles.menuElements} className="navbar-nav">
-                    {/* css                 bootstrap */}
-                    <li className={`${styles["nav-item"]}`} >
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/explore">Explorar</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link to="/perfil">
-                            <img src="/resources/pfp/lovers.jpeg" alt="PFP" />
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
+            <Menu perfil={perfil} />
 
             {/* <!-- Info del perfil --> */}
             <div className="container">

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Masonry from 'masonry-layout';
 //import Axios from 'axios';
 import axiosInstance from './AxiosConf/axiosconf';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 
 //Componentes
 import CardContainer from './components/cardContainerDashboard';
@@ -18,7 +18,7 @@ function Explore() {
     const [base64Images, setBase64Images] = useState([]);
 
     const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
-
+    //Obtiene los datos para el menu
     useEffect(() => {
         axiosInstance.get('/perfilMenu')
             .then(response => {

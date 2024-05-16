@@ -1,15 +1,34 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import styles from './paginaWeb/css/stats.module.css';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect , useState} from 'react';
 import Chart from 'chart.js/auto'
+import axiosInstance from './AxiosConf/axiosconf';
 
 import { Link } from 'react-router-dom';
 
+//Componentes
+import Menu from './components/menuComponent';
 
-function Stats() {
+
+function Stats() {    
     const chartContainer = useRef(null);
     const chartInstance = useRef(null);
 
+    //Variables para el menú
+    const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
+    //Obtiene los datos para el menu
+    useEffect(() => {
+        axiosInstance.get('/perfilMenu')
+            .then(response => {
+                //console.log(response.data.foto);                
+                setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
+            })
+            .catch(error => {
+                console.error("Error al obtener la información del perfil:", error);
+            });
+    }, []);
+
+    //Chart
     useEffect(() => {
         if (chartInstance.current) {
             chartInstance.current.destroy();
@@ -54,26 +73,7 @@ function Stats() {
     return (
         <>
             {/* <!-- Menú del apartado superior --> */}
-            <nav id={styles.menu} class="navbar navbar-expand-lg navbar-light">
-                <a id={styles.companyname} class="navbar-brand" href="#">DEEZY</a>
-                <ul id={styles.menuElements} class="navbar-nav">
-                    {/* css                 bootstrap */}
-                    <li className={`${styles["nav-item"]}`} >
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Explorar</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link to="/perfil">
-                            <img src="/resources/pfp/lovers.jpeg" alt="PFP" />
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
+            <Menu perfil={perfil} /> 
 
             <br />
             <br />

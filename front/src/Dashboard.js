@@ -1,12 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import styles from './paginaWeb/css/dashboard.module.css';
 import React, { useState, useEffect } from 'react';
 import Masonry from 'masonry-layout';
-import Axios from 'axios';
-import { Link } from 'react-router-dom';
+import axiosInstance from './AxiosConf/axiosconf';
 
 //Componentes
 import CardContainer from './components/cardContainerDashboard';
+import Menu from './components/menuComponent';
 
 
 function Dashboard() {
@@ -14,21 +13,33 @@ function Dashboard() {
 
     const [allImg, setAllImg] = useState([]);
     const [base64Images, setBase64Images] = useState([]);
-    const [Titlepubs, setTitlespubs] = useState([]);
-    //Valores para verificar si el usuario sigue a alguien      
-    const idusuario = 6; //6:non, 2:sis
+    //Valores para verificar si el usuario sigue a alguien  
     const [hasFollowed, setHasFollowed] = useState(true);
+
+    //Variables para el menú
+    const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
+    //Obtiene los datos para el menu
+    useEffect(() => {
+        axiosInstance.get('/perfilMenu')
+            .then(response => {
+                //console.log(response.data.foto);                
+                setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
+            })
+            .catch(error => {
+                console.error("Error al obtener la información del perfil:", error);
+            });
+    }, []);
+
+
 
     //Obtiene valores de las fotos y demás cosas de la base de datos
     useEffect(() => {
-        Axios.get(`http://localhost:3001/getufollowed?id_usuario=${idusuario}`)
+        axiosInstance.get("http://localhost:3001/getufollowed")
             .then((response) => {
                 if (response.data === "No imagen") {
                     alert("No hay imágenes");
-                    //console.log("no hay datos aksdjksdjkasdj xD");
                 } else {
                     setAllImg(response.data);
-                    //console.log(response.data);
                 }
             })
             .catch((error) => {
@@ -96,26 +107,7 @@ function Dashboard() {
         <>
 
             {/* <!-- Menú del apartado superior --> */}
-            <nav id={styles.menu} className="navbar navbar-expand-lg navbar-light">
-                <a id={styles.companyname} className="navbar-brand" href="#">DEEZY</a>
-                <ul id={styles.menuElements} className="navbar-nav">
-                    {/* css                 bootstrap */}
-                    <li className={`${styles["nav-item"]}`} >
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/explore">Explorar</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link to="/perfil">
-                            <img src="/resources/pfp/lovers.jpeg" alt="PFP" />
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
+            <Menu perfil={perfil} /> 
 
             {/* Renderiza el contenedor de tarjetas con los datos */}
             {hasFollowed ?
