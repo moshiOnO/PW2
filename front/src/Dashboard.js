@@ -72,7 +72,7 @@ function Dashboard() {
                 try {
                     const base64Strings = await Promise.all(base64Promises);
                     setBase64Images(base64Strings);
-                    console.log(base64Strings); // Cambiado a log de base64Strings en lugar de base64Images
+                    //console.log(base64Strings); // Cambiado a log de base64Strings en lugar de base64Images
                 } catch (error) {
                     console.error("Error converting images to base64:", error);
                 }

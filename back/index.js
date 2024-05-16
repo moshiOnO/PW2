@@ -3,7 +3,6 @@ const app = express();
 const mysql = require('mysql');
 const cors = require('cors');
 const multer = require('multer');
-
 const session = require('express-session');
 
 //Cors bien configurao
@@ -24,7 +23,7 @@ app.use(session({
     },
     name: 'id_usuario'
 }));
-
+//Verificar sesión existente
 function verificarSesion(req, res, next) {
     if (req.session.userId) {
         next(); // El usuario está logueado, continuar con la solicitud
@@ -32,8 +31,7 @@ function verificarSesion(req, res, next) {
         res.status(401).send("No autorizado"); // No logueado, enviar error
     }
 }
-
-
+//Configuración del servidor
 app.listen(3001,
     () => {
         console.log("Escuchupapuando en puertopapu 3papumil");
@@ -42,7 +40,6 @@ app.listen(3001,
 app.get('/', (req, res) => {
     res.send('Hola putupapu3000');
 });
-
 const db = mysql.createConnection(
     {
         host: "localhost",
@@ -51,6 +48,23 @@ const db = mysql.createConnection(
         database: "pw2"
     }
 )
+//PAra las imágenes
+const fileFil = (req, file, cb) => {
+    // reject a file
+    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg') {
+        cb(null, true);
+    } else {
+        cb(null, false);
+
+        return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+    }
+};
+const strg = multer.memoryStorage();
+const upload = multer({
+    storage: strg,
+    fileFilter: fileFil
+})
+
 
 
 //******************************Inicio y registro de sesión ************************
@@ -94,7 +108,7 @@ app.post("/login", (req, resp) => {
             console.error("Error en la consulta:", err);
             resp.status(500).send(err); // Manejar errores de base de datos
         } else {
-            console.log("Resultado de la consulta:", data);
+            //console.log("Resultado de la consulta:", data);
             if (data.length > 0) {
                 req.session.userId = data[0].id_usuario; // Almacenar el ID del usuario en la sesión
                 console.log("Sesión actualizada con userID:", req.session.userId); // Mostrar el ID del usuario almacenado en la sesión
@@ -109,20 +123,26 @@ app.post("/login", (req, resp) => {
 //***************************************************************************************
 //***************************************************************************************
 
+
 // Obtener info general del usuario
 app.get("/perfilMenu", verificarSesion, (req, res) => {
     const userId = req.session.userId;
-    //console.log(userId);
     if (userId) {
-        db.query("SELECT nombre_usuario, foto_usuario FROM usuario WHERE id_usuario = ?", [userId], (err, result) => {
+        db.query("SELECT * FROM usuario WHERE id_usuario = ?", [userId], (err, result) => {
             if (err) {
                 return res.status(500).send("Error al recuperar la información del usuario");
             }
             if (result.length > 0) {
-                // Asegúrate de que result[0].foto_usuario no sea null antes de convertirlo
-                //console.log(result[0]);
-                const foto = result[0].foto_usuario ? Buffer.from(result[0].foto_usuario).toString('base64') : null;
-                res.json({ nombre: result[0].nombre_usuario, foto: foto ? `data:image/jpeg;base64,${foto}` : null });
+                const usuario = result[0];
+                const foto = usuario.foto_usuario ? Buffer.from(usuario.foto_usuario).toString('base64') : null;
+                res.json({
+                    id: usuario.id_usuario,
+                    nombre: usuario.nombre_usuario,
+                    nickname: usuario.nickname_usuario,
+                    email: usuario.email_usuario,
+                    descripcion: usuario.desc_usuario,
+                    foto: foto ? `data:image/jpeg;base64,${foto}` : null
+                });
             } else {
                 res.status(404).send("Usuario no encontrado.");
             }
@@ -133,6 +153,52 @@ app.get("/perfilMenu", verificarSesion, (req, res) => {
 });
 
 
+
+
+//******************************Edición de perfil************************
+// Configuración de multer para manejar la carga de archivos
+app.put("/actualizarPerfil", verificarSesion, upload.single('foto'), (req, res) => {
+    const userId = req.session.userId;
+    const { nickname, desc, nombre, contrasenia } = req.body;
+    const foto = req.file ? req.file.buffer : null;
+
+    console.log("Datos recibidos:", req.body); // Verifica los datos recibidos
+    console.log("Contraseña recibida:", contrasenia);
+  
+    if (userId) {
+      // Verificar si el nickname ya existe para otro usuario
+      db.query("SELECT id_usuario FROM usuario WHERE nickname_usuario = ? AND id_usuario != ?", [nickname, userId], (err, result) => {
+        if (err) {
+          return res.status(500).send("Error al verificar el nickname");
+        }
+        if (result.length > 0) {
+          return res.status(400).send("El nickname ya está en uso por otro usuario");
+        }
+  
+        // Construir la consulta de actualización
+        let query = "UPDATE usuario SET nickname_usuario = ?, desc_usuario = ?, nombre_usuario = ?, contrasenia_usuario = ?";
+        //console.log("Contraseña recibida", contraseña);
+        const params = [nickname, desc, nombre, contrasenia, userId];
+        if (foto) {
+          query += ", foto_usuario = ?";
+          params.splice(4, 0, foto); // Insertar la foto en la posición correcta en params
+        }
+        query += " WHERE id_usuario = ?";
+  
+        // Si no hay conflictos, proceder con la actualización
+        db.query(query, params, (err, result) => {
+          if (err) {
+            return res.status(500).send("Error al actualizar la información del usuario");
+          }
+          res.status(200).send("Perfil actualizado exitosamente");
+        });
+      });
+    } else {
+      res.status(401).send("Usuario no autenticado.");
+    }
+  });
+  
+  
 
 
 
@@ -175,25 +241,8 @@ app.get("/getufollowed", verificarSesion, (req, resp) => {
 //***************************************************************************************
 
 
-
-
-
 //******************************Lógica de carga de imágenes************************
-const fileFil = (req, file, cb) => {
-    // reject a file
-    if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg') {
-        cb(null, true);
-    } else {
-        cb(null, false);
 
-        return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
-    }
-};
-const strg = multer.memoryStorage();
-const upload = multer({
-    storage: strg,
-    fileFilter: fileFil
-})
 app.post("/file", upload.single('file'),
     (req, resp) => {
         const imagenB64 = req.file.buffer;
@@ -234,8 +283,6 @@ app.get("/getAllImg",
 //***************************************************************************************
 //***************************************************************************************
 
-
-//******************************DashBoard ************************
 //Referencia de elminado de "usuarios.js"
 app.delete("/delete/:nomUser",
     (req, resp) => {
