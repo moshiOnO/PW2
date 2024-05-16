@@ -1,13 +1,14 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import styles from './paginaWeb/css/dashboard.module.css';
+//import styles from './paginaWeb/css/dashboard.module.css';
 import React, { useState, useEffect } from 'react';
 import Masonry from 'masonry-layout';
-import Axios from 'axios';
+//import Axios from 'axios';
 import axiosInstance from './AxiosConf/axiosconf';
 import { Link } from 'react-router-dom';
 
 //Componentes
 import CardContainer from './components/cardContainerDashboard';
+import Menu from './components/menuComponent';
 
 
 function Explore() {
@@ -32,7 +33,7 @@ function Explore() {
 
     //Obtiene valores de las fotos y demás cosas de la base de datos
     useEffect(() => {
-        Axios.get("http://localhost:3001/getnewtoold")
+        axiosInstance.get("http://localhost:3001/getnewtoold")
             .then((response) => {
                 if (response.data === "No imagen") {
                     alert("No hay imágenes");
@@ -96,27 +97,8 @@ function Explore() {
         <>
 
             {/* <!-- Menú del apartado superior --> */}
-            <nav id={styles.menu} className="navbar navbar-expand-lg navbar-light">
-                <a id={styles.companyname} className="navbar-brand" href="#">DEEZY</a>
-                <ul id={styles.menuElements} className="navbar-nav">
-                    {/* css                 bootstrap */}
-                    <li className={`${styles["nav-item"]}`} >
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/dashboard">Inicio</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/explore">Explorar</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
-                    </li>
-                    <li className={`${styles["nav-item"]}`}>
-                        {/* Aquí usamos la imagen obtenida del servidor, si está disponible */}
-                        <Link to="/perfil">
-                            {perfil.foto ? <img src={perfil.foto} alt="Perfil" /> : <img src="" alt="PFP" />}
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
+            {/* // Usando el componente del Menú */}
+            <Menu perfil={perfil} /> 
 
             {/* Renderiza el contenedor de tarjetas con los datos */}
             <CardContainer data=
