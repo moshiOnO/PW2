@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../paginaWeb/css/dashboard.module.css';
-import Card from './cardDasboard' // Asegúrate de ajustar la ruta según tu estructura de archivos
+import Card from './cardDasboard'; // Asegúrate de ajustar la ruta según tu estructura de archivos
 
 function CardContainer({ data }) {
     return (
@@ -8,7 +8,7 @@ function CardContainer({ data }) {
             <div className="row row-cols-1 row-cols-md-3" data-masonry='{"percentPosition": true }'>
                 {data.map((item, index) => (
                     <div className="col" key={index}>                        
-                        <Card imageUrl={item.imageUrl} title={item.title} />
+                        <Card imageUrl={item.imageUrl} title={item.title} idPubli={item.idPubli} />
                     </div>
                 ))}
             </div>

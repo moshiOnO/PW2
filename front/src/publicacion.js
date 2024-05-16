@@ -48,7 +48,7 @@ function Publicacion() {
     return (
         <>
             {/* <!-- Menú del apartado superior --> */}
-             
+            <Menu perfil={perfil} />
 
 
             {/* <!--Post --> */}
@@ -89,11 +89,11 @@ function Publicacion() {
                     </div>
 
                     {/* Likes  */}
-                    <div class="col-md-1">
+                    <div className="col-md-1">
                         {/* <!-- Botón de Likes --> */}
                         <div id={styles.likesContainer}>
-                            <button type="button" class="btn btn-like">
-                                <i class="bi bi-heart-fill"></i>
+                            <button type="button" className="btn btn-like">
+                                <i className="bi bi-heart-fill"></i>
                             </button>
                             <p id={styles.contadorL}>50</p>
                         </div>
@@ -101,8 +101,8 @@ function Publicacion() {
 
                         {/* <!-- Icono de Comentarios --> */}
                         <div id={styles.comI}>
-                            <button type="button" class="btn btn-comments">
-                                <i class="bi bi-chat"></i>
+                            <button type="button" className="btn btn-comments">
+                                <i className="bi bi-chat"></i>
                             </button>
                         </div>
 
@@ -111,7 +111,7 @@ function Publicacion() {
                     </div>
 
 
-                    <div id={styles.postInfo} class="col-md-3">
+                    <div id={styles.postInfo} className="col-md-3">
                         <h2 id={styles.titleP}>Rocky</h2>
                         <p id={styles.descP}>Sooooo, quería dbujar una gwen, pero pss no le puse coletas, así que ya es una OC :DD</p>
 
@@ -180,7 +180,7 @@ function Publicacion() {
 
 
                     {/* <!-- Contenido de la tercera sección --> */}
-                    <div class="col-md-4">
+                    <div className="col-md-4">
                         <div id={styles.recommContainer}>
                             <div id={styles.recomm}>
                                 <h2>Recomendaciones</h2>
