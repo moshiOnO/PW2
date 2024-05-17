@@ -1,5 +1,4 @@
 // Comentarios.js
-
 import React from 'react';
 import styles from '../paginaWeb/css/PostVentana.module.css';
 

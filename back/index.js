@@ -152,6 +152,68 @@ app.get("/perfilMenu", verificarSesion, (req, res) => {
     }
 });
 
+//Obtener info para la ventana de publicacion
+// Obtener una publicación específica por ID con detalles adicionales
+app.get('/publicacion/:id_publi', (req, res) => {
+    const { id_publi } = req.params;
+
+    const publicacionQuery = 'CALL getPublicacion(?)';
+    const comentariosQuery = 'CALL getComentarios(?)';
+    const categoriasQuery = 'CALL getCategorias(?)';
+    const recomendacionesQuery = 'CALL getRecomendaciones(?)';
+    const recientesQuery = 'CALL getRecientesAutor(?)';
+
+    db.query(publicacionQuery, [id_publi], (err, publicacionResult) => {
+        if (err) return res.status(500).send('Error al obtener la publicación');
+        if (publicacionResult[0].length === 0) return res.status(404).send('Publicación no encontrada');
+
+        const publicacion = publicacionResult[0][0];
+        const fotoPubli = publicacion.foto_publi ? publicacion.foto_publi.toString('base64') : null;
+        const fotoAutor = publicacion.foto_usuario ? publicacion.foto_usuario.toString('base64') : null;
+        publicacion.imageUrl = fotoPubli ? `data:image/jpeg;base64,${fotoPubli}` : null;
+        publicacion.autorPfp = fotoAutor ? `data:image/jpeg;base64,${fotoAutor}` : null;
+
+        db.query(comentariosQuery, [id_publi], (err, comentariosResult) => {
+            if (err) return res.status(500).send('Error al obtener los comentarios');
+            publicacion.comentarios = comentariosResult[0].map(comentario => {
+                const comentarioFoto = comentario.foto_usuario ? comentario.foto_usuario.toString('base64') : null;
+                return {
+                    ...comentario,
+                    pfp: comentarioFoto ? `data:image/jpeg;base64,${comentarioFoto}` : null
+                };
+            });
+
+            db.query(categoriasQuery, [id_publi], (err, categoriasResult) => {
+                if (err) return res.status(500).send('Error al obtener las categorías');
+                publicacion.categorias = categoriasResult[0].map(cat => cat.nombre);
+
+                db.query(recomendacionesQuery, [id_publi], (err, recomendacionesResult) => {
+                    if (err) return res.status(500).send('Error al obtener las recomendaciones');
+                    publicacion.recomendaciones = recomendacionesResult[0].map(rec => {
+                        const recFoto = rec.foto_publi ? rec.foto_publi.toString('base64') : null;
+                        return {
+                            id: rec.id_publi,
+                            imageUrl: recFoto ? `data:image/jpeg;base64,${recFoto}` : null
+                        };
+                    });
+
+                    db.query(recientesQuery, [id_publi], (err, recientesResult) => {
+                        if (err) return res.status(500).send('Error al obtener las publicaciones recientes');
+                        publicacion.recientes = recientesResult[0].map(rec => {
+                            const recFoto = rec.foto_publi ? rec.foto_publi.toString('base64') : null;
+                            return {
+                                id: rec.id_publi,
+                                imageUrl: recFoto ? `data:image/jpeg;base64,${recFoto}` : null
+                            };
+                        });
+
+                        res.json(publicacion);
+                    });
+                });
+            });
+        });
+    });
+});
 
 
 

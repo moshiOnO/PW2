@@ -1,5 +1,3 @@
-// Verificación de comms
-
 import { useState, useEffect } from 'react';
 import axiosInstance from '../AxiosConf/axiosconf';
 
@@ -25,7 +23,15 @@ export function usePublicacion(id_publi) {
     useEffect(() => {
         axiosInstance.get(`/publicacion/${id_publi}`)
             .then(response => {
-                setPublicacion(response.data);
+                const data = response.data;
+                console.log('Datos de la publicación:', data); // Verifica que los datos están siendo recibidos correctamente
+                if (data.imageUrl) {
+                    data.imageUrl = data.imageUrl;
+                }
+                if (data.autorPfp) {
+                    data.autorPfp = data.autorPfp;
+                }
+                setPublicacion(data);
             })
             .catch(error => {
                 console.error("Error al obtener la información de la publicación:", error);
@@ -54,7 +60,6 @@ export function useComment() {
         if (commentText.trim() === '') {
             setCommentError('Por favor, escribe un comentario antes de enviar.');
         } else {
-            // Aquí puedes agregar el código para enviar el comentario a la base de datos
             setCommentError('');
             setCommentText('');
         }
@@ -62,3 +67,5 @@ export function useComment() {
 
     return { commentText, setCommentText, commentError, handleFormSubmit };
 }
+
+

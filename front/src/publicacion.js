@@ -11,11 +11,14 @@ import Comentarios from './components/Comentarios';
 import Recomendaciones from './components/Recomendaciones';
 
 function Publicacion() {
-    const { id_publi } = useParams(); // Obtener id_publi de los parámetros de la URL
+    const { id_publi } = useParams(); // Obtener id_publi de los parámetros de la URL    
     const perfil = usePerfil();
     const publicacion = usePublicacion(id_publi);
     const { followed, handleFollowButtonClick } = useFollow();
     const { commentText, setCommentText, commentError, handleFormSubmit } = useComment();
+
+    console.log('Perfil:', perfil);
+    console.log('Publicación:', publicacion);
 
     return (
         <>
@@ -39,7 +42,7 @@ function Publicacion() {
 
                             <div id={styles.addInfo}>
                                 <p id="autor">{publicacion.autorNombre}</p>
-                                <p id="dateP">{publicacion.fecha}</p>
+                                <p id="dateP">{publicacion.fecha_publi}</p>
                             </div>
 
                             <button id={styles.followButton} className="btn btn-primary" onClick={handleFollowButtonClick}>
@@ -64,8 +67,8 @@ function Publicacion() {
                     </div>
 
                     <div id={styles.postInfo} className="col-md-3">
-                        <h2 id={styles.titleP}>{publicacion.titulo}</h2>
-                        <p id={styles.descP}>{publicacion.descripcion}</p>
+                        <h2 id={styles.titleP}>{publicacion.titulo_publi}</h2>
+                        <p id={styles.descP}>{publicacion.desc_publi}</p>
 
                         <Comentarios comentarios={publicacion.comentarios} />
 
@@ -108,3 +111,7 @@ function Publicacion() {
 }
 
 export default Publicacion;
+
+
+
+
