@@ -106,7 +106,8 @@ function Explore() {
                 (
                     {
                         imageUrl: base64String,
-                        title: allImg[0][index].titulo_publi
+                        title: allImg[0][index].titulo_publi,
+                        idPubli: allImg[0][index].id_publi
                     }
                 ))
                 }

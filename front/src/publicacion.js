@@ -3,7 +3,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.js';
 import styles from './paginaWeb/css/PostVentana.module.css';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { usePerfil, usePublicacion, useFollow, useComment } from './components/publicacionUtils';
+import { usePerfil, usePublicacion, useFollow, useLikes, useComment } from './components/publicacionUtils';
 import axiosInstance from './AxiosConf/axiosconf';
 
 //Componentes
@@ -15,10 +15,9 @@ function Publicacion() {
     const { id_publi } = useParams();
     const perfil = usePerfil();
     const [publicacion, setPublicacion] = usePublicacion(id_publi);
-    const { followed, handleFollowButtonClick } = useFollow();
+    const { followed, handleFollowButtonClick } = useFollow(publicacion.id_autor);
+    const { likes, liked, handleLikeButtonClick } = useLikes(id_publi);
     const { commentText, setCommentText, commentError, handleFormSubmit } = useComment();
-
-    
 
     return (
         <>
@@ -41,8 +40,9 @@ function Publicacion() {
                             </Link>
 
                             <div id={styles.addInfo}>
-                                <p id="autor">{publicacion.autorNombre}</p>
-                                <p id="dateP">{publicacion.fecha_publi}</p>
+                                <p className="autorInfo" id={publicacion.id_autor}>{publicacion.autorNombre}</p>
+                                {/* <p id="autor">{publicacion.autorNombre}</p> */}
+                                {/* <p id="dateP">{publicacion.fecha_publi}</p> */}
                             </div>
 
                             <button id={styles.followButton} className="btn btn-primary" onClick={handleFollowButtonClick}>
@@ -53,10 +53,10 @@ function Publicacion() {
 
                     <div className="col-md-1">
                         <div id={styles.likesContainer}>
-                            <button type="button" className="btn btn-like">
-                                <i className="bi bi-heart-fill"></i>
+                            <button type="button" className="btn btn-like" onClick={handleLikeButtonClick}>
+                                <i className={`bi ${liked ? 'bi-heart-fill' : 'bi-heart'}`}></i>
                             </button>
-                            <p id={styles.contadorL}>{publicacion.likes}</p>
+                            <p id={styles.contadorL}>{likes}</p>
                         </div>
 
                         <div id={styles.comI}>
@@ -111,3 +111,5 @@ function Publicacion() {
 }
 
 export default Publicacion;
+
+

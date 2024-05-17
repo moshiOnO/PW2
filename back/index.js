@@ -125,7 +125,7 @@ app.post("/login", (req, resp) => {
 //***************************************************************************************
 
 
-// Obtener info general del usuario
+// Obtener info general del usuario para el menú
 app.get("/perfilMenu", verificarSesion, (req, res) => {
     const userId = req.session.userId;
     if (userId) {
@@ -153,6 +153,7 @@ app.get("/perfilMenu", verificarSesion, (req, res) => {
     }
 });
 
+
 //Obtener info para la ventana de publicacion
 app.get('/publicacion/:id_publi', (req, res) => {
     const { id_publi } = req.params;
@@ -168,6 +169,7 @@ app.get('/publicacion/:id_publi', (req, res) => {
         if (publicacionResult[0].length === 0) return res.status(404).send('Publicación no encontrada');
 
         const publicacion = publicacionResult[0][0];
+        //console.log(publicacion.id_autor);
         const fotoPubli = publicacion.foto_publi ? publicacion.foto_publi.toString('base64') : null;
         const fotoAutor = publicacion.foto_usuario ? publicacion.foto_usuario.toString('base64') : null;
         publicacion.imageUrl = fotoPubli ? `data:image/jpeg;base64,${fotoPubli}` : null;
@@ -187,7 +189,7 @@ app.get('/publicacion/:id_publi', (req, res) => {
 
             db.query(categoriasQuery, [id_publi], (err, categoriasResult) => {
                 if (err) return res.status(500).send('Error al obtener las categorías');
-                publicacion.categorias = categoriasResult[0].map(cat => cat.nombre);
+                publicacion.categorias = categoriasResult[0].map(cat => cat.title_cat);
 
                 db.query(recomendacionesQuery, [id_publi], (err, recomendacionesResult) => {
                     if (err) return res.status(500).send('Error al obtener las recomendaciones');
@@ -269,6 +271,135 @@ app.post('/addComm', verificarSesion, (req, res) => {
         });
     });
 });
+
+// Ruta para seguir a un autor
+app.post('/follow', verificarSesion, (req, res) => {
+    const { authorId } = req.body;
+    const userId = req.session.userId;
+
+    const followQuery = 'INSERT INTO follow (id_usuario, id_ufollowed, fecha_follow ) VALUES (?, ?, NOW() )';
+
+    db.query(followQuery, [userId, authorId], (err, result) => {
+        if (err) {
+            console.error('Error al seguir al autor:', err);
+            return res.status(500).send('Error al seguir al autor');
+        }
+        res.status(200).send('Autor seguido exitosamente');
+    });
+});
+// Ruta para dejar de seguir a un autor
+app.post('/unfollow', verificarSesion, (req, res) => {
+    const { authorId } = req.body;
+    const userId = req.session.userId;
+
+    const unfollowQuery = 'DELETE FROM follow WHERE id_usuario = ? AND id_ufollowed = ?';
+
+    db.query(unfollowQuery, [userId, authorId], (err, result) => {
+        if (err) {
+            console.error('Error al dejar de seguir al autor:', err);
+            return res.status(500).send('Error al dejar de seguir al autor');
+        }
+        res.status(200).send('Autor dejado de seguir exitosamente');
+    });
+});
+// Ruta para verificar si el usuario sigue a un autor
+app.get('/isFollowing/:authorId', verificarSesion, (req, res) => {
+    const userId = req.session.userId;
+    const { authorId } = req.params;
+
+    const isFollowingQuery = 'SELECT * FROM follow WHERE id_usuario = ? AND id_ufollowed = ?';
+
+    db.query(isFollowingQuery, [userId, authorId], (err, result) => {
+        if (err) {
+            console.error('Error al verificar si el usuario sigue al autor:', err);
+            return res.status(500).send('Error al verificar seguimiento');
+        }
+        res.status(200).send(result.length > 0);
+    });
+});
+
+// Ruta para obtener el número de likes de una publicación
+app.get('/likes/:postId', (req, res) => {
+    const { postId } = req.params;
+
+    const getLikesQuery = 'SELECT COUNT(*) AS likes FROM likes WHERE id_publi = ?';
+
+    db.query(getLikesQuery, [postId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener los likes:', err);
+            return res.status(500).send('Error al obtener los likes');
+        }
+
+        res.json({ likes: results[0].likes });
+    });
+});
+
+// Ruta para agregar un like a una publicación
+app.post('/like', verificarSesion, (req, res) => {
+    const { postId } = req.body;
+    const userId = req.session.userId;
+
+    // Verificar si el usuario ya ha dado like
+    const checkLikeQuery = 'SELECT * FROM likes WHERE id_publi = ? AND id_usuario = ?';
+
+    db.query(checkLikeQuery, [postId, userId], (err, results) => {
+        if (err) {
+            console.error('Error al verificar el like:', err);
+            return res.status(500).send('Error al verificar el like');
+        }
+
+        if (results.length > 0) {
+            return res.status(400).send('Ya has dado like a esta publicación');
+        } else {
+            const addLikeQuery = 'INSERT INTO likes (id_publi, id_usuario, fecha_like) VALUES (?, ?, NOW())';
+
+            db.query(addLikeQuery, [postId, userId], (err, result) => {
+                if (err) {
+                    console.error('Error al agregar el like:', err);
+                    return res.status(500).send('Error al agregar el like');
+                }
+
+                res.status(200).send('Like agregado exitosamente');
+            });
+        }
+    });
+});
+// Ruta para quitar un like de una publicación (opcional)
+app.post('/unlike', verificarSesion, (req, res) => {
+    const { postId } = req.body;
+    const userId = req.session.userId;
+
+    const removeLikeQuery = 'DELETE FROM likes WHERE id_publi = ? AND id_usuario = ?';
+
+    db.query(removeLikeQuery, [postId, userId], (err, result) => {
+        if (err) {
+            console.error('Error al quitar el like:', err);
+            return res.status(500).send('Error al quitar el like');
+        }
+
+        res.status(200).send('Like quitado exitosamente');
+    });
+});
+// Ruta para verificar si el usuario ha dado like a una publicación
+app.get('/isLiked/:postId', verificarSesion, (req, res) => {
+    const userId = req.session.userId;
+    const { postId } = req.params;
+
+    const isLikedQuery = 'SELECT * FROM likes WHERE id_publi = ? AND id_usuario = ?';
+
+    db.query(isLikedQuery, [postId, userId], (err, results) => {
+        if (err) {
+            console.error('Error al verificar si el usuario ha dado like:', err);
+            return res.status(500).send('Error al verificar si el usuario ha dado like');
+        }
+
+        res.status(200).send(results.length > 0);
+    });
+});
+
+
+
+
 //Subir post
 app.post('/addPost', verificarSesion, upload.single('image'), (req, res) => {
     const { title, description, categories } = req.body;
@@ -279,7 +410,7 @@ app.post('/addPost', verificarSesion, upload.single('image'), (req, res) => {
         return res.status(400).send('Faltan datos requeridos');
     }
 
-    const addPostQuery = 'INSERT INTO publicacion (id_autor, titulo_publi, desc_publi, foto_publi) VALUES (?, ?, ?, ?)';
+    const addPostQuery = 'INSERT INTO publicacion (id_autor, titulo_publi, desc_publi, foto_publi, fecha_publi) VALUES (?, ?, ?, ?, NOW())';
     const addCategoryQuery = 'INSERT INTO publi_cat (id_publi, id_cat) VALUES (?, ?)';
 
     db.beginTransaction(err => {
@@ -333,7 +464,6 @@ app.post('/addPost', verificarSesion, upload.single('image'), (req, res) => {
         });
     });
 });
-
 //Obtener categorías
 app.get('/categorias', (req, res) => {
     const getCategoriasQuery = 'SELECT id_cat, title_cat FROM categoria';
