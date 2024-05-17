@@ -24,12 +24,11 @@ export function usePublicacion(id_publi) {
         axiosInstance.get(`/publicacion/${id_publi}`)
             .then(response => {
                 const data = response.data;
-                console.log('Datos de la publicación:', data); // Verifica que los datos están siendo recibidos correctamente
                 if (data.imageUrl) {
-                    data.imageUrl = data.imageUrl;
+                    //data.imageUrl = `data:image/jpeg;base64,${data.imageUrl}`;
                 }
                 if (data.autorPfp) {
-                    data.autorPfp = data.autorPfp;
+                    //data.autorPfp = `data:image/jpeg;base64,${data.autorPfp}`;
                 }
                 setPublicacion(data);
             })
@@ -38,7 +37,7 @@ export function usePublicacion(id_publi) {
             });
     }, [id_publi]);
 
-    return publicacion;
+    return [publicacion, setPublicacion];
 }
 
 export function useFollow() {
@@ -55,13 +54,22 @@ export function useComment() {
     const [commentText, setCommentText] = useState('');
     const [commentError, setCommentError] = useState('');
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = (event, id_publi, id_usuario, reloadComments) => {
         event.preventDefault();
         if (commentText.trim() === '') {
             setCommentError('Por favor, escribe un comentario antes de enviar.');
         } else {
             setCommentError('');
-            setCommentText('');
+            console.log(commentText)
+            axiosInstance.post('/addComm', { id_publi, id_usuario, commentText })
+                .then(() => {
+                    setCommentText('');
+                    window.location.reload(); // Recargar la página
+                })
+                .catch(error => {
+                    console.error("Error al enviar el comentario:", error);
+                    setCommentError('Error al enviar el comentario. Inténtalo de nuevo.');
+                });
         }
     };
 

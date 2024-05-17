@@ -102,7 +102,7 @@ app.post("/create", (req, resp) => {
 });
 //Login para almacenar cosas 
 app.post("/login", (req, resp) => {
-    console.log("Datos recibidos:", req.body.us, req.body.con);
+    //console.log("Datos recibidos:", req.body.us, req.body.con);
     db.query("SELECT * FROM usuario WHERE nickname_usuario=? AND contrasenia_usuario=?", [req.body.us, req.body.con], (err, data) => {
         if (err) {
             console.error("Error en la consulta:", err);
@@ -111,7 +111,7 @@ app.post("/login", (req, resp) => {
             //console.log("Resultado de la consulta:", data);
             if (data.length > 0) {
                 req.session.userId = data[0].id_usuario; // Almacenar el ID del usuario en la sesión
-                console.log("Sesión actualizada con userID:", req.session.userId); // Mostrar el ID del usuario almacenado en la sesión
+                //console.log("Sesión actualizada con userID:", req.session.userId); // Mostrar el ID del usuario almacenado en la sesión
                 resp.json({ alert: 'Success' }); // Usuario encontrado
             } else {
                 resp.json({ alert: 'IncorrectPassword' }); // Contraseña incorrecta o usuario no encontrado
@@ -119,6 +119,7 @@ app.post("/login", (req, resp) => {
         }
     });
 });
+
 //***************************************************************************************
 //***************************************************************************************
 //***************************************************************************************
@@ -153,7 +154,6 @@ app.get("/perfilMenu", verificarSesion, (req, res) => {
 });
 
 //Obtener info para la ventana de publicacion
-// Obtener una publicación específica por ID con detalles adicionales
 app.get('/publicacion/:id_publi', (req, res) => {
     const { id_publi } = req.params;
 
@@ -178,7 +178,9 @@ app.get('/publicacion/:id_publi', (req, res) => {
             publicacion.comentarios = comentariosResult[0].map(comentario => {
                 const comentarioFoto = comentario.foto_usuario ? comentario.foto_usuario.toString('base64') : null;
                 return {
-                    ...comentario,
+                    id_comentario: comentario.id_comm,
+                    username: comentario.username,
+                    text: comentario.desc_comm,
                     pfp: comentarioFoto ? `data:image/jpeg;base64,${comentarioFoto}` : null
                 };
             });
@@ -214,7 +216,59 @@ app.get('/publicacion/:id_publi', (req, res) => {
         });
     });
 });
+//Subir comms
+app.post('/addComm', verificarSesion, (req, res) => {
+    const { id_publi, commentText } = req.body;
+    const userId = req.session.userId;
 
+    console.log('req.body:', req.body);
+    console.log('userId:', userId);
+
+    if (!id_publi || !commentText) {
+        return res.status(400).send('Faltan datos requeridos');
+    }
+
+    const agregarComentarioQuery = 'INSERT INTO comentario (id_usuario, desc_comm) VALUES (?, ?)';
+    const conectarComentarioQuery = 'INSERT INTO publi_comm (id_publi, id_comm) VALUES (?, ?)';
+
+    db.beginTransaction(err => {
+        if (err) {
+            console.error('Error al iniciar la transacción:', err);
+            return res.status(500).send('Error al iniciar la transacción');
+        }
+
+        db.query(agregarComentarioQuery, [userId, commentText], (err, result) => {
+            if (err) {
+                console.error('Error al agregar el comentario:', err);
+                return db.rollback(() => {
+                    res.status(500).send('Error al agregar el comentario');
+                });
+            }
+
+            const id_comentario = result.insertId;
+
+            db.query(conectarComentarioQuery, [id_publi, id_comentario], (err) => {
+                if (err) {
+                    console.error('Error al conectar el comentario con la publicación:', err);
+                    return db.rollback(() => {
+                        res.status(500).send('Error al conectar el comentario con la publicación');
+                    });
+                }
+
+                db.commit(err => {
+                    if (err) {
+                        console.error('Error al confirmar la transacción:', err);
+                        return db.rollback(() => {
+                            res.status(500).send('Error al confirmar la transacción');
+                        });
+                    }
+
+                    res.status(201).send('Comentario agregado exitosamente');
+                });
+            });
+        });
+    });
+});
 
 
 //******************************Edición de perfil************************

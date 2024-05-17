@@ -4,6 +4,7 @@ import styles from './paginaWeb/css/PostVentana.module.css';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { usePerfil, usePublicacion, useFollow, useComment } from './components/publicacionUtils';
+import axiosInstance from './AxiosConf/axiosconf';
 
 //Componentes
 import Menu from './components/menuComponent';
@@ -11,14 +12,13 @@ import Comentarios from './components/Comentarios';
 import Recomendaciones from './components/Recomendaciones';
 
 function Publicacion() {
-    const { id_publi } = useParams(); // Obtener id_publi de los parámetros de la URL    
+    const { id_publi } = useParams();
     const perfil = usePerfil();
-    const publicacion = usePublicacion(id_publi);
+    const [publicacion, setPublicacion] = usePublicacion(id_publi);
     const { followed, handleFollowButtonClick } = useFollow();
     const { commentText, setCommentText, commentError, handleFormSubmit } = useComment();
 
-    console.log('Perfil:', perfil);
-    console.log('Publicación:', publicacion);
+    
 
     return (
         <>
@@ -72,7 +72,7 @@ function Publicacion() {
 
                         <Comentarios comentarios={publicacion.comentarios} />
 
-                        <form id={styles.commentForm} onSubmit={handleFormSubmit}>
+                        <form id={styles.commentForm} onSubmit={(e) => handleFormSubmit(e, id_publi)}>
                             <div className="form-group">
                                 <label htmlFor="commentText">Agregar comentario:</label>
                                 <textarea className="form-control" id="commentText" rows="3" value={commentText} onChange={(e) => setCommentText(e.target.value)}></textarea>
@@ -111,7 +111,3 @@ function Publicacion() {
 }
 
 export default Publicacion;
-
-
-
-

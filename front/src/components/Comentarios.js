@@ -8,7 +8,7 @@ function Comentarios({ comentarios }) {
             <div id={styles.commsP}>
                 {comentarios && comentarios.map((comment, index) => (
                     <div key={index} id={styles.comment}>
-                        <img src={comment.pfp} alt="PFP" />
+                        <img src={comment.pfp} alt="PFP" className={styles.pfp} />
                         <p id={styles.username}>{comment.username}</p>
                         <p>{comment.text}</p>
                         <div style={{ clear: 'both' }}></div>
@@ -20,3 +20,5 @@ function Comentarios({ comentarios }) {
 }
 
 export default Comentarios;
+
+
