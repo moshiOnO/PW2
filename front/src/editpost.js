@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/js/bootstrap.bundle.js'
+import 'bootstrap/dist/js/bootstrap.bundle.js';
 import Swal from 'sweetalert2';
 import styles from './paginaWeb/css/createpost.module.css';
 import React, { useState, useEffect } from 'react';
@@ -9,179 +9,169 @@ import { Link, useNavigate } from 'react-router-dom';
 //Componentes
 import Menu from './components/menuComponent';
 
-
 function Editpost() {
-    const nav = useNavigate()
+    const nav = useNavigate();
 
-    //Variables para el menú
     const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
-    //Obtiene los datos para el menu
+    const [imageFile, setImageFile] = useState(null);
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [categories, setCategories] = useState({});
+    const [categoryOptions, setCategoryOptions] = useState([]);
+    const [errors, setErrors] = useState({ title: '', description: '', categories: '' });
+
     useEffect(() => {
         axiosInstance.get('/perfilMenu')
             .then(response => {
-                //console.log(response.data.foto);                
                 setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
             })
             .catch(error => {
                 console.error("Error al obtener la información del perfil:", error);
             });
+
+        axiosInstance.get('/categorias')
+            .then(response => {
+                const options = response.data.map(category => ({
+                    id: category.id,
+                    name: category.name
+                }));
+                const initialCategories = options.reduce((acc, category) => {
+                    acc[category.id] = false;
+                    return acc;
+                }, {});
+                setCategoryOptions(options);
+                setCategories(initialCategories);
+            })
+            .catch(error => {
+                console.error("Error al obtener las categorías:", error);
+            });
     }, []);
 
+    const handleFileChange = (event) => {
+        setImageFile(event.target.files[0]);
+    };
 
-    useEffect(() => {
-        const handleFileChange = (event) => {
-            const carouselInner = document.getElementById('carouselInner');
-            carouselInner.innerHTML = ''; // Limpiar el contenido anterior del carrusel
+    const handleCategoryChange = (categoryId) => {
+        const selectedCategories = Object.values(categories).filter(value => value).length;
 
-            const files = event.target.files;
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = 'd-block w-100 carousel-item';
-                    carouselInner.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-
-        const botonSubirFoto = document.getElementById('BotonSubirFoto');
-        if (botonSubirFoto) {
-            botonSubirFoto.addEventListener('change', handleFileChange);
+        if (!categories[categoryId] && selectedCategories >= 3) {
+            Swal.fire({
+                title: 'Límite alcanzado',
+                text: 'Solo puedes seleccionar hasta 3 categorías.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            return;
         }
 
-        return () => {
-            if (botonSubirFoto) {
-                botonSubirFoto.removeEventListener('change', handleFileChange);
-            }
-        };
-    }, []);
+        setCategories(prevCategories => ({
+            ...prevCategories,
+            [categoryId]: !prevCategories[categoryId]
+        }));
+    };
 
-    // Función para validar el título y la descripción antes de postear
-    const validarPosteo = () => {
-        const titulo = document.getElementById("titleP").value.trim();
-        const desc = document.getElementById("descP").value.trim();
-        const categorias = document.querySelectorAll(".categoria input[type='checkbox']"); // Selecciona todos los elementos de categoría
+    const validatePost = () => {
+        const errors = {};
+        if (!title.trim()) {
+            errors.title = 'El título es requerido.';
+        }
+        if (!description.trim()) {
+            errors.description = 'La descripción es requerida.';
+        }
+        if (!Object.values(categories).some(value => value)) {
+            errors.categories = 'Debes seleccionar al menos una categoría.';
+        }
 
-        const tituloValido = titulo.length > 0;
-        const descValida = desc.length > 0;
-        let alMenosUnaCategoriaSeleccionada = false;
-
-        // Verifica si al menos una categoría ha sido seleccionada
-        categorias.forEach((categoria) => {
-            if (categoria.checked) {
-                alMenosUnaCategoriaSeleccionada = true;
-            }
-        });
-
-        if (!tituloValido || !descValida || !alMenosUnaCategoriaSeleccionada) {
-            if (!tituloValido) {
-                document.getElementById("titleError").textContent = "El título es requerido.";
-            } else {
-                document.getElementById("titleError").textContent = "";
-            }
-
-            if (!descValida) {
-                document.getElementById("descError").textContent = "La descripción es requerida.";
-            } else {
-                document.getElementById("descError").textContent = "";
-            }
-
-            if (!alMenosUnaCategoriaSeleccionada) {
-                document.getElementById("catError").textContent = "Debes seleccionar al menos una categoría.";
-            } else {
-                document.getElementById("catError").textContent = "";
-            }
-
+        if (Object.keys(errors).length > 0) {
+            setErrors(errors);
             return false;
         } else {
-            /*
-            // Limpiar los mensajes de error si los campos están validados
-            // document.getElementById("titleError").textContent = "";
-            // document.getElementById("descError").textContent = "";
-            // document.getElementById("catError").textContent = "";
-            // // Restablecer los valores de los campos
-            // document.getElementById("titleP").value = "";
-            // document.getElementById("descP").value = "";
-            // No necesitas recargar la página en React
-            // window.location.reload();
-            */
-            //Lógica de subir datos al server
-            Swal.fire({
-                title: 'Tu publicación se creó con éxito',
-                text: '<3',
-                icon: 'success',
-                confirmButtonText: 'Yeiiiiii :DD'
-            } // Aquí cambia el texto del botón de confirmación
-            ).then((result) => {
-                if (result.isConfirmed) {
-                    // Redirigir al usuario a la página "/dashboard"
-                    nav("/dashboard");
-                }
-            });
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('categories', JSON.stringify(Object.keys(categories).filter(key => categories[key])));
+            formData.append('image', imageFile);
 
+            axiosInstance.post('/addPost', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(response => {
+                Swal.fire({
+                    title: 'Tu publicación se creó con éxito',
+                    text: '<3',
+                    icon: 'success',
+                    confirmButtonText: 'Yeiiiiii :DD'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        nav("/dashboard");
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Error al crear la publicación:", error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Hubo un problema al crear la publicación.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
             return true;
         }
     };
 
-
     return (
         <>
-            {/* <!-- Menú del apartado superior --> */}
-            <Menu perfil={perfil} /> 
+            <Menu perfil={perfil} />
 
-
-            {/* <!--Post --> */}
             <div className="container">
-                <div className={`${styles["row"]} row`}>
+                <div className={`${styles.row} row`}>
                     <div className="col-md-4">
                         <div id={styles.carouselExample} className="carousel slide" data-bs-ride="carousel">
                             <div className="carousel-inner" id="carouselInner">
-                                {/* <!-- Aquí se agregarán dinámicamente las imágenes seleccionadas --> */}
+                                {imageFile && (
+                                    <img src={URL.createObjectURL(imageFile)} className="d-block w-100 carousel-item" alt="Preview" />
+                                )}
                             </div>
                         </div>
                         <label htmlFor="BotonSubirFoto" className={`${styles.customfileupload} custom-file-upload`}>Subir foto</label>
-                        <input type="file" accept="image/*" id="BotonSubirFoto" style={{ marginTop: '10px' }} hidden />
+                        <input type="file" accept="image/*" id="BotonSubirFoto" style={{ marginTop: '10px' }} onChange={handleFileChange} hidden />
                     </div>
 
-                    {/* <!-- Información del post --> */}
                     <div id={styles.postInfo} className="col-md-8">
-                        <input type="text" id="titleP" className={styles.titleP} placeholder="Nuevo Título" style={{ marginBottom: '10px' }} />
-
-                        <span id="titleError" className={`${styles.error} error-message`}></span>
+                        <input type="text" id="titleP" className={styles.titleP} placeholder="Nuevo Título" style={{ marginBottom: '10px' }} value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <span id="titleError" className={`${styles.error} error-message`}>{errors.title}</span>
                         <br />
-                        <input type="text" id="descP" className={`${styles.descP} error-message`} placeholder="Nueva Descripción" style={{ marginBottom: '10px' }} />
-
-                        <span id="descError" className={`${styles.error} error-message`}></span>
+                        <input type="text" id="descP" className={`${styles.descP} error-message`} placeholder="Nueva Descripción" style={{ marginBottom: '10px' }} value={description} onChange={(e) => setDescription(e.target.value)} />
+                        <span id="descError" className={`${styles.error} error-message`}>{errors.description}</span>
                         <br />
-
                         <div id="catP" className={`${styles.catP} col-md-8`} style={{ marginBottom: '10px' }}>
-                            <div className="form-check form-check-inline categoria">
-                                <input className={`${styles.formcheckinput} form-check-input`} type="checkbox" value="" id="animeCheck" style={{ display: 'none' }} />
-                                <label className={`${styles.formchecklabel} form-check-label checkbox-label`} htmlFor="animeCheck">Anime</label>
-                            </div>
-                            <div className="form-check form-check-inline categoria">
-                                <input className={`${styles.formcheckinput} form-check-input`} type="checkbox" value="" id="drawingCheck" style={{ display: 'none' }} />
-                                <label className={`${styles.formchecklabel} form-check-label checkbox-label`} htmlFor="drawingCheck">Drawing</label>
-                            </div>
-                            <div className="form-check form-check-inline categoria">
-                                <input className={`${styles.formcheckinput} form-check-input`} type="checkbox" value="" id="ocCheck" style={{ display: 'none' }} />
-                                <label className={`${styles.formchecklabel} form-check-label checkbox-label`} htmlFor="ocCheck">OC</label>
-                            </div>
-                            <span id="catError" className={`${styles.error} error-message`}></span>
+                            {categoryOptions.map(category => (
+                                <div key={category.id} className="form-check form-check-inline categoria">
+                                    <input 
+                                        className={`${styles.formcheckinput} form-check-input`} 
+                                        type="checkbox" 
+                                        id={`category-${category.id}`}
+                                        checked={categories[category.id]} 
+                                        onChange={() => handleCategoryChange(category.id)} 
+                                    />
+                                    <label className={`${styles.formchecklabel} form-check-label checkbox-label`} htmlFor={`category-${category.id}`}>{category.name}</label>
+                                </div>
+                            ))}
+                            <span id="catError" className={`${styles.error} error-message`}>{errors.categories}</span>
                         </div>
-
-                        {/* <!-- Botón personalizado para postear --> */}
-                        <button id={styles.BotonPostear} onClick={validarPosteo} style={{ marginTop: '10px' }}>Postear</button>
+                        <button id={styles.BotonPostear} onClick={validatePost} style={{ marginTop: '10px' }}>Postear</button>
                     </div>
                 </div>
             </div>
-
         </>
-
     );
 }
 
-export default Editpost
+export default Editpost;
+
+
+
+

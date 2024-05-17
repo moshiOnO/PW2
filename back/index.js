@@ -269,6 +269,93 @@ app.post('/addComm', verificarSesion, (req, res) => {
         });
     });
 });
+//Subir post
+app.post('/addPost', verificarSesion, upload.single('image'), (req, res) => {
+    const { title, description, categories } = req.body;
+    const userId = req.session.userId;
+    const image = req.file ? req.file.buffer : null;
+
+    if (!title || !description || !categories || !image) {
+        return res.status(400).send('Faltan datos requeridos');
+    }
+
+    const addPostQuery = 'INSERT INTO publicacion (id_autor, titulo_publi, desc_publi, foto_publi) VALUES (?, ?, ?, ?)';
+    const addCategoryQuery = 'INSERT INTO publi_cat (id_publi, id_cat) VALUES (?, ?)';
+
+    db.beginTransaction(err => {
+        if (err) {
+            console.error('Error al iniciar la transacción:', err);
+            return res.status(500).send('Error al iniciar la transacción');
+        }
+
+        db.query(addPostQuery, [userId, title, description, image], (err, result) => {
+            if (err) {
+                console.error('Error al agregar la publicación:', err);
+                return db.rollback(() => {
+                    res.status(500).send('Error al agregar la publicación');
+                });
+            }
+
+            const postId = result.insertId;
+            const categoryIds = JSON.parse(categories);
+
+            const categoryPromises = categoryIds.map(categoryId => {
+                return new Promise((resolve, reject) => {
+                    db.query(addCategoryQuery, [postId, categoryId], (err) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    });
+                });
+            });
+
+            Promise.all(categoryPromises)
+                .then(() => {
+                    db.commit(err => {
+                        if (err) {
+                            console.error('Error al confirmar la transacción:', err);
+                            return db.rollback(() => {
+                                res.status(500).send('Error al confirmar la transacción');
+                            });
+                        }
+
+                        res.status(201).send('Publicación agregada exitosamente');
+                    });
+                })
+                .catch(err => {
+                    console.error('Error al agregar categorías:', err);
+                    db.rollback(() => {
+                        res.status(500).send('Error al agregar categorías');
+                    });
+                });
+        });
+    });
+});
+
+//Obtener categorías
+app.get('/categorias', (req, res) => {
+    const getCategoriasQuery = 'SELECT id_cat, title_cat FROM categoria';
+
+    db.query(getCategoriasQuery, (err, results) => {
+        if (err) {
+            console.error('Error al obtener las categorías:', err);
+            return res.status(500).send('Error al obtener las categorías');
+        }
+
+        if (results.length > 0) {
+            const categorias = results.map(row => ({
+                id: row.id_cat,
+                name: row.title_cat
+            }));
+            res.json(categorias);
+        } else {
+            res.status(404).send('No se encontraron categorías');
+        }
+    });
+});
+
 
 
 //******************************Edición de perfil************************
