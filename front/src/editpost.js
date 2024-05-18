@@ -8,27 +8,20 @@ import { Link, useNavigate } from 'react-router-dom';
 
 //Componentes
 import Menu from './components/menuComponent';
+import { usePerfil } from './components/publicacionUtils';
 
 function Editpost() {
     const nav = useNavigate();
 
-    const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
+    const perfil = usePerfil(); 
     const [imageFile, setImageFile] = useState(null);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [categories, setCategories] = useState({});
     const [categoryOptions, setCategoryOptions] = useState([]);
-    const [errors, setErrors] = useState({ title: '', description: '', categories: '' });
+    const [errors, setErrors] = useState({ title: '', description: '', categories: '', image: '' });
 
-    useEffect(() => {
-        axiosInstance.get('/perfilMenu')
-            .then(response => {
-                setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
-            })
-            .catch(error => {
-                console.error("Error al obtener la información del perfil:", error);
-            });
-
+    useEffect(() => {   
         axiosInstance.get('/categorias')
             .then(response => {
                 const options = response.data.map(category => ({
@@ -80,6 +73,9 @@ function Editpost() {
         }
         if (!Object.values(categories).some(value => value)) {
             errors.categories = 'Debes seleccionar al menos una categoría.';
+        }
+        if (!imageFile) {
+            errors.image = 'Debes subir una imagen.';
         }
 
         if (Object.keys(errors).length > 0) {
@@ -138,6 +134,7 @@ function Editpost() {
                         </div>
                         <label htmlFor="BotonSubirFoto" className={`${styles.customfileupload} custom-file-upload`}>Subir foto</label>
                         <input type="file" accept="image/*" id="BotonSubirFoto" style={{ marginTop: '10px' }} onChange={handleFileChange} hidden />
+                        <span id="imageError" className={`${styles.error} error-message`}>{errors.image}</span>
                     </div>
 
                     <div id={styles.postInfo} className="col-md-8">
@@ -171,6 +168,7 @@ function Editpost() {
 }
 
 export default Editpost;
+
 
 
 

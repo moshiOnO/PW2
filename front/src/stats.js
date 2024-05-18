@@ -21,7 +21,7 @@ function Stats() {
         axiosInstance.get('/perfilMenu')
             .then(response => {
                 //console.log(response.data.foto);                
-                setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
+                setPerfil({ nombre: response.data.nombre, foto: response.data.foto, ID: response.data.id });
             })
             .catch(error => {
                 console.error("Error al obtener la información del perfil:", error);

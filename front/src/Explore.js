@@ -9,6 +9,7 @@ import axiosInstance from './AxiosConf/axiosconf';
 //Componentes
 import CardContainer from './components/cardContainerDashboard';
 import Menu from './components/menuComponent';
+import {usePerfil} from './components/publicacionUtils';
 
 
 function Explore() {
@@ -17,18 +18,7 @@ function Explore() {
     const [allImg, setAllImg] = useState([]);
     const [base64Images, setBase64Images] = useState([]);
 
-    const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
-    //Obtiene los datos para el menu
-    useEffect(() => {
-        axiosInstance.get('/perfilMenu')
-            .then(response => {
-                //console.log(response.data.foto);                
-                setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
-            })
-            .catch(error => {
-                console.error("Error al obtener la información del perfil:", error);
-            });
-    }, []);
+    const perfil = usePerfil(); 
 
 
     //Obtiene valores de las fotos y demás cosas de la base de datos

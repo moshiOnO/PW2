@@ -6,22 +6,13 @@ import axiosInstance from './AxiosConf/axiosconf';
 //Componentes
 import CardContainer from './components/cardContainerDashboard';
 import Menu from './components/menuComponent';
+import {usePerfil} from './components/publicacionUtils';
 
 function Dashboard() {
     const [allImg, setAllImg] = useState([]);
     const [base64Images, setBase64Images] = useState([]);
     const [hasFollowed, setHasFollowed] = useState(true);
-    const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
-
-    useEffect(() => {
-        axiosInstance.get('/perfilMenu')
-            .then(response => {
-                setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
-            })
-            .catch(error => {
-                console.error("Error al obtener la información del perfil:", error);
-            });
-    }, []);
+    const perfil = usePerfil();    
 
     useEffect(() => {
         axiosInstance.get("http://localhost:3001/getufollowed")

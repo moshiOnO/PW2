@@ -8,10 +8,11 @@ import { useNavigate } from 'react-router-dom';
 
 // Componentes
 import Menu from './components/menuComponent';
+import {usePerfil} from './components/publicacionUtils';
 
 function Editperfil() {
     const nav = useNavigate();
-    const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
+    const perfil = usePerfil(); 
     const [formData, setFormData] = useState({
         nickname: '',
         desc: '',
@@ -21,26 +22,8 @@ function Editperfil() {
     const [archivo, setArchivo] = useState(null);
     const [errors, setErrors] = useState({});
     const fileInputRef = useRef(null);
-    const imgElementRef = useRef(null);
-
-    // Obtener datos del perfil al cargar el componente
-    useEffect(() => {
-        axiosInstance.get('/perfilMenu')
-            .then(response => {
-                const data = response.data;
-                setPerfil({ nombre: data.nombre, foto: data.foto });
-                setFormData({
-                    nickname: data.nickname || '',
-                    desc: data.descripcion || '',
-                    nombre: data.nombre || '',
-                    contraseña: '' // No traemos la contraseña por seguridad
-                });
-            })
-            .catch(error => {
-                console.error('Error al obtener la información del perfil:', error);
-            });
-    }, []);
-
+    const imgElementRef = useRef(null);    
+   
     // Manejadores de eventos
     const handleChange = (e) => {
         const { name, value } = e.target;

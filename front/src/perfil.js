@@ -8,26 +8,16 @@ import { Link, useNavigate } from 'react-router-dom';
 
 //Componentes
 import Menu from './components/menuComponent';
+import {usePerfil} from './components/publicacionUtils';
 
 
 const Perfil = () => {
 
     const nav = useNavigate()
-
     //Variables para el menú
-    const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
+    const perfil = usePerfil(); 
     //Obtiene los datos para el menu
-    useEffect(() => {
-        axiosInstance.get('/perfilMenu')
-            .then(response => {
-                //console.log(response.data.foto);                
-                setPerfil({ nombre: response.data.nombre, foto: response.data.foto });
-            })
-            .catch(error => {
-                console.error("Error al obtener la información del perfil:", error);
-            });
-    }, []);
-
+    
     const mostrarVentanaConfirmacion = () => {
         Swal.fire({
             title: '¿Estás seguro?',
