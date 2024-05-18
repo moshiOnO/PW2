@@ -28,7 +28,8 @@ function App() {
         <Route path='/dashboard' element={<Dashboard />}></Route>
         <Route path='/explore' element={<Explore />}></Route>
 
-        <Route path='/perfil' element={<Perfil />}></Route>
+        {/* <Route path='/perfil' element={<Perfil />}></Route> */}
+        <Route path='/perfil/:userId' element={<Perfil />}></Route>
         
         {/* <Route path='/publicacion' element={<Publicacion />}></Route> */}
         <Route path='/publicacion/:id_publi' element={<Publicacion />}></Route> {/* Ruta actualizada */}

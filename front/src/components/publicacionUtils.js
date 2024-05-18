@@ -3,12 +3,26 @@ import Swal from 'sweetalert2';
 import axiosInstance from '../AxiosConf/axiosconf';
 
 export function usePerfil() {
-    const [perfil, setPerfil] = useState({ nombre: '', foto: '' , ID: ''});
+    const [perfil, setPerfil] = useState({
+        ID: '',
+        nombre: '',
+        nickname: '',
+        email: '',
+        descripcion: '',
+        foto: ''
+    });
 
     useEffect(() => {
         axiosInstance.get('/perfilMenu')
             .then(response => {
-                setPerfil({ nombre: response.data.nombre, foto: response.data.foto, ID: response.data.id });
+                setPerfil({
+                    ID: response.data.id,
+                    nombre: response.data.nombre,
+                    nickname: response.data.nickname,
+                    email: response.data.email,
+                    descripcion: response.data.descripcion,
+                    foto: response.data.foto
+                });
             })
             .catch(error => {
                 console.error("Error al obtener la información del perfil:", error);

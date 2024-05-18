@@ -8,11 +8,11 @@ import { useNavigate } from 'react-router-dom';
 
 // Componentes
 import Menu from './components/menuComponent';
-import {usePerfil} from './components/publicacionUtils';
+import { usePerfil } from './components/publicacionUtils';
 
 function Editperfil() {
     const nav = useNavigate();
-    const perfil = usePerfil(); 
+    const perfil = usePerfil();
     const [formData, setFormData] = useState({
         nickname: '',
         desc: '',
@@ -22,8 +22,25 @@ function Editperfil() {
     const [archivo, setArchivo] = useState(null);
     const [errors, setErrors] = useState({});
     const fileInputRef = useRef(null);
-    const imgElementRef = useRef(null);    
-   
+    const imgElementRef = useRef(null);
+
+    // Obtener datos del perfil al cargar el componente
+    useEffect(() => {
+        axiosInstance.get('/perfilMenu')
+            .then(response => {
+                const data = response.data;
+                setFormData({
+                    nickname: data.nickname || '',
+                    desc: data.descripcion || '',
+                    nombre: data.nombre || '',
+                    contraseña: '' // No traemos la contraseña por seguridad
+                });
+            })
+            .catch(error => {
+                console.error('Error al obtener la información del perfil:', error);
+            });
+    }, []);
+
     // Manejadores de eventos
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -59,46 +76,46 @@ function Editperfil() {
             const formDataToSend = new FormData();
             formDataToSend.append('nickname', formData.nickname);
             formDataToSend.append('desc', formData.desc);
-            formDataToSend.append('nombre', formData.nombre);                      
+            formDataToSend.append('nombre', formData.nombre);
             if (formData.contraseña.trim()) {
                 formDataToSend.append('contrasenia', formData.contraseña);
             }
             if (archivo) {
                 formDataToSend.append('foto', archivo);
             }
-    
+
             // Para verificar si la contraseña se ha agregado correctamente
             for (let pair of formDataToSend.entries()) {
                 console.log(pair[0] + ': ' + pair[1]);
-            }            
-    
+            }
+
             axiosInstance.put('http://localhost:3001/actualizarPerfil', formDataToSend, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            .then(response => {
-                Swal.fire({
-                    title: 'Tu perfil se modificó con éxito',
-                    text: '<3',
-                    icon: 'success',
-                    confirmButtonText: 'Yeiiiiii :DD'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        nav('/dashboard');
+                .then(response => {
+                    Swal.fire({
+                        title: 'Tu perfil se modificó con éxito',
+                        text: '<3',
+                        icon: 'success',
+                        confirmButtonText: 'Yeiiiiii :DD'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            nav('/dashboard');
+                        }
+                    });
+                })
+                .catch(error => {
+                    if (error.response && error.response.status === 400) {
+                        setErrors({ nickname: error.response.data });
+                    } else {
+                        console.error('Error al actualizar el perfil:', error);
                     }
                 });
-            })
-            .catch(error => {
-                if (error.response && error.response.status === 400) {
-                    setErrors({ nickname: error.response.data });
-                } else {
-                    console.error('Error al actualizar el perfil:', error);
-                }
-            });
         }
     };
-    
+
     return (
         <>
             <Menu perfil={perfil} />

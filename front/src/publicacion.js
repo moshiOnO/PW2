@@ -4,7 +4,6 @@ import styles from './paginaWeb/css/PostVentana.module.css';
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { usePerfil, usePublicacion, useFollow, useLikes, useComment } from './components/publicacionUtils';
-import axiosInstance from './AxiosConf/axiosconf';
 
 //Componentes
 import Menu from './components/menuComponent';
@@ -35,7 +34,7 @@ function Publicacion() {
                         </div>
 
                         <div id={styles.autorInfo}>
-                            <Link to="/perfil">
+                            <Link to={`/perfil/${publicacion.id_autor}`}>
                                 <img src={publicacion.autorPfp} alt="PFP" />
                             </Link>
 

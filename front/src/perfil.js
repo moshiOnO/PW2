@@ -1,24 +1,49 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-icons/font/bootstrap-icons.css'
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import Swal from 'sweetalert2';
 import styles from './paginaWeb/css/perfil.module.css';
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axiosInstance from './AxiosConf/axiosconf';
-import { Link, useNavigate } from 'react-router-dom';
 
 //Componentes
 import Menu from './components/menuComponent';
-import {usePerfil} from './components/publicacionUtils';
-
+import { usePerfil } from './components/publicacionUtils';
+import UserInfo from './components/UserInfo';
+import UserPosts from './components/UserPosts';
 
 const Perfil = () => {
+    const { userId } = useParams();
+    const perfilMenu = usePerfil();
+    const [perfil, setPerfil] = useState({
+        ID: '',
+        nombre: '',
+        nickname: '',
+        email: '',
+        descripcion: '',
+        foto: ''
+    });
+    const [userPosts, setUserPosts] = useState([]);
 
-    const nav = useNavigate()
-    //Variables para el menú
-    const perfil = usePerfil(); 
-    //Obtiene los datos para el menu
-    
-    const mostrarVentanaConfirmacion = () => {
+    useEffect(() => {
+        axiosInstance.get(`/perfil/${userId}`)
+            .then(response => {
+                setPerfil(response.data);
+            })
+            .catch(error => {
+                console.error('Error al obtener la información del perfil:', error);
+            });
+
+        axiosInstance.get(`/userPosts/${userId}`)
+            .then(response => {
+                setUserPosts(response.data);
+            })
+            .catch(error => {
+                console.error('Error al obtener las publicaciones del usuario:', error);
+            });
+    }, [userId]);
+
+    const mostrarVentanaConfirmacion = (postId) => {
         Swal.fire({
             title: '¿Estás seguro?',
             text: 'Se borrará la información de forma permanente.',
@@ -30,150 +55,55 @@ const Perfil = () => {
             cancelButtonText: 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Aquí puedes ejecutar la lógica para borrar la información
-                console.log('Borrando información...');
-                //Alerta               
-                Swal.fire({
-                    title: 'Tu post se borró con éxito',
-                    text: '<3',
-                    icon: 'success',
-                    confirmButtonText: 'Yeiiiiii :DD',
-                    confirmButtonColor: '#E4AF9E'
-                }
-                ).then((result) => {
-                    if (result.isConfirmed) {
-                        // Redirigir al usuario a la página 
-                        nav("/perfil");
-                    }
-                });
+                axiosInstance.delete(`/deletePost/${postId}`)
+                    .then(response => {
+                        Swal.fire({
+                            title: 'Tu post se borró con éxito',
+                            text: '<3',
+                            icon: 'success',
+                            confirmButtonText: 'Yeiiiiii :DD',
+                            confirmButtonColor: '#E4AF9E'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                setUserPosts(userPosts.filter(post => post.id !== postId));
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error al borrar la publicación:', error);
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Hubo un problema al borrar la publicación.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#E4AF9E'
+                        });
+                    });
             }
         });
     };
 
-
-
     return (
         <>
-            {/* <!-- Menú del apartado superior --> */}
-            <Menu perfil={perfil} /> 
+            <Menu perfil={perfilMenu} />
 
-            <div class="container">
-                <div className={`${styles["row"]} row`}>
-
-                    {/* <!--Columna para la info personal del usuario--> */}
-                    <div class="col-md-3">
-
-                        <div id={styles.pfp}>
-                            <Link id={styles.editButton} to="/editperfil">
-                                <span class="bi bi-wrench"></span>
-                            </Link>
-
-                            <img src="../../resources/pfp/lovers.jpeg" alt="PFP" />
-                            <h2> Donnie Balboa</h2>
-                            <p> Me gusta la saga de los juegos de Persona :DD</p>
-                            <hr class={`${styles["separador"]}`} />
-                            <h2>Estadisticas</h2>
-                            <div id={styles.featured}>
-                                <Link to="/stats">Publicaciones/Likes</Link>
-                                <Link to="/stats">Publicaciones/Visualización</Link>
-                                <Link to="/stats">Interacciones/Semanales</Link>
-                                <Link to="/stats">Seguidores/Mensuales</Link>
-                            </div>
-                        </div>
+            <div className="container">
+                <div className={`${styles.row} row`}>
+                    <div className="col-md-3">
+                        {console.log(perfil, perfilMenu.ID)}
+                        <UserInfo profile={perfil} loggedInUserId={perfilMenu.ID} />
                     </div>
 
-                    {/* <!-- Columna para el nombre y publis --> */}
-                    <div id={styles.pfinfo} class="col-md-8">
-
+                    <div id={styles.pfinfo} className="col-md-8">
                         <div id={styles.pfn}>
-                            <h3>@moshiOnO</h3>
+                            <h3>@{perfil.nickname}</h3>
                         </div>
-
-                        <div id={styles.pfpubs}>
-
-                            <div id={styles.pubpfp}>
-
-                                <Link id={styles.editPub} to="/editpost">
-                                    <span class="bi bi-wrench-adjustable"></span>
-                                </Link>
-
-                                <button id={styles.removePub} onClick={mostrarVentanaConfirmacion}>
-                                    <span class="bi bi-trash"></span>
-                                </button>
-
-                                <img src="../../resources/pubs/Akali.jpeg" alt="" />
-                                <div id={styles.pubpfpT}>
-                                    <h4>Título</h4>
-                                    <p id={styles.datePub}>Fecha uwu</p>
-                                    <p>Mi bieja weeeeeee</p>
-                                </div>
-                            </div>
-
-                            <div id={styles.pubpfp}>
-
-                                <Link id={styles.editPub} to="/editpost">
-                                    <span class="bi bi-wrench-adjustable"></span>
-                                </Link>
-                                <button id={styles.removePub} onClick={mostrarVentanaConfirmacion}>
-                                    <span class="bi bi-trash"></span>
-                                </button>
-
-                                <img src="../../resources/pubs/yanfo.jpeg" alt="" />
-                                <div id={styles.pubpfpT}>
-                                    <h4>Título</h4>
-                                    <p id={styles.datePub}>Fecha uwu</p>
-                                    <p>Un fondo de pantallita o qué?</p>
-                                </div>
-                            </div>
-
-                            <div id={styles.pubpfp}>
-
-                                <Link id={styles.editPub} to="/editpost">
-                                    <span class="bi bi-wrench-adjustable"></span>
-                                </Link>
-                                <button id={styles.removePub} onClick={mostrarVentanaConfirmacion}>
-                                    <span class="bi bi-trash"></span>
-                                </button>
-
-                                <img src="../../resources/pubs/DanHeng.jpeg" alt="" />
-                                <div id={styles.pubpfpT}>
-                                    <h4>Título</h4>
-                                    <p id={styles.datePub}>Fecha uwu</p>
-                                    <p>Que me preñe el cumpleañero</p>
-                                </div>
-                            </div>
-
-                            <div id={styles.pubpfp}>
-
-                                <Link id={styles.editPub} to="/editpost">
-                                    <span class="bi bi-wrench-adjustable"></span>
-                                </Link>
-                                <button id={styles.removePub} onClick={mostrarVentanaConfirmacion}>
-                                    <span class="bi bi-trash"></span>
-                                </button>
-
-                                <img src="../../resources/pubs/ururaka.jpeg" alt="" />
-                                <div id={styles.pubpfpT}>
-                                    <h4>Título</h4>
-                                    <p id={styles.datePub}>Fecha uwu</p>
-                                    <p>AAAAAAAAAAAAAAAA TE AMOOOOOOO MUCHO musunene</p>
-                                </div>
-                            </div>
-
-
-                        </div>
+                        <UserPosts posts={userPosts} onDelete={mostrarVentanaConfirmacion} loggedInUserId={perfilMenu.ID} />
                     </div>
-
-
                 </div>
             </div>
-
-
         </>
-
-
-
     );
-}
+};
 
-export default Perfil
+export default Perfil;

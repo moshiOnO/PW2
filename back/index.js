@@ -153,6 +153,72 @@ app.get("/perfilMenu", verificarSesion, (req, res) => {
     }
 });
 
+// Ruta para obtener el perfil de un usuario por su ID
+app.get("/perfil/:userId", verificarSesion, (req, res) => {
+    const userId = req.params.userId;
+    db.query("SELECT * FROM usuario WHERE id_usuario = ?", [userId], (err, result) => {
+        if (err) {
+            return res.status(500).send("Error al recuperar la información del usuario");
+        }
+        if (result.length > 0) {
+            const usuario = result[0];
+            const foto = usuario.foto_usuario ? Buffer.from(usuario.foto_usuario).toString('base64') : null;
+            res.json({
+                id: usuario.id_usuario,
+                nombre: usuario.nombre_usuario,
+                nickname: usuario.nickname_usuario,
+                email: usuario.email_usuario,
+                descripcion: usuario.desc_usuario,
+                foto: foto ? `data:image/jpeg;base64,${foto}` : null
+            });
+        } else {
+            res.status(404).send("Usuario no encontrado.");
+        }
+    });
+});
+// Ruta para obtener las publicaciones de un usuario por su ID
+app.get('/userPosts/:userId', verificarSesion, (req, res) => {
+    const userId = req.params.userId;
+
+    const getUserPostsQuery = 'SELECT * FROM publicacion WHERE id_autor = ?';
+
+    db.query(getUserPostsQuery, [userId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener las publicaciones del usuario:', err);
+            return res.status(500).send('Error al obtener las publicaciones del usuario');
+        }
+
+        // Convertir las imágenes a base64
+        const publicaciones = results.map(pub => {
+            const fotoPubli = pub.foto_publi ? pub.foto_publi.toString('base64') : null;
+            return {
+                ...pub,
+                imageUrl: fotoPubli ? `data:image/jpeg;base64,${fotoPubli}` : null
+            };
+        });
+
+        res.json(publicaciones);
+    });
+});
+
+// Ruta para borrar una publicación usando un procedimiento almacenado
+app.delete('/deletePost/:postId', verificarSesion, (req, res) => {
+    const { postId } = req.params;
+
+    const deletePostProcedure = 'CALL borrarPublis_byid(?)';
+
+    db.query(deletePostProcedure, [postId], (err, result) => {
+        if (err) {
+            console.error('Error al borrar la publicación:', err);
+            return res.status(500).send('Error al borrar la publicación');
+        }
+
+        res.status(200).send('Publicación borrada exitosamente');
+    });
+});
+
+
+
 
 //Obtener info para la ventana de publicacion
 app.get('/publicacion/:id_publi', (req, res) => {
@@ -317,7 +383,6 @@ app.get('/isFollowing/:authorId', verificarSesion, (req, res) => {
         res.status(200).send(result.length > 0);
     });
 });
-
 // Ruta para obtener el número de likes de una publicación
 app.get('/likes/:postId', (req, res) => {
     const { postId } = req.params;
@@ -333,7 +398,6 @@ app.get('/likes/:postId', (req, res) => {
         res.json({ likes: results[0].likes });
     });
 });
-
 // Ruta para agregar un like a una publicación
 app.post('/like', verificarSesion, (req, res) => {
     const { postId } = req.body;
@@ -396,6 +460,7 @@ app.get('/isLiked/:postId', verificarSesion, (req, res) => {
         res.status(200).send(results.length > 0);
     });
 });
+
 
 
 
