@@ -68,16 +68,6 @@ const upload = multer({
     fileFilter: fileFil
 })
 
-// Middleware para redirigir a usuarios autenticados
-function redirigirSiAutenticado(req, res, next) {
-    if (req.session.userId) {
-        res.redirect('/dashboard'); // Redirigir a la ruta /dashboard si está autenticado
-    } else {
-        next(); // No autenticado, continuar con la solicitud
-    }
-}
-
-
 
 //******************************Inicio y registro de sesión ************************
 // Modifica la ruta "/registro" para incluir el apodo (nickname) del usuario
@@ -96,28 +86,52 @@ function redirigirSiAutenticado(req, res, next) {
 // Modifica la ruta "/create" para incluir el apodo (nickname) del usuario
 app.post("/create", (req, resp) => {
     const usu = req.body.usuario;
-    const nick = req.body.apodo; // Cambio de nombre de variable
+    const nick = req.body.apodo;
     const correo = req.body.correo;
     const passw = req.body.contra;
 
-    db.query('INSERT INTO usuario (nombre_usuario, nickname_usuario, email_usuario, contrasenia_usuario) VALUES (?, ?, ?, ?)',
-        [usu, nick, correo, passw], // Modificación para incluir el apodo
-        (err, data) => {
+    // Llamar al procedimiento almacenado validar_registro
+    db.query('CALL validar_registro(?, ?, ?, @error)', [usu, nick, correo], (err, result) => {
+        if (err) {
+            console.log(err);
+            return resp.status(500).send("Error al validar el registro");
+        }
+
+        // Recuperar el mensaje de error si existe
+        db.query('SELECT @error AS error', (err, results) => {
             if (err) {
                 console.log(err);
-                resp.status(500).send("Error al registrar el usuario");
-            } else {
-                const userId = result[0].id_usuario;
-                req.session.userId = userId;
-                resp.cookie('id_usuario', userId, {
-                    httpOnly: true,
-                    maxAge: 1000 * 60 * 60 * 24 // 1 día
-                });
-                resp.send("Información insertada");
+                return resp.status(500).send("Error al obtener el resultado de la validación");
             }
-        }
-    );
+
+            const error = results[0].error;
+            if (error) {
+                // Si hay un error, enviar el mensaje de error
+                return resp.status(400).send(error);
+            } else {
+                // Si no hay error, proceder con la inserción del usuario
+                db.query('INSERT INTO usuario (nombre_usuario, nickname_usuario, email_usuario, contrasenia_usuario) VALUES (?, ?, ?, ?)',
+                    [usu, nick, correo, passw], 
+                    (err, data) => {
+                        if (err) {
+                            console.log(err);
+                            return resp.status(500).send("Error al registrar el usuario");
+                        } else {
+                            const userId = data.insertId;  // Usar data.insertId para obtener el ID del nuevo usuario
+                            req.session.userId = userId;
+                            resp.cookie('id_usuario', userId, {
+                                httpOnly: true,
+                                maxAge: 1000 * 60 * 60 * 24 // 1 día
+                            });
+                            resp.status(201).send("Usuario registrado exitosamente");
+                        }
+                    }
+                );
+            }
+        });
+    });
 });
+
 //Login para almacenar cosas 
 app.post("/login", (req, resp) => {
     db.query("SELECT * FROM usuario WHERE nickname_usuario=? AND contrasenia_usuario=?", [req.body.us, req.body.con], (err, data) => {
