@@ -262,15 +262,22 @@ app.put("/actualizarPerfil", verificarSesion, upload.single('foto'), (req, res) 
                 return res.status(400).send("El nickname ya está en uso por otro usuario");
             }
 
-            // Construir la consulta de actualización
-            let query = "UPDATE usuario SET nickname_usuario = ?, desc_usuario = ?, nombre_usuario = ?, contrasenia_usuario = ?";
-            //console.log("Contraseña recibida", contraseña);
-            const params = [nickname, desc, nombre, contrasenia, userId];
+            // Construir la consulta de actualización de manera dinámica
+            let query = "UPDATE usuario SET nickname_usuario = ?, desc_usuario = ?, nombre_usuario = ?";
+            const params = [nickname, desc, nombre];
+
+            if (contrasenia) {
+                query += ", contrasenia_usuario = ?";
+                params.push(contrasenia);
+            }
+
             if (foto) {
                 query += ", foto_usuario = ?";
-                params.splice(4, 0, foto); // Insertar la foto en la posición correcta en params
+                params.push(foto);
             }
+
             query += " WHERE id_usuario = ?";
+            params.push(userId);
 
             // Si no hay conflictos, proceder con la actualización
             db.query(query, params, (err, result) => {
@@ -284,6 +291,7 @@ app.put("/actualizarPerfil", verificarSesion, upload.single('foto'), (req, res) 
         res.status(401).send("Usuario no autenticado.");
     }
 });
+
 //***************************************************************************************
 //***************************************************************************************
 //***************************************************************************************
