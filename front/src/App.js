@@ -24,23 +24,28 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<InicioSesion />}></Route>
-        <Route path='/register' element={<Registro />}></Route>    
+        <Route path='/register' element={<Registro />}></Route>
 
         <Route path='/dashboard' element={<Dashboard />}></Route>
         <Route path='/explore' element={<Explore />}></Route>
 
         {/* <Route path='/perfil' element={<Perfil />}></Route> */}
         <Route path='/perfil/:userId' element={<Perfil />}></Route>
-        
+
         {/* <Route path='/publicacion' element={<Publicacion />}></Route> */}
         <Route path='/publicacion/:id_publi' element={<Publicacion />}></Route> {/* Ruta actualizada */}
 
         <Route path='/editperfil' element={<Editperfil />}></Route>
+
         <Route path='/stats' element={<Stats />}></Route>
-        
+        <Route path='/stats/publicacionesLikes' element={<Stats option="publicacionesLikes" />} />
+        <Route path='/stats/interaccionesSemanales' element={<Stats option="interaccionesSemanales" />} />
+        <Route path='/stats/seguidoresMensuales' element={<Stats option="seguidoresMensuales" />} />
+
+
         {/* <Route path='/editpost' element={<Editpost />}></Route> */}
         <Route path='/editpost/:postId' element={<Editpost />}></Route>
-        <Route path='/createpost' element={<CreatePost />}></Route> 
+        <Route path='/createpost' element={<CreatePost />}></Route>
 
         <Route path='/usuarios' element={<Usuarios />}></Route>
         <Route path='/cargarimagen' element={<CargarImagen />}></Route>

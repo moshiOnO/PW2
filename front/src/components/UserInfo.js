@@ -16,11 +16,11 @@ const UserInfo = ({ profile, loggedInUserId }) => {
             <hr className={styles.separador} />
             <h2>Estadísticas</h2>
             <div id={styles.featured}>
-                <Link to="/stats">Publicaciones/Likes</Link>
-                <Link to="/stats">Publicaciones/Visualización</Link>
-                <Link to="/stats">Interacciones/Semanales</Link>
-                <Link to="/stats">Seguidores/Mensuales</Link>
+                <Link to="/stats/publicacionesLikes">Publicaciones/Likes</Link>
+                <Link to="/stats/interaccionesSemanales">Interacciones Semanales</Link>
+                <Link to="/stats/seguidoresMensuales">Seguidores Mensuales</Link>
             </div>
+            <button id={styles.cerrarsesion}>Cerrar Sesión</button>
         </div>
     );
 };

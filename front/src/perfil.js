@@ -90,7 +90,7 @@ const Perfil = () => {
             <div className="container">
                 <div className={`${styles.row} row`}>
                     <div className="col-md-3">
-                        {console.log(perfil, perfilMenu.ID)}
+                        {/* {console.log(perfil, perfilMenu.ID)} */}
                         <UserInfo profile={perfil} loggedInUserId={perfilMenu.ID} />
                     </div>
 
@@ -98,6 +98,7 @@ const Perfil = () => {
                         <div id={styles.pfn}>
                             <h3>@{perfil.nickname}</h3>
                         </div>
+                        {/* {console.log(userPosts[0].id_publi)} */}
                         <UserPosts posts={userPosts} onDelete={mostrarVentanaConfirmacion} loggedInUserId={perfilMenu.ID} />
                     </div>
                 </div>

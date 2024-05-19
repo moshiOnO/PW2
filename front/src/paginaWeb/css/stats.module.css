@@ -49,11 +49,46 @@
 }
 
 /* Estilo personalizado para las estadisticas */
-.chartcontainer {
-    border: 5px solid rgb(238, 174, 153);
-    /* Melon color */
-    border-radius: 5px;
-    /* Rounded corners */
+.chartContainer {
     background-color: rgb(238, 174, 153);
-    padding: 200px;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.buttonPrimary {
+    background-color: rgb(238, 174, 153);
+    color: white;
+    border: none;
+}
+
+.buttonSecondary {
+    background-color: gainsboro;
+    color: white;
+    border: none;
+}
+
+.buttonSuccess {
+    background-color: rgb(238, 174, 153);
+    color: white;
+    border: none;
+}
+
+
+.buttonGroup {    
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.buttonGroup .btn {
+    flex: 1;
+    margin: 0 10px;
+}
+.buttonGroup .btn:first-child {
+    margin-left: 0;
+}
+.buttonGroup .btn:last-child {
+    margin-right: 0;
 }

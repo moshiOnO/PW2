@@ -153,6 +153,9 @@ app.get("/perfilMenu", verificarSesion, (req, res) => {
     }
 });
 
+
+
+
 // Ruta para obtener el perfil de un usuario por su ID
 app.get("/perfil/:userId", verificarSesion, (req, res) => {
     const userId = req.params.userId;
@@ -200,6 +203,54 @@ app.get('/userPosts/:userId', verificarSesion, (req, res) => {
         res.json(publicaciones);
     });
 });
+
+
+
+// Ruta para obtener estadísticas de publicaciones/likes por día de la semana
+app.get('/stats/publicacionesLikes', verificarSesion, (req, res) => {
+    const userId = req.session.userId;
+    const query = 'CALL getPublicacionesLikes(?)';
+
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener estadísticas de publicaciones/likes:', err);
+            return res.status(500).send('Error al obtener estadísticas de publicaciones/likes');
+        }
+        res.json(results[0]);
+    });
+});
+
+// Ruta para obtener estadísticas de interacciones semanales
+app.get('/stats/interaccionesSemanales', verificarSesion, (req, res) => {
+    const userId = req.session.userId;
+    const query = 'CALL getInteraccionesSemanales(?)';
+
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener estadísticas de interacciones semanales:', err);
+            return res.status(500).send('Error al obtener estadísticas de interacciones semanales');
+        }
+        res.json(results[0]);
+    });
+});
+
+// Ruta para obtener estadísticas de seguidores mensuales
+app.get('/stats/seguidoresMensuales', verificarSesion, (req, res) => {
+    const userId = req.session.userId;
+    const query = 'CALL getSeguidoresMensuales(?)';
+
+    db.query(query, [userId], (err, results) => {
+        if (err) {
+            console.error('Error al obtener estadísticas de seguidores mensuales:', err);
+            return res.status(500).send('Error al obtener estadísticas de seguidores mensuales');
+        }
+        res.json(results[0]);
+    });
+});
+
+
+
+
 
 // Ruta para borrar una publicación usando un procedimiento almacenado
 app.delete('/deletePost/:postId', verificarSesion, (req, res) => {
@@ -252,7 +303,6 @@ app.get('/publicacionEdit/:postId', (req, res) => {
         }
     });
 });
-// Ruta para actualizar una publicación existente
 // Ruta para actualizar una publicación existente
 app.put('/updatePost/:postId', verificarSesion, upload.single('image'), (req, res) => {
     const { postId } = req.params;
@@ -334,6 +384,10 @@ app.put('/updatePost/:postId', verificarSesion, upload.single('image'), (req, re
         });
     });
 });
+
+
+
+
 
 
 //Obtener info para la ventana de publicacion

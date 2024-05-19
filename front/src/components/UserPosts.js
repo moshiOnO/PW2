@@ -14,12 +14,13 @@ const UserPosts = ({ posts, onDelete, loggedInUserId }) => {
 
                 return (
                     <div key={index} id={styles.pubpfp}>
-                        {loggedInUserId === post.id_autor && (
-                            <>
-                                <Link id={styles.editPub} to={`/editpost/${post.id}`}>
+                        {loggedInUserId === post.id_autor && (                            
+                            <>        
+                            {/* {console.log(post.id_publi)}                     */}
+                                <Link id={styles.editPub} to={`/editpost/${post.id_publi}`}>
                                     <span className="bi bi-wrench-adjustable"></span>
                                 </Link>
-                                <button id={styles.removePub} onClick={() => onDelete(post.id)}>
+                                <button id={styles.removePub} onClick={() => onDelete(post.id_publi)}>
                                     <span className="bi bi-trash"></span>
                                 </button>
                             </>
