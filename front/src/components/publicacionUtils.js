@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import axiosInstance from '../AxiosConf/axiosconf';
+import { useNavigate } from 'react-router-dom';
 
 export function usePerfil() {
+    const nav = useNavigate();
     const [perfil, setPerfil] = useState({
         ID: '',
         nombre: '',
@@ -25,7 +27,8 @@ export function usePerfil() {
                 });
             })
             .catch(error => {
-                console.error("Error al obtener la información del perfil:", error);
+                nav('/');
+                //console.error("Error al obtener la información del perfil:", error);
             });
     }, []);
 

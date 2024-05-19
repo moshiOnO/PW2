@@ -23,6 +23,8 @@ app.use(session({
     },
     name: 'id_usuario'
 }));
+
+
 //Verificar sesión existente
 function verificarSesion(req, res, next) {
     if (req.session.userId) {
@@ -31,6 +33,7 @@ function verificarSesion(req, res, next) {
         res.status(401).send("No autorizado"); // No logueado, enviar error
     }
 }
+
 //Configuración del servidor
 app.listen(3001,
     () => {
@@ -48,7 +51,7 @@ const db = mysql.createConnection(
         database: "pw2"
     }
 )
-//PAra las imágenes
+//Para las imágenes
 const fileFil = (req, file, cb) => {
     // reject a file
     if (file.mimetype === 'image/png' || file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg') {
@@ -65,22 +68,31 @@ const upload = multer({
     fileFilter: fileFil
 })
 
+// Middleware para redirigir a usuarios autenticados
+function redirigirSiAutenticado(req, res, next) {
+    if (req.session.userId) {
+        res.redirect('/dashboard'); // Redirigir a la ruta /dashboard si está autenticado
+    } else {
+        next(); // No autenticado, continuar con la solicitud
+    }
+}
+
 
 
 //******************************Inicio y registro de sesión ************************
 // Modifica la ruta "/registro" para incluir el apodo (nickname) del usuario
-app.post("/registro", (req, res) => {
-    const { name, nickN, mail, pass } = req.body;
+// app.post("/registro", redirigirSiAutenticado, (req, res) => {
+//     const { name, nickN, mail, pass } = req.body;
 
-    const sql = 'INSERT INTO usuario (nombre_usuario, nickname_usuario, email_usuario, contrasenia_usuario) VALUES (?, ?, ?, ?)';
-    db.query(sql, [name, nickN, mail, pass], (err, result) => {
-        if (err) {
-            res.status(500).send('Error al registrar el usuario');
-            throw err;
-        }
-        res.status(200).send('Usuario registrado exitosamente');
-    });
-});
+//     const sql = 'INSERT INTO usuario (nombre_usuario, nickname_usuario, email_usuario, contrasenia_usuario) VALUES (?, ?, ?, ?)';
+//     db.query(sql, [name, nickN, mail, pass], (err, result) => {
+//         if (err) {
+//             res.status(500).send('Error al registrar el usuario');
+//             throw err;
+//         }
+//         res.status(200).send('Usuario registrado exitosamente');
+//     });
+// });
 // Modifica la ruta "/create" para incluir el apodo (nickname) del usuario
 app.post("/create", (req, resp) => {
     const usu = req.body.usuario;
@@ -95,6 +107,12 @@ app.post("/create", (req, resp) => {
                 console.log(err);
                 resp.status(500).send("Error al registrar el usuario");
             } else {
+                const userId = result[0].id_usuario;
+                req.session.userId = userId;
+                resp.cookie('id_usuario', userId, {
+                    httpOnly: true,
+                    maxAge: 1000 * 60 * 60 * 24 // 1 día
+                });
                 resp.send("Información insertada");
             }
         }
@@ -102,16 +120,13 @@ app.post("/create", (req, resp) => {
 });
 //Login para almacenar cosas 
 app.post("/login", (req, resp) => {
-    //console.log("Datos recibidos:", req.body.us, req.body.con);
     db.query("SELECT * FROM usuario WHERE nickname_usuario=? AND contrasenia_usuario=?", [req.body.us, req.body.con], (err, data) => {
         if (err) {
             console.error("Error en la consulta:", err);
             resp.status(500).send(err); // Manejar errores de base de datos
         } else {
-            //console.log("Resultado de la consulta:", data);
             if (data.length > 0) {
-                req.session.userId = data[0].id_usuario; // Almacenar el ID del usuario en la sesión
-                //console.log("Sesión actualizada con userID:", req.session.userId); // Mostrar el ID del usuario almacenado en la sesión
+                req.session.userId = data[0].id_usuario; // Almacenar el ID del usuario en la sesión                
                 resp.json({ alert: 'Success' }); // Usuario encontrado
             } else {
                 resp.json({ alert: 'IncorrectPassword' }); // Contraseña incorrecta o usuario no encontrado
@@ -119,10 +134,10 @@ app.post("/login", (req, resp) => {
         }
     });
 });
+//***************************************************************************************
+//***************************************************************************************
+//***************************************************************************************
 
-//***************************************************************************************
-//***************************************************************************************
-//***************************************************************************************
 
 
 // Obtener info general del usuario para el menú
@@ -155,7 +170,7 @@ app.get("/perfilMenu", verificarSesion, (req, res) => {
 
 
 
-
+//******************************Perfil del usuario************************
 // Ruta para obtener el perfil de un usuario por su ID
 app.get("/perfil/:userId", verificarSesion, (req, res) => {
     const userId = req.params.userId;
@@ -203,9 +218,65 @@ app.get('/userPosts/:userId', verificarSesion, (req, res) => {
         res.json(publicaciones);
     });
 });
+// Ruta para cerrar sesión
+app.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send('Error al cerrar sesión');
+        }
+        res.clearCookie('id_usuario');
+        res.send('Sesión cerrada correctamente');
+    });
+});
+//******************************Edición de perfil************************
+// Configuración de multer para manejar la carga de archivos
+app.put("/actualizarPerfil", verificarSesion, upload.single('foto'), (req, res) => {
+    const userId = req.session.userId;
+    const { nickname, desc, nombre, contrasenia } = req.body;
+    const foto = req.file ? req.file.buffer : null;
+
+    console.log("Datos recibidos:", req.body); // Verifica los datos recibidos
+    console.log("Contraseña recibida:", contrasenia);
+
+    if (userId) {
+        // Verificar si el nickname ya existe para otro usuario
+        db.query("SELECT id_usuario FROM usuario WHERE nickname_usuario = ? AND id_usuario != ?", [nickname, userId], (err, result) => {
+            if (err) {
+                return res.status(500).send("Error al verificar el nickname");
+            }
+            if (result.length > 0) {
+                return res.status(400).send("El nickname ya está en uso por otro usuario");
+            }
+
+            // Construir la consulta de actualización
+            let query = "UPDATE usuario SET nickname_usuario = ?, desc_usuario = ?, nombre_usuario = ?, contrasenia_usuario = ?";
+            //console.log("Contraseña recibida", contraseña);
+            const params = [nickname, desc, nombre, contrasenia, userId];
+            if (foto) {
+                query += ", foto_usuario = ?";
+                params.splice(4, 0, foto); // Insertar la foto en la posición correcta en params
+            }
+            query += " WHERE id_usuario = ?";
+
+            // Si no hay conflictos, proceder con la actualización
+            db.query(query, params, (err, result) => {
+                if (err) {
+                    return res.status(500).send("Error al actualizar la información del usuario");
+                }
+                res.status(200).send("Perfil actualizado exitosamente");
+            });
+        });
+    } else {
+        res.status(401).send("Usuario no autenticado.");
+    }
+});
+//***************************************************************************************
+//***************************************************************************************
+//***************************************************************************************
 
 
 
+//****************************** Estadistícas ************************
 // Ruta para obtener estadísticas de publicaciones/likes por día de la semana
 app.get('/stats/publicacionesLikes', verificarSesion, (req, res) => {
     const userId = req.session.userId;
@@ -247,11 +318,14 @@ app.get('/stats/seguidoresMensuales', verificarSesion, (req, res) => {
         res.json(results[0]);
     });
 });
+//***************************************************************************************
+//***************************************************************************************
+//***************************************************************************************
 
 
 
 
-
+//****************************** Acciones para las publis del perfil  ************************
 // Ruta para borrar una publicación usando un procedimiento almacenado
 app.delete('/deletePost/:postId', verificarSesion, (req, res) => {
     const { postId } = req.params;
@@ -384,12 +458,15 @@ app.put('/updatePost/:postId', verificarSesion, upload.single('image'), (req, re
         });
     });
 });
+//***************************************************************************************
+//***************************************************************************************
+//***************************************************************************************
 
 
 
 
 
-
+//****************************** Ventana de publicación ************************
 //Obtener info para la ventana de publicacion
 app.get('/publicacion/:id_publi', (req, res) => {
     const { id_publi } = req.params;
@@ -553,6 +630,8 @@ app.get('/isFollowing/:authorId', verificarSesion, (req, res) => {
         res.status(200).send(result.length > 0);
     });
 });
+
+
 // Ruta para obtener el número de likes de una publicación
 app.get('/likes/:postId', (req, res) => {
     const { postId } = req.params;
@@ -630,9 +709,6 @@ app.get('/isLiked/:postId', verificarSesion, (req, res) => {
         res.status(200).send(results.length > 0);
     });
 });
-
-
-
 
 
 //Subir post
@@ -720,54 +796,9 @@ app.get('/categorias', (req, res) => {
         }
     });
 });
-
-
-
-//******************************Edición de perfil************************
-// Configuración de multer para manejar la carga de archivos
-app.put("/actualizarPerfil", verificarSesion, upload.single('foto'), (req, res) => {
-    const userId = req.session.userId;
-    const { nickname, desc, nombre, contrasenia } = req.body;
-    const foto = req.file ? req.file.buffer : null;
-
-    console.log("Datos recibidos:", req.body); // Verifica los datos recibidos
-    console.log("Contraseña recibida:", contrasenia);
-  
-    if (userId) {
-      // Verificar si el nickname ya existe para otro usuario
-      db.query("SELECT id_usuario FROM usuario WHERE nickname_usuario = ? AND id_usuario != ?", [nickname, userId], (err, result) => {
-        if (err) {
-          return res.status(500).send("Error al verificar el nickname");
-        }
-        if (result.length > 0) {
-          return res.status(400).send("El nickname ya está en uso por otro usuario");
-        }
-  
-        // Construir la consulta de actualización
-        let query = "UPDATE usuario SET nickname_usuario = ?, desc_usuario = ?, nombre_usuario = ?, contrasenia_usuario = ?";
-        //console.log("Contraseña recibida", contraseña);
-        const params = [nickname, desc, nombre, contrasenia, userId];
-        if (foto) {
-          query += ", foto_usuario = ?";
-          params.splice(4, 0, foto); // Insertar la foto en la posición correcta en params
-        }
-        query += " WHERE id_usuario = ?";
-  
-        // Si no hay conflictos, proceder con la actualización
-        db.query(query, params, (err, result) => {
-          if (err) {
-            return res.status(500).send("Error al actualizar la información del usuario");
-          }
-          res.status(200).send("Perfil actualizado exitosamente");
-        });
-      });
-    } else {
-      res.status(401).send("Usuario no autenticado.");
-    }
-  });
-  
-  
-
+//***************************************************************************************
+//***************************************************************************************
+//***************************************************************************************
 
 
 //******************************DashBoard ************************
@@ -803,14 +834,12 @@ app.get("/getufollowed", verificarSesion, (req, resp) => {
         resp.status(401).send("No autorizado");
     }
 });
-
 //***************************************************************************************
 //***************************************************************************************
 //***************************************************************************************
 
 
 //******************************Lógica de carga de imágenes************************
-
 app.post("/file", upload.single('file'),
     (req, resp) => {
         const imagenB64 = req.file.buffer;
@@ -846,11 +875,9 @@ app.get("/getAllImg",
                 }
             })
     })
-
 //***************************************************************************************
 //***************************************************************************************
 //***************************************************************************************
-
 //Referencia de elminado de "usuarios.js"
 app.delete("/delete/:nomUser",
     (req, resp) => {

@@ -2,8 +2,9 @@ import 'bootstrap/dist/css/bootstrap.css';
 import styles from './paginaWeb/css/register.module.css';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import Axios from 'axios';
+import { useState, useEffect } from 'react';
+import axiosInstance from './AxiosConf/axiosconf';
+
 
 function validationCampos(name, nickN, mail, pass, pass2, setNameError, setNickError, setMailError, setPassError, setPass2Error) {
   let isValid = true;
@@ -48,6 +49,24 @@ function validationCampos(name, nickN, mail, pass, pass2, setNameError, setNickE
 }
 
 const Registro = () => {
+
+  const nav = useNavigate();
+  //Si ya existe un usuario con sesión
+  useEffect(() => {
+    const verificarSesion = async () => {
+      try {
+        const response = await axiosInstance.get('/perfilMenu');
+        if (response.status === 200) {
+          nav('/dashboard');
+        }
+      } catch (error) {
+        //console.error('No hay sesión activa:', error);
+      }
+    };
+
+    verificarSesion();
+  }, [nav]);
+
   const [name, setName] = useState('');
   const [nickN, setNickN] = useState('');
   const [mail, setMail] = useState('');
@@ -59,28 +78,28 @@ const Registro = () => {
   const [passError, setPassError] = useState('');
   const [pass2Error, setPass2Error] = useState('');
 
-  const nav = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Reset errors
     setNameError('');
     setNickError('');
     setMailError('');
     setPassError('');
     setPass2Error('');
-  
+
     // Validar campos
     const isValid = validationCampos(name, nickN, mail, pass, pass2, setNameError, setNickError, setMailError, setPassError, setPass2Error);
-  
+
     if (!isValid) {
       // Si la validación no pasa, no continúes con el envío del formulario
       return;
     }
-  
+
     try {
-      const response = await Axios.post('http://localhost:3001/create', {
+      const response = await axiosInstance.post('http://localhost:3001/create', {
         usuario: name,
         apodo: nickN, // Agregar el apodo (nickname) al objeto enviado al servidor
         correo: mail,
@@ -98,8 +117,8 @@ const Registro = () => {
           nav("/dashboard");
         }
       });
-  
-  
+
+
     } catch (error) {
       console.error(error);
       Swal.fire('Error al registrar el usuario',
@@ -108,7 +127,7 @@ const Registro = () => {
       );
     }
   };
-  
+
 
   return (
     <>

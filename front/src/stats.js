@@ -2,26 +2,20 @@ import 'bootstrap/dist/css/bootstrap.css';
 import styles from './paginaWeb/css/stats.module.css';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from './AxiosConf/axiosconf';
+import { useNavigate } from 'react-router-dom';
+
+//Componentes
 import Menu from './components/menuComponent';
 import DataView from './components/DataView';
-import { useNavigate } from 'react-router-dom';
+import {usePerfil} from './components/publicacionUtils';
+
 
 function Stats({ option }) {
     const navigate = useNavigate();
-    const [perfil, setPerfil] = useState({ nombre: '', foto: '' });
+    const perfil = usePerfil(); 
     const [publicacionesLikes, setPublicacionesLikes] = useState([]);
     const [interaccionesSemanales, setInteraccionesSemanales] = useState([]);
-    const [seguidoresMensuales, setSeguidoresMensuales] = useState([]);
-
-    useEffect(() => {
-        axiosInstance.get('/perfilMenu')
-            .then(response => {
-                setPerfil({ nombre: response.data.nombre, foto: response.data.foto, ID: response.data.id });
-            })
-            .catch(error => {
-                console.error("Error al obtener la información del perfil:", error);
-            });
-    }, []);
+    const [seguidoresMensuales, setSeguidoresMensuales] = useState([]);   
 
     useEffect(() => {
         axiosInstance.get('/stats/publicacionesLikes')

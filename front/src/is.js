@@ -2,27 +2,40 @@ import 'bootstrap/dist/css/bootstrap.css';
 import style from './paginaWeb/css/login.module.css';
 import Swal from 'sweetalert2';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-//import Axios from 'axios';
+import { useState, useEffect } from 'react';
 import axiosInstance from './AxiosConf/axiosconf';
 
 const InicioSesion = () => {
+    const nav = useNavigate();
+    //Si ya existe un usuario con sesión
+    useEffect(() => {
+        const verificarSesion = async () => {
+            try {
+                const response = await axiosInstance.get('/perfilMenu');
+                if (response.status === 200) {
+                    nav('/dashboard');
+                }
+            } catch (error) {
+                //console.error('No hay sesión activa:', error);
+            }
+        };
+
+        verificarSesion();
+    }, [nav]);
 
     const [user, setUser] = useState('');
     const [pass, setPass] = useState('');
-    const nav = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const response = await axiosInstance.post('http://localhost:3001/login', {
+            const response = await axiosInstance.post('/login', {
                 us: user,
                 con: pass
             });
 
             if (response.data.alert === "Success") {
-                //localStorage.setItem('sesion', user);
                 Swal.fire(
                     'Bienvenido a DEEZY ' + user + '!',
                     '<3',
@@ -56,38 +69,30 @@ const InicioSesion = () => {
             </div>
 
             <style>{`
-    body {
-        /* Eliminamos display:flex y align-items/justify-content */
-        /* Ajustamos el margin a 0 */
-        margin: 0;
-    
-        /* Agregamos los estilos de la imagen de fondo */
-        background-color: #080808;
-        background-image: url('/resources/Illustrations/login.jpg');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-    
-    /* Establecemos un z-index alto para asegurarnos de que la imagen de fondo esté detrás de otras capas */
-    body::before {
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        background-color: #080808;
-        background-image: url('/resources/Illustrations/login.jpg');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-    
-    `}</style>
-
-
+                body {
+                    margin: 0;
+                    background-color: #080808;
+                    background-image: url('/resources/Illustrations/login.jpg');
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                }
+                
+                body::before {
+                    content: "";
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: -1;
+                    background-color: #080808;
+                    background-image: url('/resources/Illustrations/login.jpg');
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                }
+            `}</style>
         </>
     );
 };
