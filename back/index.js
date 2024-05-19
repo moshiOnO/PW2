@@ -216,8 +216,124 @@ app.delete('/deletePost/:postId', verificarSesion, (req, res) => {
         res.status(200).send('Publicación borrada exitosamente');
     });
 });
+//Ruta para obtener la info de la publicación para editar
+app.get('/publicacionEdit/:postId', (req, res) => {
+    const { postId } = req.params;
 
+    const getPostQuery = 'SELECT * FROM publicacion WHERE id_publi = ?';
+    const getCategoriesQuery = 'SELECT id_cat FROM publi_cat WHERE id_publi = ?';
 
+    db.query(getPostQuery, [postId], (err, postResult) => {
+        if (err) {
+            console.error('Error al obtener la publicación:', err);
+            return res.status(500).send('Error al obtener la publicación');
+        }
+
+        if (postResult.length > 0) {
+            const post = postResult[0];
+            const fotoPubli = post.foto_publi ? post.foto_publi.toString('base64') : null;
+            const postDetails = {
+                ...post,
+                imageUrl: fotoPubli ? `data:image/jpeg;base64,${fotoPubli}` : null
+            };
+
+            db.query(getCategoriesQuery, [postId], (err, categoriesResult) => {
+                if (err) {
+                    console.error('Error al obtener las categorías:', err);
+                    return res.status(500).send('Error al obtener las categorías');
+                }
+
+                const categories = categoriesResult.map(row => row.id_cat);
+                postDetails.categories = categories;
+                res.json(postDetails);
+            });
+        } else {
+            res.status(404).send('Publicación no encontrada');
+        }
+    });
+});
+// Ruta para actualizar una publicación existente
+// Ruta para actualizar una publicación existente
+app.put('/updatePost/:postId', verificarSesion, upload.single('image'), (req, res) => {
+    const { postId } = req.params;
+    const { title, description, categories } = req.body;
+    const image = req.file ? req.file.buffer : null;
+
+    if (!title || !description || !categories) {
+        return res.status(400).send('Faltan datos requeridos');
+    }
+
+    let updatePostQuery;
+    const queryParams = [title, description, postId];
+
+    if (image) {
+        updatePostQuery = 'UPDATE publicacion SET titulo_publi = ?, desc_publi = ?, foto_publi = ? WHERE id_publi = ?';
+        queryParams.splice(2, 0, image); // Insertar la imagen en la posición correcta en queryParams
+    } else {
+        updatePostQuery = 'UPDATE publicacion SET titulo_publi = ?, desc_publi = ? WHERE id_publi = ?';
+    }
+
+    const deleteCategoriesQuery = 'DELETE FROM publi_cat WHERE id_publi = ?';
+    const addCategoryQuery = 'INSERT INTO publi_cat (id_publi, id_cat) VALUES (?, ?)';
+
+    db.beginTransaction(err => {
+        if (err) {
+            console.error('Error al iniciar la transacción:', err);
+            return res.status(500).send('Error al iniciar la transacción');
+        }
+
+        db.query(updatePostQuery, queryParams, (err, result) => {
+            if (err) {
+                console.error('Error al actualizar la publicación:', err);
+                return db.rollback(() => {
+                    res.status(500).send('Error al actualizar la publicación');
+                });
+            }
+
+            db.query(deleteCategoriesQuery, [postId], (err) => {
+                if (err) {
+                    console.error('Error al eliminar las categorías:', err);
+                    return db.rollback(() => {
+                        res.status(500).send('Error al eliminar las categorías');
+                    });
+                }
+
+                const categoryIds = JSON.parse(categories);
+                const categoryPromises = categoryIds.map(categoryId => {
+                    return new Promise((resolve, reject) => {
+                        db.query(addCategoryQuery, [postId, categoryId], (err) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                resolve();
+                            }
+                        });
+                    });
+                });
+
+                Promise.all(categoryPromises)
+                    .then(() => {
+                        db.commit(err => {
+                            if (err) {
+                                console.error('Error al confirmar la transacción:', err);
+                                return db.rollback(() => {
+                                    res.status(500).send('Error al confirmar la transacción');
+                                });
+                            }
+
+                            res.status(200).send('Publicación actualizada exitosamente');
+                        });
+                    })
+                    .catch(err => {
+                        console.error('Error al agregar categorías:', err);
+                        db.rollback(() => {
+                            res.status(500).send('Error al agregar categorías');
+                        });
+                    });
+            });
+        });
+    });
+});
 
 
 //Obtener info para la ventana de publicacion

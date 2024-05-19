@@ -15,7 +15,7 @@ function Menu({ perfil }) {
                     <Link className={`${styles["nav-link"]} nav-link`} to="/explore">Explorar</Link>
                 </li>
                 <li className={`${styles["nav-item"]}`}>
-                    <Link className={`${styles["nav-link"]} nav-link`} to="/editpost">Crear</Link>
+                    <Link className={`${styles["nav-link"]} nav-link`} to="/createpost">Crear</Link>
                 </li>
                 <li className={`${styles["nav-item"]}`}>
                     <Link to={`/perfil/${perfil.ID}`} >

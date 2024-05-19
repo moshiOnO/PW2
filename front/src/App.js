@@ -13,6 +13,7 @@ import Publicacion from './publicacion';
 import Editperfil from './editPerfil';
 import Stats from './stats';
 import Editpost from './editpost';
+import CreatePost from './createPost';
 
 import Usuarios from './Usuarios';
 import CargarImagen from './CargarImage';
@@ -36,7 +37,10 @@ function App() {
 
         <Route path='/editperfil' element={<Editperfil />}></Route>
         <Route path='/stats' element={<Stats />}></Route>
-        <Route path='/editpost' element={<Editpost />}></Route>
+        
+        {/* <Route path='/editpost' element={<Editpost />}></Route> */}
+        <Route path='/editpost/:postId' element={<Editpost />}></Route>
+        <Route path='/createpost' element={<CreatePost />}></Route> 
 
         <Route path='/usuarios' element={<Usuarios />}></Route>
         <Route path='/cargarimagen' element={<CargarImagen />}></Route>

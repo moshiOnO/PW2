@@ -4,15 +4,14 @@ import Swal from 'sweetalert2';
 import styles from './paginaWeb/css/createpost.module.css';
 import React, { useState, useEffect, useRef } from 'react';
 import axiosInstance from './AxiosConf/axiosconf';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 //Componentes
 import Menu from './components/menuComponent';
 import { usePerfil } from './components/publicacionUtils';
 
-function Editpost() {
+function CreatePost() {
     const nav = useNavigate();
-    const { postId } = useParams();
     const perfil = usePerfil(); 
     const [imageFile, setImageFile] = useState(null);
     const [title, setTitle] = useState('');
@@ -22,8 +21,8 @@ function Editpost() {
     const [errors, setErrors] = useState({ title: '', description: '', categories: '', image: '' });
     const imgElementRef = useRef(null);
 
-    useEffect(() => {   
-        axiosInstance.get(`/categorias`)
+    useEffect(() => {
+        axiosInstance.get('/categorias')
             .then(response => {
                 const options = response.data.map(category => ({
                     id: category.id,
@@ -34,25 +33,7 @@ function Editpost() {
             .catch(error => {
                 console.error("Error al obtener las categorías:", error);
             });
-
-        axiosInstance.get(`/publicacionEdit/${postId}`)
-            .then(response => {
-                const post = response.data;
-                setTitle(post.titulo_publi);
-                setDescription(post.desc_publi);
-                const initialCategories = response.data.categories.reduce((acc, categoryId) => {
-                    acc[categoryId] = true;
-                    return acc;
-                }, {});
-                setCategories(initialCategories);
-                if (post.imageUrl) {
-                    imgElementRef.current.src = post.imageUrl;
-                }
-            })
-            .catch(error => {
-                console.error("Error al obtener los datos de la publicación:", error);
-            });
-    }, [postId]);
+    }, []);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -93,6 +74,9 @@ function Editpost() {
         if (!Object.values(categories).some(value => value)) {
             errors.categories = 'Debes seleccionar al menos una categoría.';
         }
+        if (!imageFile) {
+            errors.image = 'Debes subir una imagen.';
+        }
 
         if (Object.keys(errors).length > 0) {
             setErrors(errors);
@@ -106,14 +90,14 @@ function Editpost() {
                 formData.append('image', imageFile);
             }
 
-            axiosInstance.put(`/updatePost/${postId}`, formData, {
+            axiosInstance.post('/addPost', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             })
             .then(response => {
                 Swal.fire({
-                    title: 'Tu publicación se actualizó con éxito',
+                    title: 'Tu publicación se creó con éxito',
                     text: '<3',
                     icon: 'success',
                     confirmButtonText: 'Yeiiiiii :DD'
@@ -124,10 +108,10 @@ function Editpost() {
                 });
             })
             .catch(error => {
-                console.error("Error al actualizar la publicación:", error);
+                console.error("Error al crear la publicación:", error);
                 Swal.fire({
                     title: 'Error',
-                    text: 'Hubo un problema al actualizar la publicación.',
+                    text: 'Hubo un problema al crear la publicación.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
@@ -154,10 +138,10 @@ function Editpost() {
                     </div>
 
                     <div id={styles.postInfo} className="col-md-8">
-                        <input type="text" id="titleP" className={styles.titleP} placeholder="Nuevo Título" style={{ marginBottom: '10px' }} value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <input type="text" id="titleP" className={styles.titleP} placeholder="Título" style={{ marginBottom: '10px' }} value={title} onChange={(e) => setTitle(e.target.value)} />
                         <span id="titleError" className={`${styles.error} error-message`}>{errors.title}</span>
                         <br />
-                        <input type="text" id="descP" className={`${styles.descP} error-message`} placeholder="Nueva Descripción" style={{ marginBottom: '10px' }} value={description} onChange={(e) => setDescription(e.target.value)} />
+                        <input type="text" id="descP" className={`${styles.descP} error-message`} placeholder="Descripción" style={{ marginBottom: '10px' }} value={description} onChange={(e) => setDescription(e.target.value)} />
                         <span id="descError" className={`${styles.error} error-message`}>{errors.description}</span>
                         <br />
                         <div id="catP" className={`${styles.catP} col-md-8`} style={{ marginBottom: '10px' }}>
@@ -175,7 +159,7 @@ function Editpost() {
                             ))}
                             <span id="catError" className={`${styles.error} error-message`}>{errors.categories}</span>
                         </div>
-                        <button id={styles.BotonPostear} onClick={validatePost} style={{ marginTop: '10px' }}>Actualizar</button>
+                        <button id={styles.BotonPostear} onClick={validatePost} style={{ marginTop: '10px' }}>Crear Publicación</button>
                     </div>
                 </div>
             </div>
@@ -183,4 +167,4 @@ function Editpost() {
     );
 }
 
-export default Editpost;
+export default CreatePost;

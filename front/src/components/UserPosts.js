@@ -6,7 +6,11 @@ const UserPosts = ({ posts, onDelete, loggedInUserId }) => {
     return (
         <div id={styles.pfpubs}>
             {posts.map((post, index) => {
-                //console.log('Rendering post:', post);
+                const formattedDate = new Date(post.fecha_publi).toLocaleDateString('es-ES', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
 
                 return (
                     <div key={index} id={styles.pubpfp}>
@@ -23,7 +27,7 @@ const UserPosts = ({ posts, onDelete, loggedInUserId }) => {
                         <img src={post.imageUrl} alt="Post" />
                         <div id={styles.pubpfpT}>
                             <h4>{post.titulo_publi}</h4>
-                            <p id={styles.datePub}>{post.fecha_publi}</p>
+                            <p id={styles.datePub}>El post se creó el: {formattedDate}</p>
                             <p>{post.desc_publi}</p>
                         </div>
                     </div>
@@ -34,4 +38,5 @@ const UserPosts = ({ posts, onDelete, loggedInUserId }) => {
 };
 
 export default UserPosts;
+
 
